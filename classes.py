@@ -6,13 +6,9 @@ class Troncon:
     species = "Canine"
 
     # Méthode constructeur
-    def __init__(self, longueur, section, diametre, materiau, rugosite):
-        self.long = longueur
-        self.sect = section
-        self.diam = diametre
-        self.mat = materiau
-        self.rug = rugosite
+    def __init__(self):
+        self.liste_attributs = []
 
-    # Méthode
-    def bark(self):
-        print("Woof!")
+    def ajouter_attribut(self, attribut):
+        self.liste_attributs.append(attribut)
+

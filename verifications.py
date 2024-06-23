@@ -55,7 +55,7 @@ def get_int_input(signe='all'):
         # On vérifie constamment l'entrée
         try:
             # On demande à l'utilisateur d'entrer la valeur
-            entree = input("-->")
+            entree = input("--> ")
             # On essaie de le convertir en entier, si ca ne marche pas, on va dans "except"
             value = int(entree)
             if (value >= 0 and signe == '+') or (value < 0 and signe == '-') or signe == 'all':
@@ -68,4 +68,34 @@ def get_int_input(signe='all'):
     return value
 
 
+# Définition de la fonction qui vérifie que l'entrée est une section valable
+def get_element_liste_input(liste):
+    mots_chaine = ''
+    for i in liste:
+        mots_chaine += (i)
+        mots_chaine += (' ')
+    print(f"Veuillez choisir parmi : ")
+    print(mots_chaine)
+    value = input("--> ")
+    while value not in liste:
+        print("Entrée invalide, vous devez sélectionner un élément de la liste :")
+        print(mots_chaine)
+        value = input("--> ")
+    return value
 
+
+def get_choix_mode():
+    print("Que voulez-vous faire dans ce programme ?")
+    print("1 - Étudier un problème de canalisation")
+    print("2 - Ajouter/supprimer un matériau à la base de données")
+    print("3 - Ajouter/supprimer un fluide à la base de données")
+    print("Entrez 1, 2 ou 3.")
+    value = input("--> ")
+    liste = ['1', '2', '3']
+    while value not in liste:
+        print("Entrée invalide, vous devez entrer 1, 2 ou 3.")
+        value = input("--> ")
+    return value
+
+
+get_element_liste_input(['ajouter', 'supprimer'])
