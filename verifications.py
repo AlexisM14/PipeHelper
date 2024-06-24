@@ -98,4 +98,16 @@ def get_choix_mode():
     return value
 
 
+def get_init_cond_input():
+    print("Quelle est la vitesse initiale, en m/s ?")
+    vitesse = get_float_input('+')
+
+    print("Quelle est la température initiale, en Kelvin ?")
+    temperature = get_float_input()
+
+    print("Quelle est la pression initiale, en bar ?")
+    pression = get_float_input('+')
+
+    return vitesse, temperature, pression
+
 get_element_liste_input(['ajouter', 'supprimer'])
