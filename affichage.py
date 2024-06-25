@@ -35,6 +35,7 @@ def interface():
         liste_fluides = ['eau', 'air', 'huile']
         # liste_fluides = lister_les_fluides()
         angle = 180  # Par défaut, l'angle du tronçon vaut 180°, portion droite
+        canalisation = Canalisation()
 
         for i in range(nbre_troncons):
             # Définition du tronçon
@@ -76,15 +77,15 @@ def interface():
             troncon.ajouter_attribut(angle)
 
             # Enregistrement de tous les tronçons les données
-            liste_troncons = np.append(liste_troncons, troncon)
+            canalisation.ajouter_troncon(troncon)
 
-            # Fluide
-            print("Quel est le fluide s'écoulant dans les canalisations ? \n")
-            fluide = get_element_liste_input(liste_fluides)
+        # Fluide
+        print("Quel est le fluide s'écoulant dans les canalisations ? \n")
+        fluide = get_element_liste_input(liste_fluides)
 
-            # Condition initiales
-            print("Quelles sont les conditions initiales du fluides, en entrée de la canalisation ? \n")
-            vitesse_init, temperature_init, pression_init = get_init_cond_input()
+        # Condition initiales
+        print("Quelles sont les conditions initiales du fluides, en entrée de la canalisation ? \n")
+        vitesse_init, temperature_init, pression_init = get_init_cond_input()
 
         # Affichage de la géométrie des canalisations
 
