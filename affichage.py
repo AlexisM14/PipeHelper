@@ -30,11 +30,11 @@ def interface():
         liste_sections = ['carré', 'rond']
         liste_materiaux = ['PVC', 'bois', 'béton']
         # liste_materiaux = lister_les_materiaux()
-        liste_geometries = ['droit', 'coude', 'T']
-        liste_geometrie_angle = ['coude', 'T']
+        liste_geometries = ['droit', 'coude D', 'coude B' 'coude G', 'coude H']
+        liste_geometrie_angle = ['coude D', 'coude B' 'coude G', 'coude H']
         liste_fluides = ['eau', 'air', 'huile']
         # liste_fluides = lister_les_fluides()
-        angle = 180  # Par défaut, l'angle du tronçon vaut 180°, portion droite
+        angle = 0  # Par défaut, l'angle du tronçon vaut 0°, portion droite. Un coude vaut 90°
         canalisation = Canalisation()
 
         for i in range(nbre_troncons):
@@ -68,6 +68,10 @@ def interface():
 
             # Forme et angle du tronçon
             print(f"Quelle est la géométrie de la section du tronçon {i} ? \n")
+            print("'coude D' et 'coude G' correspondent respectivement à un coude qui part vers "
+                  "la droite et la gauche. \n De mâme, 'coude H' et 'coude B' correspondent respectivement à un "
+                  "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
+                  "initiale du fluide. ")
             geometrie = get_element_liste_input(liste_geometries)
             troncon.ajouter_attribut(geometrie)
 

@@ -36,7 +36,7 @@ class Canalisation:
         if self.len == 0:
             self.liste_troncons[0] = troncon
         else:
-            np.append(self.liste_troncons, attribut)
+            np.append(self.liste_troncons, troncon)
         self.len += 1
 
     def renvoyer_longueur(self):
