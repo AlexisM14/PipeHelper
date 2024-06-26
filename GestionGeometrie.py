@@ -5,46 +5,39 @@ import matplotlib.pyplot as plt
 # La direction y va de haut en bas
 
 
-def calculer_coordonnées_coude(x_depart, y_depart, longueur, angle_deg, direction):
-    coordonnees_x = np.zeros(1)
-    coordonnees_x = np.append(coordonnees_x, x_depart)
+def calculer_coordonnees_coude(x_debut, y_debut, longueur, angle_deg, orientation):
+    angle_rad = np.radians(angle_deg)
 
-    coordonnees_y = np.zeros(1)
-    coordonnees_y = np.append(coordonnees_y, y_depart)
+    nbre_points = int(longueur * 100)
 
-    angle_rad = np.deg2rad(angle_deg)
-    nbre_points_angle = int(longueur * 100)
+    angles = np.linspace(0, angle_rad, nbre_points)
 
-    perimetre = longueur * 2 * np.pi / angle_rad
-    rayon = perimetre / (2 * np.pi)
+    x = np.zeros(nbre_points)
+    y = np.zeros(nbre_points)
 
-    if direction == 'coude B':
-        centre_cercle_x = x_depart + rayon
-        centre_cercle_y = y_depart
-        liste_angles = np.linspace(-np.pi, -np.pi+angle_rad, nbre_points_angle)
+    rayon = longueur / angle_rad
 
-    elif direction == 'coude D':
-        centre_cercle_x = x_depart
-        centre_cercle_y = y_depart - rayon
-        liste_angles = np.linspace(np.pi/2, (np.pi/2)+angle_rad, nbre_points_angle)
+    if orientation == 'coude D':
+        for i in range(nbre_points):
+            x[i] = x_debut + rayon * (1 - np.cos(angles[i]))
+            y[i] = y_debut + rayon * np.sin(angles[i])
 
-    elif direction == 'coude G':
-        centre_cercle_x = x_depart - rayon
-        centre_cercle_y = y_depart
-        liste_angles = np.linspace(0,angle_rad, nbre_points_angle)
+    elif orientation == 'coude G':
+        for i in range(nbre_points):
+            x[i] = x_debut - rayon * (1 - np.cos(angles[i]))
+            y[i] = y_debut + rayon * np.sin(angles[i])
 
-    else:
-        centre_cercle_x = x_depart
-        centre_cercle_y = y_depart + rayon
-        liste_angles = np.linspace(-np.pi/2, (-np.pi/2)+angle_rad, nbre_points_angle)
+    elif orientation == 'coude H':
+        for i in range(nbre_points):
+            x[i] = x_debut + rayon * np.sin(angles[i])
+            y[i] = y_debut + rayon * (1 - np.cos(angles[i]))
 
-    for i in liste_angles:
-        x = centre_cercle_x + rayon * np.cos(i)
-        y = centre_cercle_y + rayon * np.sin(i)
-        coordonnees_x = np.append(coordonnees_x, x)
-        coordonnees_y = np.append(coordonnees_y, y)
+    elif orientation == 'coude B':
+        for i in range(nbre_points):
+            x[i] = x_debut + rayon * np.sin(angles[i])
+            y[i] = y_debut - rayon * (1 - np.cos(angles[i]))
 
-    return coordonnees_x, coordonnees_y
+    return x, y
 
 
 def calculer_coordonnees_guide(canalisation):
@@ -105,9 +98,9 @@ def calculer_coordonnees_guide(canalisation):
                     y_guide = np.append(y_guide, y_debut_troncon + liste_longueur[j])
 
         elif i == 'coude D' or i == 'coude G' or i == 'coude B' or i == 'coude H':
-            x, y = calculer_coordonnées_coude(x_debut_troncon, y_debut_troncon, float(liste_longueur[idx]),
+            x, y = calculer_coordonnees_coude(x_guide[-1], y_guide[-1], float(liste_longueur[idx]),
                                               float(liste_angle[idx]), i)
-            print(x,y)
+            # print(x,y)
             for j in range(len(x)):
                 x_guide = np.append(x_guide, x[j])
                 y_guide = np.append(y_guide, y[j])
@@ -120,15 +113,32 @@ def calculer_coordonnees_guide(canalisation):
 
 def tracer_canalisations(canalisation):
     x_guide, y_guide = calculer_coordonnees_guide(canalisation)
-    print(x_guide, y_guide)
+    # print(x_guide, y_guide)
     plt.plot(x_guide,y_guide)
     plt.show()
 
 
-troncon1 = np.array([10, 'rond', 5, 2, 'droit', 0])
-troncon2 = np.array([5, 'rond', 5, 2, 'coude D', 90])
-troncon3 = np.array([7, 'rond', 5, 2, 'droit', 90])
-canal = np.array([troncon1, troncon2, troncon3])
+def tracer_canal():
+    troncon1 = np.array([10, 'rond', 5, 2, 'droit', 0])
+    troncon2 = np.array([5, 'rond', 5, 2, 'coude D', 90])
+    troncon3 = np.array([7, 'rond', 5, 2, 'droit', 90])
+    canal = np.array([troncon1, troncon2, troncon3])
 
-tracer_canalisations(canal)
+    # tracer_canalisations(np.array([troncon2, [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]))
 
+    tracer_canalisations(canal)
+
+
+def tracer_coude():
+    x = 0
+    y = 0
+    l = 10
+    angle = 90
+    dir = 'coude D'
+    print(x,y)
+    x,y = calculer_coordonnees_coude(x, y, l, angle, dir)
+    plt.plot(x,y)
+    plt.show()
+
+
+tracer_canal()
