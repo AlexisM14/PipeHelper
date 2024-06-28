@@ -35,7 +35,7 @@ def get_float_input(signe='all'):
         # On vérifie constamment l'entrée
         try:
             # On demande à l'utilisateur d'entrer la valeur
-            entree = input("-->")
+            entree = input("--> ")
             # On essaie de le convertir en flottant, si ca ne marche pas, on va dans "except"
             value = float(entree)
             if (value >= 0 and signe == '+') or (value < 0 and signe == '-') or signe == 'all':
@@ -95,7 +95,7 @@ def get_choix_mode():
     while value not in liste:
         print("Entrée invalide, vous devez entrer 1, 2 ou 3.")
         value = input("--> ")
-    return value
+    return int(value)
 
 
 def get_init_cond_input():
@@ -110,4 +110,3 @@ def get_init_cond_input():
 
     return vitesse, temperature, pression
 
-get_element_liste_input(['ajouter', 'supprimer'])

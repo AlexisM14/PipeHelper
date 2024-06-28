@@ -27,7 +27,8 @@ def interface():
         print("Combien de sections composent la géométrie des canalisations du problème ?")
         nbre_troncons = get_int_input('+')
         liste_troncons = np.zeros(nbre_troncons)
-        liste_sections = ['carré', 'rond']
+        # Pour l'instant on fait que section rondes
+        liste_sections = ['rond']
         liste_materiaux = ['PVC', 'bois', 'béton']
         # liste_materiaux = lister_les_materiaux()
         liste_geometries = ['droit', 'coude D', 'coude B' 'coude G', 'coude H']
@@ -42,7 +43,7 @@ def interface():
             troncon = Troncon()
 
             # Longueur du tronçon
-            print(f"Quelle est la longueur du tronçon {i} ? \n")
+            print(f"Quelle est la longueur du tronçon {i} en mm ? \n")
             longueur = get_float_input('+')
             troncon.ajouter_attribut(longueur)
 
@@ -52,7 +53,7 @@ def interface():
             troncon.ajouter_attribut(section)
 
             # Diamètre/largeur du tronçon
-            print(f"Quelle est le diamètre/largeur de la section du tronçon {i} ? \n")
+            print(f"Quelle est le diamètre de la section du tronçon {i} en mm ? \n")
             diametre = get_float_input('+')
             troncon.ajouter_attribut(diametre)
 
@@ -76,8 +77,7 @@ def interface():
             troncon.ajouter_attribut(geometrie)
 
             if geometrie in liste_geometrie_angle:
-                print(f"Quelle est l'angle du {geometrie} en ° ? \n")
-                angle = get_float_input()
+                angle = 90
             troncon.ajouter_attribut(angle)
 
             # Enregistrement de tous les tronçons les données
@@ -97,33 +97,32 @@ def interface():
 
     # MODE AJOUT/SUPPRESSION DE MATÉRIAU
     elif mode == 2:
-        print("Voici les matériaux actuels de la base de données")
-        afficher_materiaux()
-        print("\n Voulez-vous ajouter ou supprimer un matériau.")
-        choix_edition_2 = get_element_liste_input(['ajouter', 'supprimer'])
-
-        if choix_edition_2 == 'ajouter':
-            ajouter_materiaux()
-        else:
-            supprimer_materiaux()
+        print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
+        interface()
+        return True
+        # print("Voici les matériaux actuels de la base de données")
+        # afficher_materiaux()
+        # print("\n Voulez-vous ajouter ou supprimer un matériau.")
+        # choix_edition_2 = get_element_liste_input(['ajouter', 'supprimer'])
+        #
+        # if choix_edition_2 == 'ajouter':
+        #     ajouter_materiaux()
+        # else:
+        #     supprimer_materiaux()
 
     # MODE AJOUT/SUPPRESSION DE FLUIDE
-    else:
-        print("Voici les matériaux actuels de la base de données")
-        afficher_fluide()
-        print("\n Voulez-vous ajouter ou supprimer un matériau.")
-        choix_edition_3 = get_element_liste_input(['ajouter', 'supprimer'])
-
-        if choix_edition_3 == 'ajouter':
-            ajouter_fluides()
-        else:
-            supprimer_fluides()
-
-
-
-
-
-
-
+    elif mode == 3:
+        print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
+        interface()
+        return True
+        # print("Voici les matériaux actuels de la base de données")
+        # afficher_fluide()
+        # print("\n Voulez-vous ajouter ou supprimer un matériau.")
+        # choix_edition_3 = get_element_liste_input(['ajouter', 'supprimer'])
+        #
+        # if choix_edition_3 == 'ajouter':
+        #     ajouter_fluides()
+        # else:
+        #     supprimer_fluides()
 
 interface()
