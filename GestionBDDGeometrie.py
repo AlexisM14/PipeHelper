@@ -19,6 +19,11 @@ liste_rapport = df_geometrie.groupby('nom')['rapport rayon diametre'].apply(list
 liste_rapport_coude = liste_rapport[liste_rapport['nom'] == 'coude']['rapport rayon diametre'].tolist()[0]
 
 
+def recuperer_attribut_geo(geometrie, colonne):
+    liste =  df_geometrie.groupby('nom')[colonne].apply(list).reset_index()
+    return liste[liste['nom'] == geometrie][colonne].tolist()[0]
+
+
 def trouver_nombre_apres(liste, nombre):
     """Trouve le plus petit élément de la liste, plus grand que nombre"""
     liste_triee = sorted(liste, reverse=True)

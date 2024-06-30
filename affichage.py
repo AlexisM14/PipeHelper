@@ -74,10 +74,11 @@ def interface():
             # Rayon de courbure du tronçon
             rayon_courbure = 0
             if geometrie[:-2] == 'coude':
+                liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
                 print(f"Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
                 rayon_courbure = get_float_input('+')
-                rapport_rayon_diam_min = min(rapport_coude)
-                rapport_rayon_diam_max = max(rapport_coude)
+                rapport_rayon_diam_min = min(liste_rap_coude)
+                rapport_rayon_diam_max = max(liste_rap_coude)
                 while rayon_courbure / diametre > rapport_rayon_diam_max or rayon_courbure < rapport_rayon_diam_min:
                     print(f"Le rapport rayon de courbure doit être compirs entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
                     print(f"Le rapport actuel vaut {rayon_courbure}.")
@@ -147,3 +148,5 @@ def interface():
         #     ajouter_fluides()
         # else:
         #     supprimer_fluides()
+
+interface()
