@@ -35,6 +35,13 @@ def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
         return A - ((B-A)**2)/(C-2*B+A)
 
 
+def calculer_coef_perte_charge_coude(rayon_courbure, diametre, angle):
+    if angle == 90:
+        return
+    elif angle == 45:
+        return
+
+
 # Définition de la fonction de calcul de pression selon la formule de Poiseuille
 def calculer_pression_poiseuille(debit_vol, viscosite_cine, pression_entree, longueur_canal, rayon_canal):
     """Renvoie la pression de sortie dans un écoulement de Poiseuille"""

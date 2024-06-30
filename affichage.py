@@ -4,6 +4,7 @@ from verifications import *
 from classes import *
 from GestionBDDFluide import *
 from GestionBDDMateriau import *
+from GestionBDDGeometrie import *
 
 
 def interface():
@@ -43,29 +44,24 @@ def interface():
             troncon = Troncon()
 
             # Longueur du tronçon
-            print(f"Quelle est la longueur du tronçon {i} en mm ? \n")
+            print(f"Quelle est la longueur du tronçon {i} en m ? \n")
             longueur = get_float_input('+')
-            troncon.ajouter_attribut(longueur)
 
             # Forme de la section du tronçon
             print(f"Quelle est la forme de la section du tronçon {i} ? \n")
             section = get_element_liste_input(liste_sections)
-            troncon.ajouter_attribut(section)
 
             # Diamètre/largeur du tronçon
-            print(f"Quelle est le diamètre de la section du tronçon {i} en mm ? \n")
+            print(f"Quelle est le diamètre de la section du tronçon {i} en m ? \n")
             diametre = get_float_input('+')
-            troncon.ajouter_attribut(diametre)
 
             # Matériau du tronçon
             print(f"Quelle est le matériau de la section du tronçon {i} ? \n")
             materiau = get_element_liste_input(liste_materiaux)
-            troncon.ajouter_attribut(materiau)
 
             # Rugosité du tronçon
             print(f"Quelle est la rugosité de la section du tronçon {i} ? \n")
             rugosite = get_float_input('+')
-            troncon.ajouter_attribut(rugosite)
 
             # Forme et angle du tronçon
             print(f"Quelle est la géométrie de la section du tronçon {i} ? \n")
@@ -74,11 +70,38 @@ def interface():
                   "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
                   "initiale du fluide. ")
             geometrie = get_element_liste_input(liste_geometries)
-            troncon.ajouter_attribut(geometrie)
+
+            # Rayon de courbure du tronçon
+            rayon_courbure = 0
+            if geometrie[:-2] == 'coude':
+                print(f"Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
+                rayon_courbure = get_float_input('+')
+                rapport_rayon_diam_min = min(rapport_coude)
+                rapport_rayon_diam_max = max(rapport_coude)
+                while rayon_courbure / diametre > rapport_rayon_diam_max or rayon_courbure < rapport_rayon_diam_min:
+                    print(f"Le rapport rayon de courbure doit être compirs entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
+                    print(f"Le rapport actuel vaut {rayon_courbure}.")
+                    print("Voulez-vous modifier le rayon de courbure ou le diamètre du tronçon ?")
+                    choix_modif = get_element_liste_input(['rayon de courbure', 'diamètre'])
+                    if choix_modif == 'rayon de courbure':
+                        print(f"Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
+                        rayon_courbure = get_float_input('+')
+                    else:
+                        print(f"Quelle est le diamètre de la section du tronçon {i} en m ? \n")
+                        diametre = get_float_input('+')
 
             if geometrie in liste_geometrie_angle:
                 angle = 90
+
+            # Enregistrement de tous les attributs
+            troncon.ajouter_attribut(longueur)
+            troncon.ajouter_attribut(section)
+            troncon.ajouter_attribut(diametre)
+            troncon.ajouter_attribut(materiau)
+            troncon.ajouter_attribut(rugosite)
+            troncon.ajouter_attribut(geometrie)
             troncon.ajouter_attribut(angle)
+            troncon.ajouter_attribut(rayon_courbure)
 
             # Enregistrement de tous les tronçons les données
             canalisation.ajouter_troncon(troncon)
@@ -124,5 +147,3 @@ def interface():
         #     ajouter_fluides()
         # else:
         #     supprimer_fluides()
-
-interface()
