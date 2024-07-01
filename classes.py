@@ -103,6 +103,9 @@ class Canalisation(Troncon):
         self.liste_troncons = []
         self.len = 0
 
+    def recupere_nbre_troncons(self):
+        return self.len
+
     def ajouter_troncon(self, troncon):
         self.liste_troncons.append(troncon)
         self.len += 1

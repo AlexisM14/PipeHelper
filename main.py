@@ -73,29 +73,29 @@ def interface():
                   "initiale du fluide. ")
             geometrie = get_element_liste_input(liste_geometries)
 
+            angle = 0  # Par défaut, l'angle du tronçon vaut 0°, portion droite. Un coude vaut 90°
+            if geometrie in liste_geometrie_angle:
+                angle = 90
+
             # Rayon de courbure du tronçon
-            rayon_courbure = 0
+            rayon_courbure = longueur / np.deg2rad(angle)
             if geometrie[:-2] == 'coude':
                 liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
-                print(f"\n Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
-                rayon_courbure = get_float_input('+')
+
                 rapport_rayon_diam_min = min(liste_rap_coude)
                 rapport_rayon_diam_max = max(liste_rap_coude)
                 while (rayon_courbure / diametre) > rapport_rayon_diam_max or (rayon_courbure/diametre) < rapport_rayon_diam_min:
                     print(f"Le rapport rayon de courbure doit être compris entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
                     print(f"Le rapport actuel vaut {rayon_courbure/diametre}.")
-                    print("Voulez-vous modifier le rayon de courbure ou le diamètre du tronçon ?")
-                    choix_modif = get_element_liste_input(['rayon de courbure', 'diamètre'])
-                    if choix_modif == 'rayon de courbure':
-                        print(f"\n Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
-                        rayon_courbure = get_float_input('+')
+                    print("Voulez-vous modifier la longueur du tronçon ou le diamètre du tronçon ?")
+                    choix_modif = get_element_liste_input(['longueur', 'diamètre'])
+                    if choix_modif == 'longueur':
+                        print(f"\n Quel est la longueur du {geometrie} du tronçon {i} en m ?")
+                        longueur = get_float_input('+')
                     else:
                         print(f"\n Quelle est le diamètre de la section du tronçon {i} en m ? \n")
                         diametre = get_float_input('+')
-
-            angle = 0  # Par défaut, l'angle du tronçon vaut 0°, portion droite. Un coude vaut 90°
-            if geometrie in liste_geometrie_angle:
-                angle = 90
+                    rayon_courbure = longueur / np.deg2rad(angle)
 
             vitesse_init = 0
             temperature_init = 0
