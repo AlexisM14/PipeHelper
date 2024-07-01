@@ -1,14 +1,14 @@
 """ Ce script permet de générer l'affichage du programme"""
 import numpy as np
 from verifications import *
-from classes import *
-from GestionBDDFluide import *
-from GestionBDDMateriau import *
-from GestionBDDGeometrie import *
+from classes import Troncon
+from classes import Canalisation
+from gestion_BDD_fluides import *
+from gestion_BDD_materiaux import *
+from gestion_BDD_geometries import *
 
 
 def interface():
-    nettoyer_ecran()
 
     # Affichage du principe du script
     print("Ce script permet de configurer des canalisations ! \n"
@@ -24,8 +24,15 @@ def interface():
 
     # MODE PROBLÈME
     if mode == 1:
-        print("\n Vous entrez dans le mode de résolution de problème.")
-        print("Combien de sections composent la géométrie des canalisations du problème ?")
+        nettoyer_ecran()
+        liste_fluides = lister_fluides()
+        print("\n Vous entrez dans le mode de résolution de problème.\n")
+
+        # Fluide
+        print("Quel est le fluide s'écoulant dans les canalisations ?")
+        fluide = get_element_liste_input(liste_fluides)
+
+        print("\n Combien de sections composent la géométrie des canalisations du problème ?")
         nbre_troncons = get_int_input('+')
         liste_troncons = np.zeros(nbre_troncons)
         # Pour l'instant on fait que section rondes
@@ -34,37 +41,32 @@ def interface():
         # liste_materiaux = lister_les_materiaux()
         liste_geometries = ['droit', 'coude D', 'coude B' 'coude G', 'coude H']
         liste_geometrie_angle = ['coude D', 'coude B' 'coude G', 'coude H']
-        liste_fluides = ['eau', 'air', 'huile']
-        # liste_fluides = lister_les_fluides()
-        angle = 0  # Par défaut, l'angle du tronçon vaut 0°, portion droite. Un coude vaut 90°
+
         canalisation = Canalisation()
 
         for i in range(nbre_troncons):
-            # Définition du tronçon
-            troncon = Troncon()
-
             # Longueur du tronçon
-            print(f"Quelle est la longueur du tronçon {i} en m ? \n")
+            print(f"\n Quelle est la longueur du tronçon {i} en m ?")
             longueur = get_float_input('+')
 
             # Forme de la section du tronçon
-            print(f"Quelle est la forme de la section du tronçon {i} ? \n")
+            print(f"\n Quelle est la forme de la section du tronçon {i} ?")
             section = get_element_liste_input(liste_sections)
 
             # Diamètre/largeur du tronçon
-            print(f"Quelle est le diamètre de la section du tronçon {i} en m ? \n")
+            print(f"\n Quelle est le diamètre de la section du tronçon {i} en m ?")
             diametre = get_float_input('+')
 
             # Matériau du tronçon
-            print(f"Quelle est le matériau de la section du tronçon {i} ? \n")
+            print(f"\n Quelle est le matériau de la section du tronçon {i} ?")
             materiau = get_element_liste_input(liste_materiaux)
 
             # Rugosité du tronçon
-            print(f"Quelle est la rugosité de la section du tronçon {i} ? \n")
+            print(f"\n Quelle est la rugosité de la section du tronçon {i} en m ?")
             rugosite = get_float_input('+')
 
             # Forme et angle du tronçon
-            print(f"Quelle est la géométrie de la section du tronçon {i} ? \n")
+            print(f"\n Quelle est la géométrie de la section du tronçon {i} ?")
             print("'coude D' et 'coude G' correspondent respectivement à un coude qui part vers "
                   "la droite et la gauche. \n De mâme, 'coude H' et 'coude B' correspondent respectivement à un "
                   "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
@@ -75,53 +77,55 @@ def interface():
             rayon_courbure = 0
             if geometrie[:-2] == 'coude':
                 liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
-                print(f"Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
+                print(f"\n Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
                 rayon_courbure = get_float_input('+')
                 rapport_rayon_diam_min = min(liste_rap_coude)
                 rapport_rayon_diam_max = max(liste_rap_coude)
-                while rayon_courbure / diametre > rapport_rayon_diam_max or rayon_courbure < rapport_rayon_diam_min:
-                    print(f"Le rapport rayon de courbure doit être compirs entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
-                    print(f"Le rapport actuel vaut {rayon_courbure}.")
+                while (rayon_courbure / diametre) > rapport_rayon_diam_max or (rayon_courbure/diametre) < rapport_rayon_diam_min:
+                    print(f"Le rapport rayon de courbure doit être compris entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
+                    print(f"Le rapport actuel vaut {rayon_courbure/diametre}.")
                     print("Voulez-vous modifier le rayon de courbure ou le diamètre du tronçon ?")
                     choix_modif = get_element_liste_input(['rayon de courbure', 'diamètre'])
                     if choix_modif == 'rayon de courbure':
-                        print(f"Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
+                        print(f"\n Quel est le rayon de courbure du {geometrie} du tronçon {i} en m ?")
                         rayon_courbure = get_float_input('+')
                     else:
-                        print(f"Quelle est le diamètre de la section du tronçon {i} en m ? \n")
+                        print(f"\n Quelle est le diamètre de la section du tronçon {i} en m ? \n")
                         diametre = get_float_input('+')
 
+            angle = 0  # Par défaut, l'angle du tronçon vaut 0°, portion droite. Un coude vaut 90°
             if geometrie in liste_geometrie_angle:
                 angle = 90
 
-            # Enregistrement de tous les attributs
-            troncon.ajouter_attribut(longueur)
-            troncon.ajouter_attribut(section)
-            troncon.ajouter_attribut(diametre)
-            troncon.ajouter_attribut(materiau)
-            troncon.ajouter_attribut(rugosite)
-            troncon.ajouter_attribut(geometrie)
-            troncon.ajouter_attribut(angle)
-            troncon.ajouter_attribut(rayon_courbure)
+            vitesse_init = 0
+            temperature_init = 0
+            pression_init = 0
+            # Condition initiales
+            if i == 0:
+                print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
+                vitesse_init, temperature_init, pression_init = get_init_cond_input()
+                liste_temperature = recuperer_liste_temperature(fluide)
+                if temperature_init < min(liste_temperature) or temperature_init > max(liste_temperature):
+                    print(f"La température initiale doit être comprise entre {min(liste_temperature)} °C et {max(liste_temperature)} °C ")
+                    print(f"La température initiale actuelle vaut {temperature_init} °C, veuillez la modifier.")
+                    temperature_init = get_float_input('+')
 
-            # Enregistrement de tous les tronçons les données
+            # On enregistre toutes les valeurs dans un tronçon
+            troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, angle, rayon_courbure, fluide, vitesse_init, pression_init, temperature_init)
+            # On enregistre le tronçon dans la canalisation
             canalisation.ajouter_troncon(troncon)
 
-        # Fluide
-        print("Quel est le fluide s'écoulant dans les canalisations ? \n")
-        fluide = get_element_liste_input(liste_fluides)
-
-        # Condition initiales
-        print("Quelles sont les conditions initiales du fluides, en entrée de la canalisation ? \n")
-        vitesse_init, temperature_init, pression_init = get_init_cond_input()
-
         # Affichage de la géométrie des canalisations
+        print(f"longueur : {canalisation.renvoyer_liste_longueur()}")
+        print(f"géométrie : {canalisation.renvoyer_liste_geometrie()}")
 
         # Début des calculs
 
     # MODE AJOUT/SUPPRESSION DE MATÉRIAU
     elif mode == 2:
+        nettoyer_ecran()
         print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
+        print("")
         interface()
         return True
         # print("Voici les matériaux actuels de la base de données")
@@ -136,7 +140,9 @@ def interface():
 
     # MODE AJOUT/SUPPRESSION DE FLUIDE
     elif mode == 3:
+        nettoyer_ecran()
         print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
+        print("")
         interface()
         return True
         # print("Voici les matériaux actuels de la base de données")

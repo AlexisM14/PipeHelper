@@ -38,13 +38,13 @@ def get_float_input(signe='all'):
             entree = input("--> ")
             # On essaie de le convertir en flottant, si ca ne marche pas, on va dans "except"
             value = float(entree)
-            if (value >= 0 and signe == '+') or (value < 0 and signe == '-') or signe == 'all':
+            if (value >= 0 and signe == '+') or (value <= 0 and signe == '-') or signe == 'all':
                 break
             else:
                 print("\n Entrée invalide, le signe du nombre entré n'est pas correct. Essayez à nouveau.")
         except ValueError:
             # Si l'entrée n'est pas un flottant, on obtient ValueError
-            print("\n Entrée invalide, elle doit être un entier. Essayez à nouveau.")
+            print("\n Entrée invalide, elle doit être un décimal. Essayez à nouveau.")
     return value
 
 
@@ -70,10 +70,10 @@ def get_int_input(signe='all'):
 
 # Définition de la fonction qui vérifie que l'entrée est une section valable
 def get_element_liste_input(liste):
-    mots_chaine = ''
-    for i in liste:
+    mots_chaine = liste[0]
+    for i in liste[1:]:
+        mots_chaine += ', '
         mots_chaine += (i)
-        mots_chaine += (' ')
     print(f"Veuillez choisir parmi : ")
     print(mots_chaine)
     value = input("--> ")
@@ -105,8 +105,9 @@ def get_init_cond_input():
     print("Quelle est la température initiale, en Kelvin ?")
     temperature = get_float_input()
 
-    print("Quelle est la pression initiale, en bar ?")
-    pression = get_float_input('+')
+    print("La pression initiale ne peut actuellement pas être ajustée, elle est fixée à "
+          "la pression atmosphérique : 1,018 en bar.")
+    pression = 1.018*10**5
 
     return vitesse, temperature, pression
 

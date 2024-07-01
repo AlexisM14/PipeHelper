@@ -5,9 +5,14 @@ import pandas as pd
 df_fluide = pd.read_excel('BDD_fluides.xlsx')
 
 
+def lister_fluides():
+    """Renvoie la liste des fluides de la base de données"""
+    return df_fluide['Nom fluide'].unique().tolist()
+
+
 def afficher_fluide():
     """Affiche les différents fluides de la base de données"""
-    liste_noms = df_fluide['Nom fluide'].unique().tolist()
+    liste_noms = lister_fluides()
     fluides = str(liste_noms[0])
     for i in liste_noms[1:]:
         fluides += ', '

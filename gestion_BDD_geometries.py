@@ -140,4 +140,4 @@ def recuperer_coeff_perte_charge_singuliere(geometrie, angle, diametre_entree, d
                     coef_suivant - coef_precedent)
 
     else:
-        print("Géométrie non trouvée")
+        return 0

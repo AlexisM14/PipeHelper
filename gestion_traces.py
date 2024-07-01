@@ -141,4 +141,4 @@ def tracer_coude():
     plt.show()
 
 
-tracer_canal()
+tracer_coude()
