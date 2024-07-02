@@ -5,3 +5,6 @@ Proposer de verifier la géométrie du problème sinon modifier troncon par tron
 Prévoir un cas ou le diametre de la canalisation est constante
 
 Prévoir un cas ou le matériau de la canalisation est identique
+
+Il faut prendre en compte les cas ou le flux vient de droite et du haut
+=> création de 4 nouveaux coude : HD, HG et GH, GB. En fonction de x+, x-, y+, y- on trace HD, HG, BD, BG, GH, GB, DH ou DD

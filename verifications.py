@@ -1,5 +1,5 @@
 """Ce script permet de définir les fonctions qui vont vérifier la validité des données entrées par l'utilisateur"""
-
+from gestion_BDD_fluides import *
 
 # Définition de la procédure nettoyer_écran
 def nettoyer_ecran():
@@ -98,12 +98,17 @@ def get_choix_mode():
     return int(value)
 
 
-def get_init_cond_input():
+def get_init_cond_input(fluide):
+    liste_temperature = recuperer_liste_temperature(fluide)
     print("Quelle est la vitesse initiale, en m/s ?")
     vitesse = get_float_input('+')
 
     print("Quelle est la température initiale, en °C ?")
     temperature = get_float_input()
+    while temperature < min(liste_temperature) or temperature > max(liste_temperature):
+        print(f"La température initiale doit être comprise entre {min(liste_temperature)} °C et {max(liste_temperature)} °C ")
+        print(f"La température initiale actuelle vaut {temperature} °C, veuillez la modifier.")
+        temperature = get_float_input('+')
 
     print("La pression initiale ne peut actuellement pas être ajustée, elle est fixée à "
           "la pression atmosphérique : 1,018 en bar.")
