@@ -102,7 +102,7 @@ def get_init_cond_input():
     print("Quelle est la vitesse initiale, en m/s ?")
     vitesse = get_float_input('+')
 
-    print("Quelle est la température initiale, en Kelvin ?")
+    print("Quelle est la température initiale, en °C ?")
     temperature = get_float_input()
 
     print("La pression initiale ne peut actuellement pas être ajustée, elle est fixée à "

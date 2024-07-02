@@ -1,4 +1,3 @@
-from verifications import *
 import pandas as pd
 
 # On enregistre la base de données dans df

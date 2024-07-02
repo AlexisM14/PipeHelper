@@ -1,5 +1,6 @@
 """Ce script définit toutes les classes qui seront utiles au programme"""
 from calculs import *
+from gestion_BDD_geometries import *
 
 
 class Troncon:
@@ -37,7 +38,7 @@ class Troncon:
     def calculer_delta_pression_reguliere_troncon(self):
         return calculer_perte_reguliere(self.longueur, self.diametre, self.vitesse_init, self.viscosite_cine, self.rugosite, self.densite, self.pression_init)
 
-    def calculer_delta_pression_singuliere_troncon(self):
+    def calculer_coef_singuliere_troncon(self):
         if self.geometrie[:-2] == 'coude':
             geometrie = 'coude'
 
@@ -49,8 +50,10 @@ class Troncon:
 
         else:
             geometrie = self.geometrie
+        return recuperer_coeff_perte_charge_singuliere(geometrie, self.angle, self.diametre, self.diametre, self.courbure)
 
-        coef = recuperer_coeff_perte_charge_singuliere(geometrie, self.angle, self.diametre, self.diametre, self.courbure)
+    def calculer_delta_pression_singuliere_troncon(self):
+        coef = self.calculer_coef_singuliere_troncon()
         return calculer_perte_singuliere(coef, self.densite, self.vitesse_init)
 
     def recuperer_longueur(self):
@@ -101,14 +104,19 @@ class Canalisation(Troncon):
     # Méthode constructeur
     def __init__(self):
         self.liste_troncons = []
-        self.len = 0
+        self.longueur = 0
 
     def recupere_nbre_troncons(self):
-        return self.len
+        return self.longueur
+
+    def renvoyer_troncon(self, idx):
+        if idx < self.longueur:
+            return self.liste_troncons[idx]
+        return "idx trop grand"
 
     def ajouter_troncon(self, troncon):
         self.liste_troncons.append(troncon)
-        self.len += 1
+        self.longueur += 1
 
     def renvoyer_liste_longueur(self):
         liste = []

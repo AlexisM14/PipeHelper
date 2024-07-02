@@ -1,3 +1,7 @@
 Si le matériau ou le fluide n'existe pas, proposer de l'ajouter ?
 
-Il faut faire des fonctions dans les classes qui permettent de sortir les longueurs, sections etc... pour chaque troncon
+Proposer de verifier la géométrie du problème sinon modifier troncon par troncon
+
+Prévoir un cas ou le diametre de la canalisation est constante
+
+Prévoir un cas ou le matériau de la canalisation est identique

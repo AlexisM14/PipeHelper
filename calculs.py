@@ -2,6 +2,8 @@ import numpy as np
 from verifications import *
 from gestion_BDD_fluides import *
 from gestion_BDD_materiaux import *
+from gestion_BDD_geometries import *
+
 
 g = 9.81
 
@@ -75,8 +77,9 @@ def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree)
 def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse_init):
     return coef_perte_signuliere * densite * vitesse_init**2 / 2
 
-def calculer_vitesse_troncon():
-    return True
+
+def calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere):
+    return np.sqrt(2 * (pression_entree - pression_sortie - delta_reguliere) / (densite * (1 + coef_singuliere)) + vitesse_entree**2 / (1 + coef_singuliere))
 
 
 def calculer_vitesse():

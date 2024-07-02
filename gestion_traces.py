@@ -42,78 +42,7 @@ def calculer_coordonnees_coude(x_debut, y_debut, longueur, angle_deg, orientatio
     return x, y
 
 
-def calculer_coordonnees_guideV1(canalisation):
-    # liste_longueur = canalisation.renvoyer_longueur()
-    # liste_forme = canalisation.renvoyer_forme_troncon()
-    # liste_angle = canalisation.renvoyer_angle_troncon()
-
-    # Version ndarrays
-    liste_longueur = np.array([])
-    liste_forme = np.array([])
-    liste_angle = np.array([])
-    for i in range(len(canalisation)):
-        liste_longueur = np.append(liste_longueur, float(canalisation[i][0]))
-        liste_forme = np.append(liste_forme, canalisation[i][4])
-        liste_angle = np.append(liste_angle, float(canalisation[i][5]))
-
-    print(liste_longueur)
-    longueur_canalisation = np.sum(liste_longueur)
-
-    x_guide = np.array([])
-    x_guide = np.append(x_guide, 0)
-
-    y_guide = np.array([])
-    y_guide = np.append(y_guide, 0)
-
-    for idx, i in enumerate(liste_forme):
-        x_debut_troncon = x_guide[-1]
-        y_debut_troncon = y_guide[-1]
-
-        longueur_troncon = liste_longueur[idx]
-
-        angle_troncon = liste_angle[idx]
-
-        if i == 'droit':
-            if idx > 0:
-                if liste_forme[idx-1][-1] == 'D':
-                    for j in range(len(liste_longueur)):
-                        x_guide = np.append(x_guide, x_debut_troncon +  liste_longueur[j])
-                        y_guide = np.append(y_guide, y_debut_troncon)
-
-                elif liste_forme[idx-1][-1] == 'G':
-                    for j in range(len(liste_longueur)):
-                        x_guide = np.append(x_guide, x_debut_troncon -  liste_longueur[j])
-                        y_guide = np.append(y_guide, y_debut_troncon)
-
-                elif liste_forme[idx-1][-1] == 'B':
-                    for j in range(len(liste_longueur)):
-                        x_guide = np.append(x_guide, x_debut_troncon)
-                        y_guide = np.append(y_guide, y_debut_troncon - liste_longueur[j])
-
-                elif liste_forme[idx-1][-1] == 'H':
-                    for j in range(len(liste_longueur)):
-                        x_guide = np.append(x_guide, x_debut_troncon)
-                        y_guide = np.append(y_guide, y_debut_troncon +  liste_longueur[j])
-            else:
-                for j in range(len(liste_longueur)):
-                    x_guide = np.append(x_guide, x_debut_troncon)
-                    y_guide = np.append(y_guide, y_debut_troncon + liste_longueur[j])
-
-        elif i == 'coude D' or i == 'coude G' or i == 'coude B' or i == 'coude H':
-            x, y = calculer_coordonnees_coude(x_guide[-1], y_guide[-1], float(liste_longueur[idx]),
-                                              float(liste_angle[idx]), i)
-            # print(x,y)
-            for j in range(len(x)):
-                x_guide = np.append(x_guide, x[j])
-                y_guide = np.append(y_guide, y[j])
-
-        else:
-            a = 1
-
-    return x_guide, y_guide
-
-
-def calculer_coordonnees_gudie_V2(canalisation, x_debut, y_debut, direction='y+'):
+def calculer_coordonnees_guide_v2(canalisation, x_debut, y_debut, direction='y+'):
 
     liste_longueur = canalisation.renvoyer_liste_longueur()
     liste_geometrie = canalisation.renvoyer_liste_geometrie()
@@ -125,7 +54,7 @@ def calculer_coordonnees_gudie_V2(canalisation, x_debut, y_debut, direction='y+'
     liste_directions = ['y+', 'x+', 'y-', 'x-']
 
     for i in range(nbre_troncons):
-        nbre_points = liste_longueur[i] * 100
+        nbre_points = int(liste_longueur[i] * 100)
         increment = liste_longueur[i] / nbre_points
 
         if liste_geometrie[i] == 'droit':
@@ -167,13 +96,32 @@ def calculer_coordonnees_gudie_V2(canalisation, x_debut, y_debut, direction='y+'
 
     return x,y
 
+
 def tracer_canalisations(canalisation):
-    x_guide, y_guide = calculer_coordonnees_guideV1(canalisation)
+    x_guide, y_guide = calculer_coordonnees_guide_v2(canalisation,0,0)
     # print(x_guide, y_guide)
     plt.plot(x_guide,y_guide)
+    plt.axis('equal')
     plt.show()
 
 
+def tracer_pression_1d(liste_pression, liste_longueur):
+    plt.plot(liste_longueur, liste_pression)
+    plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+    plt.xlabel("Longueur en m")
+    plt.ylabel("Pression en Pa")
+    plt.show()
+
+
+def tracer_vitesse_1d(liste_vitesse, liste_longueur):
+    plt.plot(liste_longueur, liste_vitesse)
+    plt.title("Évolution de la vitesse le long de la canalisation, en longueur linéaire")
+    plt.xlabel("Longueur en m")
+    plt.ylabel("Vitesse en m/s")
+    plt.show()
+
+
+# Fonction test pour tracer une canalisation
 def tracer_canal():
     troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 180, .1, 'Eau', 2, 1.018*10**5, 20)
     troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D', 90, .1, 'Eau', 2, 1.018*10**5, 20)
@@ -189,13 +137,7 @@ def tracer_canal():
     canal.ajouter_troncon(troncon4)
     canal.ajouter_troncon(troncon5)
 
-    x,y = calculer_coordonnees_gudie_V2(canal,0,0)
-
-    plt.plot(x,y)
-    axes = plt.gca()
-    axes.set_xlim(-1,10)
-    axes.set_ylim(-1,10)
-    plt.show()
+    tracer_canalisations(canal)
 
 
 def tracer_coude():
@@ -210,4 +152,10 @@ def tracer_coude():
     plt.show()
 
 
-tracer_canal()
+liste_longueur1 = [0, 2, 3, 7, 10]
+liste_pression1 = [1.018, 1.013, 1.004, 0.998, 0.9]
+liste_vitesse1 = [5, 4, 4.5, 4.2, 3]
+
+# tracer_pression_1d(liste_pression1, liste_longueur1)
+# tracer_vitesse_1d(liste_vitesse1, liste_longueur1)
+
