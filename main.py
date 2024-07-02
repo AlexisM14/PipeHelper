@@ -8,6 +8,16 @@ from gestion_BDD_materiaux import *
 from gestion_BDD_geometries import *
 from gestion_traces import *
 
+liste_o_n = ['oui', 'non']
+# Pour l'instant, on fait que section rondes
+liste_sections = ['rond']
+liste_materiaux = lister_les_materiaux()
+liste_geometrie_angle = ['coude D', 'coude B', 'coude G', 'coude H']
+liste_geometries = ['droit'] + liste_geometrie_angle
+liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
+rapport_rayon_diam_min = min(liste_rap_coude)
+rapport_rayon_diam_max = max(liste_rap_coude)
+
 
 def interface():
 
@@ -224,6 +234,153 @@ def interface():
         #     supprimer_fluides()
 
 
+def choisir_materiaux_canalisation(nbre, choix):
+    liste = np.array([])
+    if choix == 'non':
+        for i in range(nbre):
+            print(f"\n Quel est le matériau du tronçon {i} ? Les matériaux possibles sont :")
+            afficher_materiaux()
+            choix_numeros_materiau = get_element_liste_input([str(i) for i in range(len(liste_materiaux))])
+            materiau = liste_materiaux[int(choix_numeros_materiau)]
+            liste = np.append(liste, materiau)
+    else:
+        print(f"\n Quel est le matériau de la canalisation ? Les matériaux possibles sont :")
+        afficher_materiaux()
+        choix_numeros_materiau = get_element_liste_input([str(a) for a in range(len(liste_materiaux))])
+        materiau = liste_materiaux[int(choix_numeros_materiau)]
+        for kl in range(nbre):
+            liste = np.append(liste, materiau)
+    return liste
+
+
+def choisir_rugosite_canalisation(nbre, choix_rugo, choix_mat, liste_mat):
+    liste = []
+    # Si la rugosité varie
+    if choix_rugo == 'non':
+        for j in range(nbre):
+            print(f"Connaissez-vous la rugosité du tronçon {j} ?")
+            choix_connaitre_rugosite = get_element_liste_input(liste_o_n)
+            if choix_connaitre_rugosite == 'oui':
+                print(f"\n Quelle est la rugosité du tronçon {j} en m ? Si aucune rugosité, entrez 0.")
+                rugosite = get_float_input('+')
+                liste = np.append(liste, rugosite)
+            else:
+                print("La rugosité choisie sera alors celle de la base de données.")
+                rugosite = recuperer_rugosite(liste_mat[j]) * 10 ** (-3)
+                print(f"Elle vaut {rugosite} m.")
+                liste = np.append(liste, rugosite)
+    # Si la rugosité est constante
+    else:
+        # Si le matériau est identique
+        if choix_mat == 'oui':
+            print(f"Connaissez-vous la rugosité de la canalisation ?")
+            choix_connaitre_rugosite = get_element_liste_input(liste_o_n)
+            # Si la rugosité est connue
+            if choix_connaitre_rugosite == 'oui':
+                print(f"\n Quelle est la rugosité de la canalisation en m ? Si aucune rugosité, entrez 0.")
+                rugosite = get_float_input('+')
+            else:
+                print("La rugosité choisie sera alors celle de la base de données.")
+                rugosite = recuperer_rugosite(liste_mat[0]) * 10 ** (-3)
+                print(f"Elle vaut {rugosite} m.")
+        else:
+            print(f"\n Quelle est la rugosité de la canalisation en m ? Si aucune rugosité, entrez 0.")
+            rugosite = get_float_input('+')
+
+        for lsp in range(nbre):
+            liste = np.append(liste, rugosite)
+    return liste
+
+
+def choisir_geometrie_canalisation(nbre):
+    liste = []
+    for i in range(nbre):
+        print(f"\n Quelle est la géométrie du tronçon {i} ?")
+        print("'coude D' et 'coude G' correspondent respectivement à un coude qui part vers "
+              "la droite et la gauche. \n De mâme, 'coude H' et 'coude B' correspondent respectivement à un "
+              "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
+              "initiale du fluide. ")
+        geometrie = get_element_liste_input(liste_geometries)
+
+        # Verification de la possibilité de la configuration
+        if i > 0:
+
+            if geometrie in liste_geometrie_angle:
+                coude_precedent = liste[0]
+                for j in liste:
+                    if j in liste_geometrie_angle:
+                        coude_precedent = j
+
+                # configurations impossibles
+                if coude_precedent == 'coude H':
+                    while geometrie == 'coude B':
+                        print("Cette configuration n'est pas possible :")
+                        print(f"{coude_precedent} ne peut être suivie de {geometrie}")
+                        print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
+                        geometrie = get_element_liste_input(liste_geometries)
+                elif coude_precedent == 'coude D':
+                    while geometrie == 'coude G':
+                        print("Cette configuration n'est pas possible :")
+                        print(f"{coude_precedent} ne peut être suivie de {geometrie}")
+                        print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
+                        geometrie = get_element_liste_input(liste_geometries)
+                elif coude_precedent == 'coude B':
+                    while geometrie == 'coude H':
+                        print("Cette configuration n'est pas possible :")
+                        print(f"{coude_precedent} ne peut être suivie de {geometrie}")
+                        print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
+                        geometrie = get_element_liste_input(liste_geometries)
+                elif coude_precedent == 'coude G':
+                    while geometrie == 'coude D':
+                        print("Cette configuration n'est pas possible :")
+                        print(f"{coude_precedent} ne peut être suivie de {geometrie}")
+                        print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
+                        geometrie = get_element_liste_input(liste_geometries)
+                coude_precedent = geometrie
+        liste = np.append(liste, geometrie)
+    return liste
+
+
+def choisir_longueur_canalisation(nbre, liste_geo):
+    liste_long = []
+    liste_rayon = []
+    for i in range(nbre):
+        geometrie = liste_geo[i]
+        if geometrie in liste_geometrie_angle:
+            print(f"\n Quel est le rayon de courbure du coude du tronçon {i} en m ?")
+            rayon = get_float_input('+')
+            liste_long = np.append(liste_long, np.pi*rayon/2)
+            liste_rayon = np.append(liste_rayon, rayon)
+        else:
+            print(f"\n Quelle est la longueur du tronçon {i} en m ?")
+            longueur = get_float_input('+')
+            liste_long = np.append(liste_long, longueur)
+            liste_rayon = np.append(liste_rayon, 0)
+    return liste_long, liste_rayon
+
+
+def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste_rayon):
+    liste = []
+    # Vérification du rapport rayon de courbure / diametre
+    for i in range(nbre):
+        geometrie = liste_geo[i]
+        if geometrie in liste_geometrie_angle:
+            rayon_courbure = liste_rayon[i]
+            diametre = liste_diam[i]
+            rapport = rayon_courbure / diametre
+            while rapport > rapport_rayon_diam_max or rapport < rapport_rayon_diam_min:
+                print(f"\n La base de données ne peut calculer les pertes de charges que pour des rapports rayon de "
+                      f"courbure sur diamètre compris entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
+                print(f"Le rapport actuel vaut {rapport}.")
+                print(f"Veuillez modifier le rayon de courbure du coude du tronçon {i}, il vaut actuellement {rayon_courbure}.")
+                print(f"\n Quel est le rayon du tronçon {i} en m ?")
+                rayon_courbure = get_float_input('+')
+                rapport = rayon_courbure / diametre
+                liste_long[i] = np.pi*rayon_courbure/2
+
+    return liste_rayon, liste_long
+
+
 def interface2():
     liste_o_n = ['oui','non']
     # Affichage du principe du script
@@ -251,12 +408,6 @@ def interface2():
         print("\n Combien de tronçons composent la géométrie des canalisations du problème ?")
         nbre_troncons = get_int_input('+')
 
-        # Pour l'instant on fait que section rondes
-        liste_sections = ['rond']
-        liste_materiaux = lister_les_materiaux()
-        liste_geometrie_angle = ['coude D', 'coude B', 'coude G', 'coude H']
-        liste_geometries = ['droit'] + liste_geometrie_angle
-
         print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
         vitesse_init, temperature_init, pression_init = get_init_cond_input(fluide)
         liste_pression = [pression_init]
@@ -268,170 +419,46 @@ def interface2():
         # Choix matériau
         print("\n Le matériau est-il le même dans toute la canalisation ?")
         choix_materiau = get_element_liste_input(liste_o_n)
-        liste_materiaux_canalisation = []
-        if choix_materiau == 'non':
-            for i in range(nbre_troncons):
-                print(f"\n Quel est le matériau du tronçon {i} ? Les matériaux possibles sont :")
-                afficher_materiaux()
-                choix_numeros_materiau = get_element_liste_input([str(i) for i in range(len(liste_materiaux))])
-                materiau = liste_materiaux[int(choix_numeros_materiau)]
-                liste_materiaux_canalisation = np.append(liste_materiaux_canalisation, materiau)
-        else:
-            print(f"\n Quel est le matériau de la canalisation ? Les matériaux possibles sont :")
-            afficher_materiaux()
-            choix_numeros_materiau = get_element_liste_input([str(i) for i in range(len(liste_materiaux))])
-            materiau = liste_materiaux[int(choix_numeros_materiau)]
-            for i in range(nbre_troncons):
-                liste_materiaux_canalisation = np.append(liste_materiaux_canalisation, materiau)
+        liste_materiau_canalisation = choisir_materiaux_canalisation(nbre_troncons, choix_materiau)
 
         # Choix rugosité
         print("")
         print("\n La rugosité est-elle la même dans toute la canalisation ?")
         choix_rugosite = get_element_liste_input(liste_o_n)
-        liste_rugosite_canalisation = []
-        if choix_rugosite == 'non':
-            for i in range(nbre_troncons):
-                print(f"Connaissez-vous la rugosité du tronçon {i} ?")
-                choix_connaitre_rugosite = get_element_liste_input(liste_o_n)
-                if choix_connaitre_rugosite == 'oui':
-                    print(f"\n Quelle est la rugosité du tronçon {i} en m ? Si aucune rugosité, entrez 0.")
-                    rugosite = get_float_input('+')
-                    liste_rugosite_canalisation = np.append(liste_rugosite_canalisation, rugosite)
-                else:
-                    print("La rugosité choisie sera alors celle de la base de données.")
-                    rugosite = recuperer_rugosite(liste_materiaux_canalisation[i])*10**(-3)
-                    print(f"Elle vaut {rugosite} m.")
-                    liste_rugosite_canalisation = np.append(liste_rugosite_canalisation, rugosite)
-
-        else:
-            if choix_materiau == 'oui':
-                print(f"Connaissez-vous la rugosité de la canalisation ?")
-                choix_connaitre_rugosite = get_element_liste_input(liste_o_n)
-                if choix_connaitre_rugosite == 'oui':
-                    print(f"\n Quelle est la rugosité du tronçon {i} en m ? Si aucune rugosité, entrez 0.")
-                    rugosite = get_float_input('+')
-                else:
-                    print("La rugosité choisie sera alors celle de la base de données.")
-                    rugosite = recuperer_rugosite(liste_materiaux_canalisation[i]) * 10 ** (-3)
-                    print(f"Elle vaut {rugosite} m.")
-            else:
-                print(f"\n Quelle est la rugosité de la canalisation en m ? Si aucune rugosité, entrez 0.")
-                rugosite = get_float_input('+')
-
-            for i in range(nbre_troncons):
-                liste_rugosite_canalisation = np.append(liste_rugosite_canalisation, rugosite)
+        liste_rugosite_canalisation = choisir_rugosite_canalisation(nbre_troncons, choix_rugosite, choix_materiau, liste_materiau_canalisation)
 
         # Choix forme section
         print("\n Quelle est la forme de la section de la canalisation ?")
         forme_section = get_element_liste_input(liste_sections)
+        liste_forme_canalisation = [forme_section]*nbre_troncons
 
         # Choix diamètre
-        print("\n Le diamètre de la canalisation est-il constant ?")
-        choix_diametre = get_element_liste_input(liste_o_n)
-        liste_diametre_canalisation = []
-        diametre = 1
-        if choix_diametre == 'non':
-            for i in range(nbre_troncons):
-                print(f"\n Quel est le diamètre du tronçon {i} en m ?")
-                diametre = get_float_input('+')
-                liste_diametre_canalisation = np.append(liste_materiaux_canalisation, diametre)
-        else:
-            print(f"\n Quel est le diamètre de la canalisation en m ?")
-            diametre = get_float_input('+')
-            for i in range(nbre_troncons):
-                liste_diametre_canalisation = np.append(liste_diametre_canalisation, diametre)
-
-        # Choix longueur de chaque tronçon
-        liste_longueur_canalisation = []
-        for i in range(nbre_troncons):
-            print(f"\n Quelle est la longueur du tronçon {i} en m ?")
-            longueur = get_float_input('+')
-            liste_longueur_canalisation = np.append(liste_longueur_canalisation, longueur)
+        print("\n Qule est le diamètre de la section de la canalisation en m?")
+        diametre = get_float_input('+')
+        liste_diametre_canalisation = [diametre]*nbre_troncons
 
         # Choix geometrie et angle du tronçon
-        liste_geometrie_canalisation = []
-        liste_rayon_courbure_canalisation = []
-        liste_angle_canalisation = []
+        liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)
 
-        liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
-        rapport_rayon_diam_min = min(liste_rap_coude)
-        rapport_rayon_diam_max = max(liste_rap_coude)
-
-        for i in range(nbre_troncons):
-            print(f"\n Quelle est la géométrie du tronçon {i} ?")
-            print("'coude D' et 'coude G' correspondent respectivement à un coude qui part vers "
-                  "la droite et la gauche. \n De mâme, 'coude H' et 'coude B' correspondent respectivement à un "
-                  "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
-                  "initiale du fluide. ")
-            geometrie = get_element_liste_input(liste_geometries)
-
-            # Verification de la possibilité de la configuration
-            if i > 0:
-
-                if geometrie in liste_geometrie_angle:
-                    # Si avant ce coude il n'y a que des formes droites, alors il s'agit du premier coude
-                    compteur_droit = 0
-                    coude_precedent = ''
-                    for j in range(i - 1):
-                        if geometrie == 'droit':
-                            compteur_droit += 1
-                    if compteur_droit == i - 1:
-                        coude_precedent = geometrie
-
-                    # configurations impossibles
-                    if coude_precedent == 'coude H' or coude_precedent == 'coude B':
-                        while geometrie == 'coude H' or geometrie == 'coude B':
-                            print("Cette configuration n'est pas possible :")
-                            print(f"{coude_precedent} ne peut être suivie de {geometrie}")
-                            print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
-                            geometrie = get_element_liste_input(liste_geometries)
-                    elif coude_precedent == 'coude D' or coude_precedent == 'coude G':
-                        while geometrie == 'coude D' or geometrie == 'coude G':
-                            print("Cette configuration n'est pas possible :")
-                            print(f"{coude_precedent} ne peut être suivie de {geometrie}")
-                            print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
-                            geometrie = get_element_liste_input(liste_geometries)
-                    coude_precedent = geometrie
-            liste_geometrie_canalisation = np.append(liste_geometrie_canalisation, geometrie)
+        # Choix longueur de chaque tronçon
+        liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)
 
 
-            # Choix de l'angle du coude
-            angle = 10
-            if geometrie in liste_geometrie_angle:
-                angle = 90
-            #     print(f"Quel est l'angle de {liste_geometrie_canalisation[i]} en ° ?")
-            #     angle = get_float_input('+')
-            #     liste_angle_canalisation = np.append(liste_angle_canalisation, angle)
-            liste_angle_canalisation = np.append(liste_angle_canalisation, angle)
+        liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
 
-            # Vérification du rapport rayon de courbure / diametre
-            rayon_courbure = 0
-            if geometrie in liste_geometrie_angle:
-                rayon_courbure = liste_longueur_canalisation[i] / np.deg2rad(liste_angle_canalisation[i])
-                rapport = rayon_courbure / diametre
-                while rapport > rapport_rayon_diam_max or rapport < rapport_rayon_diam_min:
-                    print(
-                        f"\n La base de données ne peut calculer les pertes de charges que pour des rapports rayon de courbure sur diamètre compirs entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
-                    print(f"Le rapport actuel vaut {rapport}.")
-                    print(f"Veuillez modifier la longueur du tronçon, elle vaut actuellement {liste_longueur_canalisation[i]}.")
-                    print(f"\n Quel est la longueur du {geometrie} du tronçon {i} en m ?")
-                    longueur = get_float_input('+')
-                    rayon_courbure = longueur / np.deg2rad(angle)
-                    rapport = rayon_courbure / diametre
-
-            liste_rayon_courbure_canalisation = np.append(liste_rayon_courbure_canalisation, rayon_courbure)
-            liste_geometrie_canalisation = np.append(liste_geometrie_canalisation, geometrie)
+        print(liste_longueur_canalisation)
+        print(diametre)
+        print(liste_geometrie_canalisation)
 
         # Enregistrement des tronçons et de la canalisation
         for i in range(nbre_troncons):
             longueur = liste_longueur_canalisation[i]
-            section = forme_section
+            section = liste_forme_canalisation[i]
             diametre = liste_diametre_canalisation[i]
-            materiau = liste_materiaux_canalisation[i]
+            materiau = liste_materiau_canalisation[i]
             rugosite = liste_rugosite_canalisation[i]
             geometrie = liste_geometrie_canalisation[i]
-            angle = liste_angle_canalisation[i]
-            rayon_courbure = liste_rayon_courbure_canalisation[i]
+            rayon_courbure = liste_rayon_canalisation[i]
 
             if i == 0:
                 vitesse_entree = vitesse_init
@@ -442,69 +469,70 @@ def interface2():
                 pression_entree = 0
                 temperature_entree = 0
 
-            troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, angle, rayon_courbure,
+            troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, rayon_courbure,
                               fluide, vitesse_entree, pression_entree, temperature_entree)
             canalisation.ajouter_troncon(troncon)
 
-        print(canalisation.renvoyer_liste_longueur())
-        print(canalisation.renvoyer_liste_longueur())
+        # Affichage de la géométrie des canalisations
+        print("La géométrie de votre problème est-elle bien la suivante ?")
+        tracer_canalisations(canalisation)
+        confirmation_geometrie = get_element_liste_input(['oui', 'non'])
+        if confirmation_geometrie == 'non':
+            print("Il n'est pas disponible de modifier la géométrie du problème pour l'instant")
+            print("voulez-vous recommencer depuis le début ? ")
+            choix_recommencer = get_element_liste_input(['oui', 'non'])
+            if choix_recommencer == 'oui':
+                interface()
+                return True
 
-        # # Affichage de la géométrie des canalisations
-        # print("La géométrie de votre problème est-elle bien la suivante ?")
-        # tracer_canalisations(canalisation)
-        # confirmation_geometrie = get_element_liste_input(['oui', 'non'])
-        # if confirmation_geometrie == 'non':
-        #     print("Il n'est pas disponible de modifier la géométrie du problème pour l'instant")
-        #     print("voulez-vous recommencer depuis le début ? ")
-        #     choix_recommencer = get_element_liste_input(['oui', 'non'])
-        #     if choix_recommencer == 'oui':
-        #         interface()
-        #         return True
-        #
-        # # Phase de calculs
-        # print("...Début de la phase de calculs...")
-        # liste_longueur = [0] + canalisation.renvoyer_liste_longueur()
-        # longueur_totale = sum(liste_longueur)
-        # print(liste_longueur, longueur_totale)
-        # for i in range(nbre_troncons):
-        #     troncon = canalisation.renvoyer_troncon(i)
-        #     pression_entree = liste_pression[i]
-        #     print(troncon)
-        #     print(troncon.recuperer_longueur())
-        #
-        #     # Si la vitesse en entrée ou la pression en entrée est nulle alors elle restera nulle
-        #     # car aucune action de gravité
-        #     if pression_entree == 0 or liste_vitesse[-1]:
-        #         liste_pression = np.append(liste_pression, 0)
-        #         liste_vitesse = np.append(liste_vitesse, 0)
-        #     else:
-        #         # Calcul des pertes de charges et pression de sortie
-        #         delta_reguliere = troncon.calculer_delta_pression_reguliere_troncon()
-        #         delta_singuliere = troncon.calculer_delta_pression_singuliere_troncon()
-        #         delta_pression = delta_singuliere + delta_reguliere
-        #         pression_sortie = pression_entree - delta_pression
-        #
-        #         # Calcul de la vitesse de sortie
-        #         densite = troncon.recuperer_densite()
-        #         coef_singuliere = troncon.calculer_coef_singuliere_troncon()
-        #         vitesse_entree = liste_vitesse[-1]
-        #         vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie,
-        #                                                  delta_reguliere, densite, coef_singuliere)
-        #
-        #         # Si les pressions et vitesses calculées sont négatives alors on dit qu'elles sont nulles car
-        #         # elle ne peuvent pas devenir négative dans de telles conditions
-        #         if vitesse_sortie > 0:
-        #             liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
-        #         if pression_sortie > 0:
-        #             liste_pression = np.append(liste_pression, pression_sortie)
-        #         liste_pression = np.append(liste_pression, 0)
-        #         liste_vitesse = np.append(liste_vitesse, 0)
-        #
-        # # On trace la variation de pression et de vitesse
-        # print("Tracé de la pression")
-        # tracer_pression_1d(liste_pression, liste_longueur)
-        # print("Tracé de la vitesse")
-        # tracer_vitesse_1d(liste_vitesse, liste_longueur)
+        # Phase de calculs
+        print("...Début de la phase de calculs...")
+        liste_longueur = [0] + canalisation.renvoyer_liste_longueur()
+        longueur_totale = sum(liste_longueur)
+        print(liste_longueur, longueur_totale)
+
+        for i in range(nbre_troncons):
+            troncon = canalisation.renvoyer_troncon(i)
+            pression_entree = troncon.recuperer_pression()
+            vitesse_entree = troncon.recuperer_vitesse()
+            troncon.afficher()
+
+            # Si la vitesse en entrée ou la pression en entrée est nulle alors elle restera nulle
+            # car aucune action de gravité
+            if pression_entree == 0 or vitesse_entree:
+                liste_pression = np.append(liste_pression, 0)
+                liste_vitesse = np.append(liste_vitesse, 0)
+            else:
+                # Calcul des pertes de charges et pression de sortie
+                delta_reguliere = troncon.calculer_delta_pression_reguliere()
+                delta_singuliere = troncon.calculer_delta_pression_singuliere()
+                delta_pression = delta_singuliere + delta_reguliere
+                pression_sortie = pression_entree - delta_pression
+
+                # Calcul de la vitesse de sortie
+                densite = troncon.recuperer_densite()
+                coef_singuliere = troncon.calculer_coef_singuliere_troncon()
+                vitesse_entree = liste_vitesse[-1]
+                vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie,
+                                                         delta_reguliere, densite, coef_singuliere)
+
+                # Si les pressions et vitesses calculées sont négatives alors on dit qu'elles sont nulles car
+                # elle ne peuvent pas devenir négative dans de telles conditions
+                if vitesse_sortie > 0 and pression_sortie > 0:
+                    liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
+                    liste_pression = np.append(liste_pression, pression_sortie)
+                else:
+                    liste_pression = np.append(liste_pression, 0)
+                    liste_vitesse = np.append(liste_vitesse, 0)
+
+        # On trace la variation de pression et de vitesse
+        print("Tracé de la pression")
+        tracer_pression_1d(liste_pression, liste_longueur)
+        print("Tracé de la vitesse")
+        tracer_vitesse_1d(liste_vitesse, liste_longueur)
+        print(liste_pression)
+        print(liste_vitesse)
+        print(liste_longueur)
 
     # MODE AJOUT/SUPPRESSION DE MATÉRIAU
     elif mode == 2:
@@ -540,42 +568,4 @@ def interface2():
         # else:
         #     supprimer_fluides()
 
-# interface2()
-
-liste_geometrie_angle = ['coude D', 'coude B', 'coude G', 'coude H']
-liste_geometries = ['droit'] + liste_geometrie_angle
-liste_geometrie_canalisation = []
-
-liste_coude_canalisation = []
-
-for i in range(10):
-    print(f"\n Quelle est la géométrie du tronçon {i} ?")
-    print("'coude D' et 'coude G' correspondent respectivement à un coude qui part vers "
-          "la droite et la gauche. \n De mâme, 'coude H' et 'coude B' correspondent respectivement à un "
-          "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
-          "initiale du fluide. ")
-    geometrie = get_element_liste_input(liste_geometries)
-
-    # Verification de la possibilité de la configuration
-    if i > 0:
-
-        if geometrie in liste_geometrie_angle:
-            for j in reversed(liste_geometrie_canalisation):
-                if j[:-2] == 'coude':
-                    coude_precedent = j
-
-            # configurations impossibles
-            if coude_precedent == 'coude H' or coude_precedent == 'coude B':
-                while geometrie == 'coude H' or geometrie == 'coude B':
-                    print("Cette configuration n'est pas possible :")
-                    print(f"{coude_precedent} ne peut être suivie de {geometrie}")
-                    print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
-                    geometrie = get_element_liste_input(liste_geometries)
-            elif coude_precedent == 'coude D' or coude_precedent == 'coude G':
-                while geometrie == 'coude D' or geometrie == 'coude G':
-                    print("Cette configuration n'est pas possible :")
-                    print(f"{coude_precedent} ne peut être suivie de {geometrie}")
-                    print(f"\n Veuillez entrer à nouveau la géométrie du tronçon {i}.")
-                    geometrie = get_element_liste_input(liste_geometries)
-            coude_precedent = geometrie
-    liste_geometrie_canalisation = np.append(liste_geometrie_canalisation, geometrie)
+interface2()

@@ -2,9 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from classes import Troncon
 from classes import Canalisation
+from classes import ListeCirculaire
 
 # La direction x va de gauche à droite
 # La direction y va de haut en bas
+
+liste_directions = ListeCirculaire(['y+', 'x+', 'y-', 'x-'])
 
 
 def calculer_coordonnees_coude(x_debut, y_debut, longueur, angle_deg, orientation):
@@ -47,18 +50,20 @@ def calculer_coordonnees_guide_v2(canalisation, x_debut, y_debut, direction='y+'
     liste_longueur = canalisation.renvoyer_liste_longueur()
     liste_geometrie = canalisation.renvoyer_liste_geometrie()
     nbre_troncons = canalisation.recupere_nbre_troncons()
+    liste_rayon = canalisation.renvoyer_liste_courbure()
+    liste_nbre_pts = []
 
     x = np.array([x_debut])
     y = np.array([y_debut])
 
-    liste_directions = ['y+', 'x+', 'y-', 'x-']
-
     for i in range(nbre_troncons):
         nbre_points = int(liste_longueur[i] * 100)
+        liste_nbre_pts = np.append(liste_nbre_pts, nbre_points)
+
         increment = liste_longueur[i] / nbre_points
 
         if liste_geometrie[i] == 'droit':
-            if i>0 and liste_geometrie[i-1][:-2] == 'coude':
+            if i > 0 and liste_geometrie[i-1][:-2] == 'coude':
                 if liste_geometrie[i-1][-1] == 'D':
                     direction = 'x+'
                 elif liste_geometrie[i-1][-1] == 'G':
@@ -102,6 +107,7 @@ def tracer_canalisations(canalisation):
     # print(x_guide, y_guide)
     plt.plot(x_guide,y_guide)
     plt.axis('equal')
+    plt.grid()
     plt.show()
 
 
@@ -123,12 +129,12 @@ def tracer_vitesse_1d(liste_vitesse, liste_longueur):
 
 # Fonction test pour tracer une canalisation
 def tracer_canal():
-    troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 180, .1, 'Eau', 2, 1.018*10**5, 20)
-    troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D', 90, .1, 'Eau', 2, 1.018*10**5, 20)
-    troncon3 = Troncon(1, 'rond', .05, 'PVC', .002, 'droit', 180, .1, 'Eau', 2, 1.018*10**5, 20)
-    troncon4 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude H', 180, .1, 'Eau', 2, 1.018*10**5, 20)
-    troncon5 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude G', 180, .1, 'Eau', 2, 1.018*10**5, 20)
-    troncon6 = Troncon(1, 'rond', .05, 'PVC', .002, 'droit', 180, .1, 'Eau', 2, 1.018*10**5, 20)
+    troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 0, 'eau', 2, 1.018*10**5, 20)
+    troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',1,'eau', 2, 1.018*10**5, 20)
+    troncon3 = Troncon(1, 'rond', .05, 'PVC', .002, 'droit',  0, 'eau', 2, 1.018*10**5, 20)
+    troncon4 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude H',  2, 'eau', 2, 1.018*10**5, 20)
+    troncon5 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude G',  3, 'eau', 2, 1.018*10**5, 20)
+    troncon6 = Troncon(1, 'rond', .05, 'PVC', .002, 'droit',  .1, 'eau', 2, 1.018*10**5, 20)
 
     canal = Canalisation()
     canal.ajouter_troncon(troncon1)
@@ -136,6 +142,7 @@ def tracer_canal():
     canal.ajouter_troncon(troncon3)
     canal.ajouter_troncon(troncon4)
     canal.ajouter_troncon(troncon5)
+    canal.ajouter_troncon(troncon6)
 
     tracer_canalisations(canal)
 
@@ -159,3 +166,4 @@ liste_vitesse1 = [5, 4, 4.5, 4.2, 3]
 # tracer_pression_1d(liste_pression1, liste_longueur1)
 # tracer_vitesse_1d(liste_vitesse1, liste_longueur1)
 
+tracer_canal()

@@ -6,17 +6,13 @@ from gestion_BDD_geometries import *
 class Troncon:
 
     # Méthode constructeur
-    def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, angle, courbure, fluide, vitesse_init, pression_init, temperature_init):
-        self.liste_attributs = np.zeros(1)
-        # Les attributs doivent être enregistrés dans l'ordre : longueur, forme de la section, diamètre, rugosité,
-        # forme du tronçon, angle du troçon,
+    def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init):
         self.longueur = longueur
         self.section = section
         self.diametre = diametre
         self.materiau = materiau
         self.rugosite = rugosite
         self.geometrie = geometrie
-        self.angle = angle
         self.courbure = courbure
         self.fluide = fluide
         self.vitesse_init = vitesse_init
@@ -24,13 +20,6 @@ class Troncon:
         self.temperature_init = temperature_init
         self.viscosite_cine = recuperer_valeur_fluide(fluide, temperature_init, 'Viscosité cinématique')
         self.densite = recuperer_valeur_fluide(fluide, temperature_init, 'Masse volumique')
-
-    def ajouter_attribut(self, attribut):
-        if self.len == 0:
-            self.liste_attributs[0] = attribut
-        else:
-            np.append(self.liste_attributs, attribut)
-        self.len += 1
 
     def calculer_reynolds_troncon(self):
         return calculer_reynolds(self.vitesse_init, self.diametre, self.viscosite_cine)
@@ -50,7 +39,7 @@ class Troncon:
 
         else:
             geometrie = self.geometrie
-        return recuperer_coeff_perte_charge_singuliere(geometrie, self.angle, self.diametre, self.diametre, self.courbure)
+        return recuperer_coeff_perte_charge_singuliere(geometrie, 90, self.diametre, self.diametre, self.courbure)
 
     def calculer_delta_pression_singuliere_troncon(self):
         coef = self.calculer_coef_singuliere_troncon()
@@ -74,9 +63,6 @@ class Troncon:
     def recuperer_geometrie(self):
         return self.geometrie
 
-    def recuperer_angle(self):
-        return self.angle
-
     def recuperer_courbure(self):
         return self.courbure
 
@@ -98,6 +84,10 @@ class Troncon:
     def recuperer_densite(self):
         return self.densite
 
+    def afficher(self):
+        print(self.longueur, self.section, self.diametre, self.materiau, self.rugosite ,self.geometrie,
+              self.courbure, self.fluide, self.vitesse_init, self.pression_init, self.temperature_init,
+              self.viscosite_cine, self.densite)
 
 class Canalisation(Troncon):
 
@@ -154,12 +144,6 @@ class Canalisation(Troncon):
             liste.append(i.recuperer_geometrie())
         return liste
 
-    def renvoyer_liste_angle(self):
-        liste = []
-        for i in self.liste_troncons:
-            liste.append(i.recuperer_angle())
-        return liste
-
     def renvoyer_liste_courbure(self):
         liste = []
         for i in self.liste_troncons:
@@ -201,4 +185,24 @@ class Canalisation(Troncon):
         for i in self.liste_troncons:
             liste.append(i.recuperer_densite())
         return liste
+
+
+# Classe générée par ChatGPT à partir de la requête :
+# "Crée une classe de liste dont les index sont circulaire en langage python"
+class ListeCirculaire():
+
+    def __init__(self, data):
+        self.data = data
+
+    def __getitem__(self, index):
+        return self.data[index % len(self.data)]
+
+    def __setitem__(self, index, value):
+        self.data[index % len(self.data)] = value
+
+    def __len__(self):
+        return len(self.data)
+
+    def __repr__(self):
+        return repr(self.data)
 
