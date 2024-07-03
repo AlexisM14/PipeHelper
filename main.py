@@ -337,6 +337,7 @@ def interface():
         nettoyer_ecran()
         print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
         print("")
+
         interface()
         return True
         # print("Voici les matériaux actuels de la base de données")
