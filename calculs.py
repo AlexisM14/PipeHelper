@@ -13,7 +13,7 @@ def calculer_reynolds(vitesse, diametre, viscosite_cine):
     """Calcule le nombre de Reynolds"""
     # vitesse en m/s - diametre en m - viscorsite_cine en m2/s
     re = vitesse * diametre / viscosite_cine
-    print(f"Reynolds : {re}")
+    # print(f"Reynolds : {re}")
     return re
 
 
@@ -59,7 +59,7 @@ def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosi
     # pression_entree en Pa
     reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
     fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)
-    print(f"coef regu : {fd}")
+    # print(f"coef regu : {fd}")
     return fd * longueur * densite * vitesse**2 / (diametre * 2)
 
 

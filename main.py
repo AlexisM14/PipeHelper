@@ -166,6 +166,16 @@ def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste
     return liste_rayon, liste_long
 
 
+def trouver_emplacement_pompe(liste_pression, pression_min):
+    compteur = 0
+    pression_entree = liste_pression[compteur]
+    debit = liste_pression[compteur]
+    while compteur < len(liste_pression) - 1 and pression_entree > pression_min:
+        compteur += 1
+        pression_entree = liste_pression[compteur]
+    return compteur
+
+
 def interface():
     liste_o_n = ['oui','non']
     # Affichage du principe du script
@@ -280,7 +290,7 @@ def interface():
             return True
         else:
             print("Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?")
-            pression_min = get_float_between_input(0, pression_init)
+            pression_min = get_float_between_input(0, pression_init)*10**5
             print("Quelle est la puissance de votre pompe, en W ?")
             puissance_pompe = get_float_input('+')
             print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
@@ -292,22 +302,19 @@ def interface():
             for i in range(len(liste_abscisse_discrete)):
                 liste_debit_discrete = np.append(liste_debit_discrete, liste_vitesse_discrete[i]*np.pi*(diametre/2)**2)
 
-            compteur = 0
-            pression_entree = liste_pression_discrete[compteur]
-            debit = liste_debit_discrete[compteur]
-            while compteur < len(liste_pression_discrete) - 1 and pression_entree > pression_min:
-                compteur += 1
-                pression_entree = liste_pression_discrete[compteur]
-                debit = liste_debit_discrete[compteur]
+            # Tant que l'idx est pas à la fin on continue
+            idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression_discrete, pression_min)
 
-            if compteur == len(liste_pression_discrete):
+            if idx_emplacement_pompe == len(liste_pression_discrete):
                 print("Le système n'a pas besoin de pompe pour satisfaire les exigences.")
                 print("Vous quittez le programme.")
                 return True
             else:
+                debit = liste_debit_discrete[idx_emplacement_pompe]
+                pression_entree = liste_pression_discrete[idx_emplacement_pompe]
                 pression_sortie_pompe = calculer_pression_sortie_pompe(puissance_pompe, rendement, debit, pression_entree)
 
-                print(f"Il faut placer une pompe à {liste_abscisse_discrete[compteur]} m.")
+                print(f"Il faut placer une pompe à {liste_abscisse_discrete[idx_emplacement_pompe]} m.")
                 print(f"La pression en sortie sera de {pression_sortie_pompe/10**5} bar.")
                 print("Vous quittez le programme.")
                 return True

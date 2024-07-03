@@ -125,9 +125,9 @@ def get_init_cond_input(fluide, diametre):
     if choix_donnees == 'oui':
         print("Que vaut la pression initiale, en bar ?")
         pression = get_float_input('+')*10**5
-        print("que vaut la densité initiale, en kg/m3 ?")
+        print("Que vaut la densité initiale, en kg/m3 ?")
         densite = get_float_input('+')
-        print("que vaut la viscosité cinématique initiale, en m2/s ?")
+        print("Que vaut la viscosité cinématique initiale, en m2/s ?")
         viscosite_cine = get_float_input('+')
     else:
         print("La pression initiale est fixée à "

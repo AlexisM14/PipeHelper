@@ -212,10 +212,10 @@ class Canalisation(Troncon):
             coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, diametre, troncon.recuperer_courbure())
             delta_singuliere = calculer_perte_singuliere(coef_singuliere, densite, vitesse_entree)
             delta_pression = delta_singuliere + delta_reguliere
-            print(f"Sortie tronçon {i}")
-            print(f"Regu : {delta_reguliere}")
-            print(f"Singu : {delta_singuliere}")
-            print("")
+            # print(f"Sortie tronçon {i}")
+            # print(f"Regu : {delta_reguliere}")
+            # print(f"Singu : {delta_singuliere}")
+            # print("")
             pression_sortie = pression_entree - delta_pression
 
             vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere)
@@ -248,7 +248,7 @@ class Canalisation(Troncon):
     def tracer_pression_vitesse_1d(self):
         liste_pression, liste_vitesse, liste_temperature, liste_abscisse, liste_longueur = self.calculer_distrib_pression_vitesse()
 
-        print("...Tracé de la pression...")
+        # print("...Tracé de la pression...")
         plt.plot(liste_abscisse, liste_pression, label='Pression')
         # for i in range(len(liste_longueur)):
         #     plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
@@ -258,7 +258,7 @@ class Canalisation(Troncon):
         plt.legend()
         plt.show()
 
-        print("...Tracé de la vitesse...")
+        # print("...Tracé de la vitesse...")
         plt.plot(liste_abscisse, liste_vitesse, label='Vitesse')
         # for i in range(len(liste_longueur)):
         #     plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
