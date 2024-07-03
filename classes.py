@@ -250,8 +250,8 @@ class Canalisation(Troncon):
 
         print("...Tracé de la pression...")
         plt.plot(liste_abscisse, liste_pression, label='Pression')
-        for i in range(len(liste_longueur)):
-            plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
+        # for i in range(len(liste_longueur)):
+        #     plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
         plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
         plt.xlabel("Longueur linéaire en m")
         plt.ylabel("Pression en Pa")
@@ -260,8 +260,8 @@ class Canalisation(Troncon):
 
         print("...Tracé de la vitesse...")
         plt.plot(liste_abscisse, liste_vitesse, label='Vitesse')
-        for i in range(len(liste_longueur)):
-            plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
+        # for i in range(len(liste_longueur)):
+        #     plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
         plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
         plt.xlabel("Longueur linéaire en m")
         plt.ylabel("Vitesse en m/s")

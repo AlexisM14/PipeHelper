@@ -229,7 +229,6 @@ def interface():
         # Choix longueur de chaque tronçon
         liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)
 
-
         liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
 
         # Enregistrement des tronçons et de la canalisation
