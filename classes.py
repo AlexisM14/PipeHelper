@@ -185,24 +185,3 @@ class Canalisation(Troncon):
         for i in self.liste_troncons:
             liste.append(i.recuperer_densite())
         return liste
-
-
-# Classe générée par ChatGPT à partir de la requête :
-# "Crée une classe de liste dont les index sont circulaire en langage python"
-class ListeCirculaire():
-
-    def __init__(self, data):
-        self.data = data
-
-    def __getitem__(self, index):
-        return self.data[index % len(self.data)]
-
-    def __setitem__(self, index, value):
-        self.data[index % len(self.data)] = value
-
-    def __len__(self):
-        return len(self.data)
-
-    def __repr__(self):
-        return repr(self.data)
-
