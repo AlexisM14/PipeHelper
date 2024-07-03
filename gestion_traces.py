@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from classes import Troncon
 from classes import Canalisation
-from classes import ListeCirculaire
 
 # La direction x va de gauche à droite
 # La direction y va de haut en bas
