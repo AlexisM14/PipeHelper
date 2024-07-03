@@ -13,7 +13,7 @@ def calculer_reynolds(vitesse, diametre, viscosite_cine):
     """Calcule le nombre de Reynolds"""
     # vitesse en m/s - diametre en m - viscorsite_cine en m2/s
     re = vitesse * diametre / viscosite_cine
-    print(f"Raynolds : {re}")
+    print(f"Reynolds : {re}")
     return re
 
 
@@ -82,7 +82,7 @@ def calculer_perte_chgt_brusque_section(vitesse, section_entree, densite, sectio
 def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree):
     """Renvoie la différence de pression en sortie d'une pompe"""
     # puissance en W - debit en m3/s - pression_entree en Pa - rendement sans unité
-    return rendement * puissance/debit
+    return pression_entree + rendement * puissance/debit
 
 
 def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse_init):

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 class Troncon:
 
     # Méthode constructeur
-    def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init):
+    def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init, densite, viscosite_cine):
         self.longueur = longueur
         self.section = section
         self.diametre = diametre
@@ -21,8 +21,14 @@ class Troncon:
         self.vitesse_init = vitesse_init
         self.pression_init = pression_init
         self.temperature_init = temperature_init
-        self.viscosite_cine = recuperer_valeur_fluide(fluide, temperature_init, 'Viscosité cinématique')
-        self.densite = recuperer_valeur_fluide(fluide, temperature_init, 'Masse volumique')
+        if viscosite_cine == 0:
+            self.viscosite_cine = recuperer_valeur_fluide(fluide, temperature_init, 'Viscosité cinématique')
+        else:
+            self.viscosite_cine = viscosite_cine
+        if densite == 0:
+            self.densite = recuperer_valeur_fluide(fluide, temperature_init, 'Masse volumique')
+        else:
+            self.densite = densite
 
     def calculer_reynolds_troncon(self):
         return calculer_reynolds(self.vitesse_init, self.diametre, self.viscosite_cine)
@@ -156,6 +162,12 @@ class Canalisation(Troncon):
             liste.append(i.recuperer_geometrie())
         return liste
 
+    def renvoyer_liste_pression(self):
+        liste = []
+        for i in self.liste_troncons:
+            liste.append(i.recuperer_pression())
+        return liste
+
     def renvoyer_liste_courbure(self):
         liste = []
         for i in self.liste_troncons:
@@ -213,6 +225,9 @@ class Canalisation(Troncon):
             liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
             liste_temperature = np.append(liste_temperature, temperature_sortie)
             liste_abscisse = np.append(liste_abscisse, liste_abscisse[-1] + liste_longueur[i])
+            troncon.ajouter_pression(pression_sortie)
+            troncon.ajouter_vitesse(vitesse_sortie)
+            troncon.ajouter_temperature(temperature_sortie)
 
         liste_abscisse_discrete = []
         liste_pression_discrete =[]
@@ -223,12 +238,12 @@ class Canalisation(Troncon):
                 longueur = liste_longueur[i]
                 nbre_points = int(longueur*100)
 
-                liste_pression_discrete = np.append(liste_pression_discrete, np.linspace(liste_pression[0], liste_pression[i+1], nbre_points)[:-1])
-                liste_vitesse_discrete = np.append(liste_vitesse_discrete, np.linspace(liste_vitesse[0], liste_vitesse[i+1], nbre_points)[:-1])
-                liste_temperature_discrete = np.append(liste_temperature_discrete, np.linspace(liste_abscisse[0], liste_abscisse[i+1], nbre_points)[:-1])
-                liste_abscisse_discrete = np.append(liste_abscisse_discrete, np.linspace(liste_abscisse[0], liste_abscisse[i + 1], nbre_points)[:-1])
+                liste_pression_discrete = np.append(liste_pression_discrete, np.linspace(liste_pression[i], liste_pression[i+1], nbre_points)[:-1])
+                liste_vitesse_discrete = np.append(liste_vitesse_discrete, np.linspace(liste_vitesse[i], liste_vitesse[i+1], nbre_points)[:-1])
+                liste_temperature_discrete = np.append(liste_temperature_discrete, np.linspace(liste_abscisse[i], liste_abscisse[i+1], nbre_points)[:-1])
+                liste_abscisse_discrete = np.append(liste_abscisse_discrete, np.linspace(liste_abscisse[i], liste_abscisse[i + 1], nbre_points)[:-1])
 
-        return liste_pression, liste_vitesse, liste_temperature, liste_abscisse, liste_longueur
+        return liste_pression_discrete, liste_vitesse_discrete, liste_temperature_discrete, liste_abscisse_discrete, liste_longueur
 
     def tracer_pression_vitesse_1d(self):
         liste_pression, liste_vitesse, liste_temperature, liste_abscisse, liste_longueur = self.calculer_distrib_pression_vitesse()

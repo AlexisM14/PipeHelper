@@ -1,5 +1,6 @@
 """Ce script permet de définir les fonctions qui vont vérifier la validité des données entrées par l'utilisateur"""
 from gestion_BDD_fluides import *
+import numpy as np
 
 # Définition de la procédure nettoyer_écran
 def nettoyer_ecran():
@@ -98,10 +99,17 @@ def get_choix_mode():
     return int(value)
 
 
-def get_init_cond_input(fluide):
+def get_init_cond_input(fluide, diametre):
     liste_temperature = recuperer_liste_temperature(fluide)
-    print("Quelle est la vitesse initiale, en m/s ?")
-    vitesse = get_float_input('+')
+    print("Voulez-vous entrez la vitesse (m/s) ou le débit (m3/s) à l'entrée de la canalisation ?")
+    choix = get_element_liste_input(['vitesse','débit'])
+    if choix == 'débit':
+        print("Veuillez entrer le débit en m3/s")
+        debit = get_float_input('+')
+        vitesse = debit/(np.pi*(diametre/2)**2)
+    else:
+        print("Quelle est la vitesse initiale, en m/s ?")
+        vitesse = get_float_input('+')
 
     print("Quelle est la température initiale, en °C ?")
     temperature = get_float_input()
@@ -110,9 +118,35 @@ def get_init_cond_input(fluide):
         print(f"La température initiale actuelle vaut {temperature} °C, veuillez la modifier.")
         temperature = get_float_input('+')
 
-    print("La pression initiale ne peut actuellement pas être ajustée, elle est fixée à "
-          "la pression atmosphérique : 1,013 en bar.")
-    pression = 1.013*10**5
+    print("Le programme s'appuie sur une base de donnée pour effectuer ses calculs.")
+    print("Vous pouvez en faire abstraction et utiliser vos propres données.")
+    print("Connaissez-vous les paramètre de votre fluide : densité, viscosité cinématique, pression ?")
+    choix_donnees = get_element_liste_input(['oui','non'])
+    if choix_donnees == 'oui':
+        print("Que vaut la pression initiale, en bar ?")
+        pression = get_float_input('+')*10**5
+        print("que vaut la densité initiale, en kg/m3 ?")
+        densite = get_float_input('+')
+        print("que vaut la viscosité cinématique initiale, en m2/s ?")
+        viscosite_cine = get_float_input('+')
+    else:
+        print("La pression initiale est fixée à "
+              "la pression atmosphérique : 1,013 en bar.")
+        pression = 1.013*10**5
+        densite = 0
+        viscosite_cine = 0
 
-    return vitesse, temperature, pression
+    return vitesse, temperature, pression, densite, viscosite_cine
 
+def get_float_between_input(a,b):
+    while b < a:
+        print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")
+        print("a = ")
+        a = get_float_input()
+        print("b = ")
+        b = get_float_input()
+    nbre = get_float_input()
+    while nbre > b or nbre < a:
+        print("Le chiffre entré n'est pas dans l'intervalle, veuillez le saisir à nouveau.")
+        nbre = get_float_input()
+    return nbre

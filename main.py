@@ -7,6 +7,7 @@ from gestion_BDD_fluides import *
 from gestion_BDD_materiaux import *
 from gestion_BDD_geometries import *
 from gestion_traces import *
+from calculs import *
 
 liste_o_n = ['oui', 'non']
 # Pour l'instant, on fait que section rondes
@@ -192,12 +193,6 @@ def interface():
         print("\n Combien de tronçons composent la géométrie des canalisations du problème ?")
         nbre_troncons = get_int_input('+')
 
-        print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
-        vitesse_init, temperature_init, pression_init = get_init_cond_input(fluide)
-        liste_pression = [pression_init]
-        liste_vitesse = [vitesse_init]
-        liste_temperature = [temperature_init]
-
         canalisation = Canalisation()
 
         # Choix matériau
@@ -220,6 +215,13 @@ def interface():
         print("\n Quel est le diamètre de la section de la canalisation en m ?")
         diametre = get_float_input('+')
         liste_diametre_canalisation = [diametre]*nbre_troncons
+
+        # Conditions initiales
+        print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
+        vitesse_init, temperature_init, pression_init, densite_init, viscosite_init = get_init_cond_input(fluide, diametre)
+        liste_pression = [pression_init]
+        liste_vitesse = [vitesse_init]
+        liste_temperature = [temperature_init]
 
         # Choix geometrie et angle du tronçon
         liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)
@@ -250,7 +252,7 @@ def interface():
                 temperature_entree = 0
 
             troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, rayon_courbure,
-                              fluide, vitesse_entree, pression_entree, temperature_entree)
+                              fluide, vitesse_entree, pression_entree, temperature_entree, densite_init, viscosite_init)
             canalisation.ajouter_troncon(troncon)
 
         # Affichage de la géométrie des canalisations
@@ -269,6 +271,48 @@ def interface():
         print("...Début de la phase de calculs...")
         print("...Tracé de la pression...")
         canalisation.tracer_pression_vitesse_1d()
+
+        # Phase de placement pompe
+        print("")
+        print("Voulez-vous placer une pompe sur la canalisation ?")
+        choix_pompe = get_element_liste_input(liste_o_n)
+        if choix_pompe == 'non':
+            print("Vous quittez le programme.")
+            return True
+        else:
+            print("Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?")
+            pression_min = get_float_between_input(0, pression_init)
+            print("Quelle est la puissance de votre pompe, en W ?")
+            puissance_pompe = get_float_input('+')
+            print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
+            rendement = get_float_between_input(0, 1)
+
+            liste_pression_discrete, liste_vitesse_discrete, liste_temperature_discrete, liste_abscisse_discrete, liste_longueur = canalisation.calculer_distrib_pression_vitesse()
+            liste_debit_discrete = []
+
+            for i in range(len(liste_abscisse_discrete)):
+                liste_debit_discrete = np.append(liste_debit_discrete, liste_vitesse_discrete[i]*np.pi*(diametre/2)**2)
+
+            compteur = 0
+            pression_entree = liste_pression_discrete[compteur]
+            debit = liste_debit_discrete[compteur]
+            while compteur < len(liste_pression_discrete) - 1 and pression_entree > pression_min:
+                compteur += 1
+                pression_entree = liste_pression_discrete[compteur]
+                debit = liste_debit_discrete[compteur]
+
+            if compteur == len(liste_pression_discrete):
+                print("Le système n'a pas besoin de pompe pour satisfaire les exigences.")
+                print("Vous quittez le programme.")
+                return True
+            else:
+                pression_sortie_pompe = calculer_pression_sortie_pompe(puissance_pompe, rendement, debit, pression_entree)
+
+                print(f"Il faut placer une pompe à {liste_abscisse_discrete[compteur]} m.")
+                print(f"La pression en sortie sera de {pression_sortie_pompe/10**5} bar.")
+                print("Vous quittez le programme.")
+                return True
+
 
 
     # MODE AJOUT/SUPPRESSION DE MATÉRIAU
@@ -293,7 +337,7 @@ def interface():
         nettoyer_ecran()
         print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
         print("")
-        interface2()
+        interface()
         return True
         # print("Voici les matériaux actuels de la base de données")
         # afficher_fluide()
