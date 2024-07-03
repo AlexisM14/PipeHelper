@@ -1,6 +1,7 @@
 """Ce script définit toutes les classes qui seront utiles au programme"""
 from calculs import *
 from gestion_BDD_geometries import *
+import matplotlib.pyplot as plt
 
 
 class Troncon:
@@ -84,6 +85,15 @@ class Troncon:
     def recuperer_densite(self):
         return self.densite
 
+    def ajouter_vitesse(self, vitesse):
+        self.vitesse_init = vitesse
+
+    def ajouter_pression(self, pression):
+        self.pression_init = pression
+
+    def ajouter_temperature(self, temperature):
+        self.temperature_init = temperature
+
     def afficher(self):
         print(self.longueur, self.section, self.diametre, self.materiau, self.rugosite ,self.geometrie,
               self.courbure, self.fluide, self.vitesse_init, self.pression_init, self.temperature_init,
@@ -162,11 +172,64 @@ class Canalisation(Troncon):
             liste.append(i.recuperer_vitesse())
         return liste
 
-    def renvoyer_liste_pression(self):
-        liste = []
-        for i in self.liste_troncons:
-            liste.append(i.recuperer_pression())
-        return liste
+    def calculer_distrib_pression_vitesse(self):
+        liste_geometrie = self.renvoyer_liste_geometrie()
+        liste_longueur = self.renvoyer_liste_longueur()
+        troncon = self.renvoyer_troncon(0)
+        nbre_troncon = self.recupere_nbre_troncons()
+
+        densite = troncon.recuperer_densite()
+
+        liste_pression = [troncon.recuperer_pression()]
+        liste_vitesse = [troncon.recuperer_vitesse()]
+        liste_temperature = [troncon.recuperer_temperature()]
+        liste_abscisse = [0]
+
+        for i in range(0,nbre_troncon):
+            troncon = self.renvoyer_troncon(i)
+            pression_entree = liste_pression[-1]
+            vitesse_entree = liste_vitesse[-1]
+            temperature_entree = liste_temperature[-1]
+            longueur = liste_longueur[i]
+            diametre = troncon.recuperer_diametre()
+
+            # Calcul des pertes de charges et pression de sortie
+            delta_reguliere = calculer_perte_reguliere(longueur, diametre, vitesse_entree, troncon.recuperer_viscosite_cine(), troncon.recuperer_rugosite(), densite)
+            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i], 90, diametre, diametre, troncon.recuperer_courbure())
+            delta_singuliere = calculer_perte_singuliere(coef_singuliere, densite, vitesse_entree)
+            delta_pression = delta_singuliere + delta_reguliere
+            print(f"Regu : {delta_reguliere}")
+            print(f"Singu : {delta_singuliere}")
+            pression_sortie = pression_entree - delta_pression
+
+            vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere)
+            temperature_sortie = calculer_temperature_sortie(temperature_entree)
+
+            liste_abscisse = np.append(liste_abscisse, liste_abscisse[-1] + liste_longueur[i])
+            liste_pression = np.append(liste_pression, pression_sortie)
+            liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
+            liste_temperature = np.append(liste_temperature, temperature_sortie)
+        print(liste_pression)
+        print(liste_vitesse)
+        print(liste_abscisse)
+        return liste_pression, liste_vitesse, liste_temperature, liste_abscisse
+
+    def tracer_pression_vitesse_1d(self):
+        liste_pression, liste_vitesse, liste_temperature, liste_abscisse = self.calculer_distrib_pression_vitesse()
+
+        print("...Tracé de la pression...")
+        plt.plot(liste_abscisse, liste_pression)
+        plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+        plt.xlabel("Longueur linéaire en m")
+        plt.ylabel("Pression en Pa")
+        plt.show()
+
+        print("...Tracé de la vitesse...")
+        plt.plot(liste_abscisse, liste_vitesse)
+        plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+        plt.xlabel("Longueur linéaire en m")
+        plt.ylabel("Vitesse en m/s")
+        plt.show()
 
     def renvoyer_liste_temperature(self):
         liste = []

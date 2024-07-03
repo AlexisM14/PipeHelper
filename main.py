@@ -12,7 +12,7 @@ liste_o_n = ['oui', 'non']
 # Pour l'instant, on fait que section rondes
 liste_sections = ['rond']
 liste_materiaux = lister_les_materiaux()
-liste_geometrie_angle = ['coude D', 'coude B', 'coude G', 'coude H']
+liste_geometrie_angle = ['coude D', 'coude B']
 liste_geometries = ['droit'] + liste_geometrie_angle
 liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
 rapport_rayon_diam_min = min(liste_rap_coude)
@@ -81,10 +81,8 @@ def choisir_geometrie_canalisation(nbre):
     liste = []
     for i in range(nbre):
         print(f"\n Quelle est la géométrie du tronçon {i} ?")
-        print("'coude D' et 'coude G' correspondent respectivement à un coude qui part vers "
-              "la droite et la gauche. \n De mâme, 'coude H' et 'coude B' correspondent respectivement à un "
-              "coude qui part vers le haut et vers le bas. \n Ces direction étant par rapport à la direction "
-              "initiale du fluide. ")
+        print("'coude D' et 'coude G' correspondent respectivement à un coude qui fait dévier le fluide vers "
+              "sa droite et sa gauche.")
         geometrie = get_element_liste_input(liste_geometries)
 
         # Verification de la possibilité de la configuration
@@ -219,7 +217,7 @@ def interface():
         liste_forme_canalisation = [forme_section]*nbre_troncons
 
         # Choix diamètre
-        print("\n Qule est le diamètre de la section de la canalisation en m?")
+        print("\n Quel est le diamètre de la section de la canalisation en m ?")
         diametre = get_float_input('+')
         liste_diametre_canalisation = [diametre]*nbre_troncons
 
@@ -269,52 +267,9 @@ def interface():
 
         # Phase de calculs
         print("...Début de la phase de calculs...")
-        liste_longueur = [0] + canalisation.renvoyer_liste_longueur()
-        longueur_totale = sum(liste_longueur)
-        print(liste_longueur, longueur_totale)
+        print("...Tracé de la pression...")
+        canalisation.tracer_pression_vitesse_1d()
 
-        for i in range(nbre_troncons):
-            troncon = canalisation.renvoyer_troncon(i)
-            pression_entree = troncon.recuperer_pression()
-            vitesse_entree = troncon.recuperer_vitesse()
-            troncon.afficher()
-
-            # Si la vitesse en entrée ou la pression en entrée est nulle alors elle restera nulle
-            # car aucune action de gravité
-            if pression_entree == 0 or vitesse_entree:
-                liste_pression = np.append(liste_pression, 0)
-                liste_vitesse = np.append(liste_vitesse, 0)
-            else:
-                # Calcul des pertes de charges et pression de sortie
-                delta_reguliere = troncon.calculer_delta_pression_reguliere()
-                delta_singuliere = troncon.calculer_delta_pression_singuliere()
-                delta_pression = delta_singuliere + delta_reguliere
-                pression_sortie = pression_entree - delta_pression
-
-                # Calcul de la vitesse de sortie
-                densite = troncon.recuperer_densite()
-                coef_singuliere = troncon.calculer_coef_singuliere_troncon()
-                vitesse_entree = liste_vitesse[-1]
-                vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie,
-                                                         delta_reguliere, densite, coef_singuliere)
-
-                # Si les pressions et vitesses calculées sont négatives alors on dit qu'elles sont nulles car
-                # elle ne peuvent pas devenir négative dans de telles conditions
-                if vitesse_sortie > 0 and pression_sortie > 0:
-                    liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
-                    liste_pression = np.append(liste_pression, pression_sortie)
-                else:
-                    liste_pression = np.append(liste_pression, 0)
-                    liste_vitesse = np.append(liste_vitesse, 0)
-
-        # On trace la variation de pression et de vitesse
-        print("Tracé de la pression")
-        tracer_pression_1d(liste_pression, liste_longueur)
-        print("Tracé de la vitesse")
-        tracer_vitesse_1d(liste_vitesse, liste_longueur)
-        print(liste_pression)
-        print(liste_vitesse)
-        print(liste_longueur)
 
     # MODE AJOUT/SUPPRESSION DE MATÉRIAU
     elif mode == 2:
@@ -350,4 +305,4 @@ def interface():
         # else:
         #     supprimer_fluides()
 
-interface2()
+interface()

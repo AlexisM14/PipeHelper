@@ -138,27 +138,16 @@ def calculer_coordonnees_guide_v2(canalisation, x_debut, y_debut, direction='y+'
 
 def tracer_canalisations(canalisation):
     x_guide, y_guide = calculer_coordonnees_guide_v2(canalisation,0,0)
-    print(x_guide, y_guide)
     plt.plot(x_guide,y_guide)
     plt.axis('equal')
+    plt.xlabel("Longueur en m")
+    plt.ylabel("Longueur en m")
+    plt.title("Tracé de la géométrie du problème")
     plt.grid()
     plt.show()
 
 
-def tracer_pression_1d(liste_pression, liste_longueur):
-    plt.plot(liste_longueur, liste_pression)
-    plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
-    plt.xlabel("Longueur en m")
-    plt.ylabel("Pression en Pa")
-    plt.show()
 
-
-def tracer_vitesse_1d(liste_vitesse, liste_longueur):
-    plt.plot(liste_longueur, liste_vitesse)
-    plt.title("Évolution de la vitesse le long de la canalisation, en longueur linéaire")
-    plt.xlabel("Longueur en m")
-    plt.ylabel("Vitesse en m/s")
-    plt.show()
 
 
 # Fonction test pour tracer une canalisation

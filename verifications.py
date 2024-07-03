@@ -111,8 +111,8 @@ def get_init_cond_input(fluide):
         temperature = get_float_input('+')
 
     print("La pression initiale ne peut actuellement pas être ajustée, elle est fixée à "
-          "la pression atmosphérique : 1,018 en bar.")
-    pression = 1.018*10**5
+          "la pression atmosphérique : 1,013 en bar.")
+    pression = 1.013*10**5
 
     return vitesse, temperature, pression
 

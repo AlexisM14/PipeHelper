@@ -43,13 +43,13 @@ def calculer_pression_poiseuille(debit_vol, viscosite_cine, pression_entree, lon
 
 
 # Définition de la fonction qui calcule les pertes de charges régulières
-def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite, pression_entree):
+def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite):
     """Renvoie la différence de pression en sortie d'un endroit pouvant provoquer une perte de charge régulière"""
     # longueur, diametre, rugosite en m - vitesse en m/s - viscosite_cine en m2/s - densite en kg/m2 -
     # pression_entree en Pa
     reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
     fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)
-    return fd * longueur * densite * vitesse**2 / diametre * 2
+    return fd * longueur * densite * vitesse**2 / (diametre * 2)
 
 
 # Définition de la fonction qui calcule les pertes de charges liée à un changement brusque de section
@@ -79,17 +79,13 @@ def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse_init):
 
 
 def calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere):
-    return np.sqrt(2 * (pression_entree - pression_sortie - delta_reguliere) / (densite * (1 + coef_singuliere)) + vitesse_entree**2 / (1 + coef_singuliere))
+    A = ((pression_entree - pression_sortie - delta_reguliere) / (densite * (1 + coef_singuliere)))
+    B = (vitesse_entree**2 / (1 + coef_singuliere))
+    return np.sqrt(2 * A + B)
 
 
-def calculer_vitesse():
-    return True
+def calculer_temperature_sortie(temperature_entree):
+    return temperature_entree
 
 
-def calculer_temperature_troncon():
-    return True
-
-
-def calculer_temperature():
-    return True
 
