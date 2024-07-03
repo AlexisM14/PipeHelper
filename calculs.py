@@ -12,7 +12,16 @@ g = 9.81
 def calculer_reynolds(vitesse, diametre, viscosite_cine):
     """Calcule le nombre de Reynolds"""
     # vitesse en m/s - diametre en m - viscorsite_cine en m2/s
-    return vitesse * diametre / viscosite_cine
+    re = vitesse * diametre / viscosite_cine
+    print(f"Raynolds : {re}")
+    return re
+
+
+def calculer_debit2vitesse(debit, diametre, section):
+    surface = 1
+    if section == 'rond':
+        surface = np.pi*(diametre/2)**2
+    return debit/surface
 
 
 # Définition de la fonction qui calcule le coefficient de perte de charge
@@ -21,12 +30,13 @@ def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
     # rugosite et diametre en mm - reynolds sans unite
     # formule https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
     if reynolds < 2320:
+    #if reynolds > 0:
         # Loi de Hagen-Poiseuille
         return 64 / reynolds
     else:
         if rugosite == 0:
             # Correlation de Blasius
-            return 0.3164 * reynolds ** (1/4)
+            return 0.3164 * reynolds ** (-1/4)
 
         # Corrélation de Serguides
         A = -2 * np.log10((rugosite/(diametre*3.7) + 12/reynolds))
@@ -49,6 +59,7 @@ def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosi
     # pression_entree en Pa
     reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
     fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)
+    print(f"coef regu : {fd}")
     return fd * longueur * densite * vitesse**2 / (diametre * 2)
 
 
@@ -88,4 +99,18 @@ def calculer_temperature_sortie(temperature_entree):
     return temperature_entree
 
 
+def exercice_verif_regu():
+    diametre = 14*10**(-3)
+    longueur = 10
+    rugosite = .1*10**(-3)
 
+    densite = 900
+    viscosite_cine = 30*10**(-6)
+    debit = 55*10**(-3)/60
+
+    vitesse = calculer_debit2vitesse(debit, diametre, 'rond')
+    reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
+    coef_singu = calculer_coef_perte_de_charge(reynolds, 0, diametre)
+
+    delta_P = calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, 0, densite)
+    print(delta_P)

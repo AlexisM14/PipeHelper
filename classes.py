@@ -1,4 +1,6 @@
 """Ce script définit toutes les classes qui seront utiles au programme"""
+import numpy as np
+
 from calculs import *
 from gestion_BDD_geometries import *
 import matplotlib.pyplot as plt
@@ -195,40 +197,60 @@ class Canalisation(Troncon):
 
             # Calcul des pertes de charges et pression de sortie
             delta_reguliere = calculer_perte_reguliere(longueur, diametre, vitesse_entree, troncon.recuperer_viscosite_cine(), troncon.recuperer_rugosite(), densite)
-            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i], 90, diametre, diametre, troncon.recuperer_courbure())
+            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, diametre, troncon.recuperer_courbure())
             delta_singuliere = calculer_perte_singuliere(coef_singuliere, densite, vitesse_entree)
             delta_pression = delta_singuliere + delta_reguliere
+            print(f"Sortie tronçon {i}")
             print(f"Regu : {delta_reguliere}")
             print(f"Singu : {delta_singuliere}")
+            print("")
             pression_sortie = pression_entree - delta_pression
 
             vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere)
             temperature_sortie = calculer_temperature_sortie(temperature_entree)
 
-            liste_abscisse = np.append(liste_abscisse, liste_abscisse[-1] + liste_longueur[i])
             liste_pression = np.append(liste_pression, pression_sortie)
             liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
             liste_temperature = np.append(liste_temperature, temperature_sortie)
-        print(liste_pression)
-        print(liste_vitesse)
-        print(liste_abscisse)
-        return liste_pression, liste_vitesse, liste_temperature, liste_abscisse
+            liste_abscisse = np.append(liste_abscisse, liste_abscisse[-1] + liste_longueur[i])
+
+        liste_abscisse_discrete = []
+        liste_pression_discrete =[]
+        liste_vitesse_discrete = []
+        liste_temperature_discrete =[]
+
+        for i in range(nbre_troncon):
+                longueur = liste_longueur[i]
+                nbre_points = int(longueur*100)
+
+                liste_pression_discrete = np.append(liste_pression_discrete, np.linspace(liste_pression[0], liste_pression[i+1], nbre_points)[:-1])
+                liste_vitesse_discrete = np.append(liste_vitesse_discrete, np.linspace(liste_vitesse[0], liste_vitesse[i+1], nbre_points)[:-1])
+                liste_temperature_discrete = np.append(liste_temperature_discrete, np.linspace(liste_abscisse[0], liste_abscisse[i+1], nbre_points)[:-1])
+                liste_abscisse_discrete = np.append(liste_abscisse_discrete, np.linspace(liste_abscisse[0], liste_abscisse[i + 1], nbre_points)[:-1])
+
+        return liste_pression, liste_vitesse, liste_temperature, liste_abscisse, liste_longueur
 
     def tracer_pression_vitesse_1d(self):
-        liste_pression, liste_vitesse, liste_temperature, liste_abscisse = self.calculer_distrib_pression_vitesse()
+        liste_pression, liste_vitesse, liste_temperature, liste_abscisse, liste_longueur = self.calculer_distrib_pression_vitesse()
 
         print("...Tracé de la pression...")
-        plt.plot(liste_abscisse, liste_pression)
+        plt.plot(liste_abscisse, liste_pression, label='Pression')
+        for i in range(len(liste_longueur)):
+            plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
         plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
         plt.xlabel("Longueur linéaire en m")
         plt.ylabel("Pression en Pa")
+        plt.legend()
         plt.show()
 
         print("...Tracé de la vitesse...")
-        plt.plot(liste_abscisse, liste_vitesse)
+        plt.plot(liste_abscisse, liste_vitesse, label='Vitesse')
+        for i in range(len(liste_longueur)):
+            plt.axvline(liste_longueur[i], color='r', linestyle='--', label=f"Changement {i+1} de géométrie")
         plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
         plt.xlabel("Longueur linéaire en m")
         plt.ylabel("Vitesse en m/s")
+        plt.legend()
         plt.show()
 
     def renvoyer_liste_temperature(self):
