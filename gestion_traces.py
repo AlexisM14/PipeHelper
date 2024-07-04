@@ -151,29 +151,28 @@ def tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, li
 
     print("...Tracé de la pression...")
     plt.plot(liste_abscisse, liste_pression, label='Pression')
-    liste_longueur = liste_longueur[1:-1]
-    abscisse_geo = liste_longueur[0]
+    liste_longueur = liste_longueur[:-1]
+    abscisse_geo = 0
     for idx in range(len(liste_longueur)):
-        plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')
         abscisse_geo += liste_longueur[idx]
+        plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')
     plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
     plt.xlabel("Longueur linéaire en m")
     plt.ylabel("Pression en Pa")
     plt.legend()
     plt.show()
 
-    print("...Tracé de la vitesse...")
-    plt.plot(liste_abscisse, liste_vitesse, label='Vitesse')
-    abscisse_geo = liste_longueur[0]
-    for idx in range(len(liste_longueur)):
-        plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')
-        abscisse_geo += liste_longueur[idx]
-    plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
-
-    plt.xlabel("Longueur linéaire en m")
-    plt.ylabel("Vitesse en m/s")
-    plt.legend()
-    plt.show()
+    # print("...Tracé de la vitesse...")
+    # plt.plot(liste_abscisse, liste_vitesse, label='Vitesse')
+    # abscisse_geo = liste_longueur[0]
+    # for idx in range(len(liste_longueur)):
+    #     plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')
+    #     abscisse_geo += liste_longueur[idx]
+    # plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+    # plt.xlabel("Longueur linéaire en m")
+    # plt.ylabel("Vitesse en m/s")
+    # plt.legend()
+    # plt.show()
 
 
 # Fonction test pour tracer une canalisation
@@ -207,6 +206,3 @@ def tracer_coude():
     print(x[-1],y[-1])
     plt.plot(x,y)
     plt.show()
-
-
-
