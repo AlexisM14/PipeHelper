@@ -85,7 +85,7 @@ def calculer_coordonnees_guide_v2(canalisation, x_debut, y_debut, direction='y+'
     for i in range(nbre_troncons):
         nbre_points = int(liste_longueur[i] * 100)
 
-        increment = liste_longueur[i] / nbre_points
+        increment = float(liste_longueur[i]) / nbre_points
 
         if liste_geometrie[i] == 'droit':
             if direction == 'y+':

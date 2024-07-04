@@ -5,6 +5,7 @@ from verifications import *
 from gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite
 from gestion_BDD_geometries import recuperer_attribut_geo
 from gestion_traces import tracer_canalisations, tracer_pression_vitesse_1d
+from gestion_YAML import get_name_yaml, get_info_yaml
 
 liste_o_n = ['oui', 'non']
 # Pour l'instant, on fait que section rondes
@@ -224,55 +225,78 @@ def interface():
 
     # MODE PROBLÈME
     if mode == 1:
-        nettoyer_ecran()
-        liste_fluides = lister_fluides()
-        print("\n Vous entrez dans le mode de résolution de problème.\n")
+        print("\n Voulez-vous utiliser un fichier .yaml, celui doit être enregistré dans le même dossier que ce script.")
+        choix_yaml = get_element_liste_input(liste_o_n)
+        print("Quel est le nom du fichier, suivit de '.yaml'")
+        nom_fichier = get_name_yaml()
 
-        # Fluide
-        print("Quel est le fluide s'écoulant dans les canalisations ?")
-        fluide = get_element_liste_input(liste_fluides)
+        if choix_yaml == 'non':
+            nettoyer_ecran()
+            liste_fluides = lister_fluides()
+            print("\n Vous entrez dans le mode de résolution de problème.\n")
 
-        print("\n Combien de tronçons composent la géométrie des canalisations du problème ?")
-        nbre_troncons = get_int_input('+')
+            # Fluide
+            print("Quel est le fluide s'écoulant dans les canalisations ?")
+            fluide = get_element_liste_input(liste_fluides)
+
+            print("\n Combien de tronçons composent la géométrie des canalisations du problème ?")
+            nbre_troncons = get_int_input('+')
+
+            # Choix matériau
+            print("\n Le matériau est-il le même dans toute la canalisation ?")
+            choix_materiau = get_element_liste_input(liste_o_n)
+            liste_materiau_canalisation = choisir_materiaux_canalisation(nbre_troncons, choix_materiau)
+
+            # Choix rugosité
+            print("")
+            print("\n La rugosité est-elle la même dans toute la canalisation ?")
+            choix_rugosite = get_element_liste_input(liste_o_n)
+            liste_rugosite_canalisation = choisir_rugosite_canalisation(nbre_troncons, choix_rugosite, choix_materiau, liste_materiau_canalisation)
+
+            # Choix forme section
+            print("\n Quelle est la forme de la section de la canalisation ?")
+            forme_section = get_element_liste_input(liste_sections)
+            liste_forme_canalisation = [forme_section]*nbre_troncons
+
+            # Choix diamètre
+            print("\n Quel est le diamètre de la section de la canalisation en m ?")
+            diametre = get_float_input('+')
+            liste_diametre_canalisation = [diametre]*nbre_troncons
+
+            # Conditions initiales
+            print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
+            vitesse_init, temperature_init, pression_init, densite, viscosite_cine, debit = get_init_cond_input(fluide, diametre)
+            liste_pression = [pression_init]
+            liste_vitesse = [vitesse_init]
+            liste_temperature = [temperature_init]
+
+            # Choix geometrie et angle du tronçon
+            liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)
+
+            # Choix longueur de chaque tronçon
+            liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)
+
+            liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
+
+        if True:
+            fluide, nbre_troncons, materiau, rugosite, forme, diametre, vitesse_init, debit, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie_canalisation, liste_longueur_canalisation, liste_rayon_canalisation, choix_pompe, pression_min, puissance_pompe, rendement = get_info_yaml(nom_fichier)
+
+            if vitesse_init == 0:
+                vitesse_init = debit / (np.pi*(diametre/2)**2)
+            if debit == 0:
+                debit_init = vitesse_init * np.pi*(diametre/2)**2
+
+            for i in range(nbre_troncons):
+                longueur = liste_longueur_canalisation[i]
+                if longueur == 0:
+                    liste_longueur_canalisation[i] = liste_rayon_canalisation[i]*np.pi/2
+
+            liste_forme_canalisation = [forme] * nbre_troncons
+            liste_diametre_canalisation = [diametre] * nbre_troncons
+            liste_materiau_canalisation = [diametre] * nbre_troncons
+            liste_rugosite_canalisation = [rugosite] * nbre_troncons
 
         canalisation = Canalisation()
-
-        # Choix matériau
-        print("\n Le matériau est-il le même dans toute la canalisation ?")
-        choix_materiau = get_element_liste_input(liste_o_n)
-        liste_materiau_canalisation = choisir_materiaux_canalisation(nbre_troncons, choix_materiau)
-
-        # Choix rugosité
-        print("")
-        print("\n La rugosité est-elle la même dans toute la canalisation ?")
-        choix_rugosite = get_element_liste_input(liste_o_n)
-        liste_rugosite_canalisation = choisir_rugosite_canalisation(nbre_troncons, choix_rugosite, choix_materiau, liste_materiau_canalisation)
-
-        # Choix forme section
-        print("\n Quelle est la forme de la section de la canalisation ?")
-        forme_section = get_element_liste_input(liste_sections)
-        liste_forme_canalisation = [forme_section]*nbre_troncons
-
-        # Choix diamètre
-        print("\n Quel est le diamètre de la section de la canalisation en m ?")
-        diametre = get_float_input('+')
-        liste_diametre_canalisation = [diametre]*nbre_troncons
-
-        # Conditions initiales
-        print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
-        vitesse_init, temperature_init, pression_init, densite_init, viscosite_init, debit = get_init_cond_input(fluide, diametre)
-        liste_pression = [pression_init]
-        liste_vitesse = [vitesse_init]
-        liste_temperature = [temperature_init]
-
-        # Choix geometrie et angle du tronçon
-        liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)
-
-        # Choix longueur de chaque tronçon
-        liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)
-
-        liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
-
         # Enregistrement des tronçons et de la canalisation
         for i in range(nbre_troncons):
             longueur = liste_longueur_canalisation[i]
@@ -293,7 +317,7 @@ def interface():
                 temperature_entree = 0
 
             troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, rayon_courbure,
-                              fluide, vitesse_entree, pression_entree, temperature_entree, densite_init, viscosite_init)
+                              fluide, vitesse_entree, pression_entree, temperature_entree, densite, viscosite_cine)
             canalisation.ajouter_troncon(troncon)
 
         # Affichage de la géométrie des canalisations
@@ -315,20 +339,23 @@ def interface():
 
         tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur_canalisation)
 
-        # Phase de placement pompe
-        print("")
-        print("Voulez-vous placer une pompe sur la canalisation ?")
-        choix_pompe = get_element_liste_input(liste_o_n)
+        if choix_yaml == 'non':
+            # Phase de placement pompe
+            print("")
+            print("Voulez-vous placer une pompe sur la canalisation ?")
+            choix_pompe = get_element_liste_input(liste_o_n)
+
         if choix_pompe == 'non':
             print("Vous quittez le programme.")
             return True
         else:
-            print("Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?")
-            pression_min = get_float_between_input(0, pression_init)*10**5
-            print("Quelle est la puissance de votre pompe, en W ?")
-            puissance_pompe = get_float_input('+')
-            print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
-            rendement = get_float_between_input(0, 1)
+            if choix_yaml == 'non':
+                print("Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?")
+                pression_min = get_float_between_input(0, pression_init)*10**5
+                print("Quelle est la puissance de votre pompe, en W ?")
+                puissance_pompe = get_float_input('+')
+                print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
+                rendement = get_float_between_input(0, 1)
 
             placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement)
 
