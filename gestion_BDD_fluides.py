@@ -1,7 +1,7 @@
 import pandas as pd
 
 # On enregistre la base de données dans df
-df_fluide = pd.read_excel('BDD_fluides.xlsx')
+df_fluide = pd.read_excel('Base_De_Donnees/BDD_fluides.xlsx')
 
 
 def lister_fluides():
