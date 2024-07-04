@@ -1,13 +1,10 @@
 """ Ce script permet de générer l'affichage du programme"""
-import numpy as np
-from verifications import *
-from classes import Troncon
-from classes import Canalisation
-from gestion_BDD_fluides import *
-from gestion_BDD_materiaux import *
-from gestion_BDD_geometries import *
-from gestion_traces import *
+from classes import *
 from calculs import *
+from verifications import *
+from gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite
+from gestion_BDD_geometries import recuperer_attribut_geo
+from gestion_traces import tracer_canalisations, tracer_pression_vitesse_1d
 
 liste_o_n = ['oui', 'non']
 # Pour l'instant, on fait que section rondes
@@ -133,13 +130,15 @@ def choisir_longueur_canalisation(nbre, liste_geo):
         if geometrie in liste_geometrie_angle:
             print(f"\n Quel est le rayon de courbure du coude du tronçon {i} en m ?")
             rayon = get_float_input('+')
-            liste_long = np.append(liste_long, np.pi*rayon/2)
-            liste_rayon = np.append(liste_rayon, rayon)
+            longueur = rayon*2*np.pi/4  # coude à 90° : 1/4 du périmètre du cercle
         else:
             print(f"\n Quelle est la longueur du tronçon {i} en m ?")
             longueur = get_float_input('+')
-            liste_long = np.append(liste_long, longueur)
-            liste_rayon = np.append(liste_rayon, 0)
+            rayon = 0
+
+        liste_long = np.append(liste_long, longueur)
+        liste_rayon = np.append(liste_rayon, rayon)
+
     return liste_long, liste_rayon
 
 
@@ -169,11 +168,44 @@ def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste
 def trouver_emplacement_pompe(liste_pression, pression_min):
     compteur = 0
     pression_entree = liste_pression[compteur]
-    debit = liste_pression[compteur]
     while compteur < len(liste_pression) - 1 and pression_entree > pression_min:
         compteur += 1
         pression_entree = liste_pression[compteur]
     return compteur
+
+
+def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement):
+
+    idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min)
+
+    if idx_emplacement_pompe == len(liste_pression):
+        print("Le système n'a pas besoin de pompe pour satisfaire les exigences.")
+
+    else:
+        pression_entree = liste_pression[idx_emplacement_pompe]
+        pression_sortie_pompe = calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree)
+
+        print(f"Il faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.")
+        print(f"La pression en sortie sera de {pression_sortie_pompe / 10 ** 5} bar.")
+        delta_pression_pompe = pression_sortie_pompe - liste_pression[idx_emplacement_pompe]
+        liste_pression_new = []
+
+        for i in range(len(liste_abscisse)):
+            if liste_pression[i] > pression_min:
+                liste_pression_new = np.append(liste_pression_new, liste_pression[i])
+            else:
+                liste_pression_new = np.append(liste_pression_new, liste_pression[i] + delta_pression_pompe)
+
+        plt.plot(liste_abscisse, liste_pression, label='Pression originale')
+        plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')
+        plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+        plt.xlabel("Longueur linéaire en m")
+        plt.ylabel("Pression en Pa")
+        plt.axvline(liste_abscisse[idx_emplacement_pompe], color='r', linestyle='--')
+        plt.legend()
+        plt.show()
+        return liste_pression_new
+
 
 
 def interface():
@@ -228,7 +260,7 @@ def interface():
 
         # Conditions initiales
         print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
-        vitesse_init, temperature_init, pression_init, densite_init, viscosite_init = get_init_cond_input(fluide, diametre)
+        vitesse_init, temperature_init, pression_init, densite_init, viscosite_init, debit = get_init_cond_input(fluide, diametre)
         liste_pression = [pression_init]
         liste_vitesse = [vitesse_init]
         liste_temperature = [temperature_init]
@@ -278,8 +310,10 @@ def interface():
 
         # Phase de calculs
         print("...Début de la phase de calculs...")
-        print("...Tracé de la pression...")
-        canalisation.tracer_pression_vitesse_1d()
+
+        liste_pression, liste_vitesse, liste_temperature, liste_abscisse, _ = canalisation.calculer_distrib_pression_vitesse()
+
+        tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur_canalisation)
 
         # Phase de placement pompe
         print("")
@@ -296,28 +330,10 @@ def interface():
             print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
             rendement = get_float_between_input(0, 1)
 
-            liste_pression_discrete, liste_vitesse_discrete, liste_temperature_discrete, liste_abscisse_discrete, liste_longueur = canalisation.calculer_distrib_pression_vitesse()
-            liste_debit_discrete = []
+            placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement)
 
-            for i in range(len(liste_abscisse_discrete)):
-                liste_debit_discrete = np.append(liste_debit_discrete, liste_vitesse_discrete[i]*np.pi*(diametre/2)**2)
-
-            # Tant que l'idx est pas à la fin on continue
-            idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression_discrete, pression_min)
-
-            if idx_emplacement_pompe == len(liste_pression_discrete):
-                print("Le système n'a pas besoin de pompe pour satisfaire les exigences.")
-                print("Vous quittez le programme.")
-                return True
-            else:
-                debit = liste_debit_discrete[idx_emplacement_pompe]
-                pression_entree = liste_pression_discrete[idx_emplacement_pompe]
-                pression_sortie_pompe = calculer_pression_sortie_pompe(puissance_pompe, rendement, debit, pression_entree)
-
-                print(f"Il faut placer une pompe à {liste_abscisse_discrete[idx_emplacement_pompe]} m.")
-                print(f"La pression en sortie sera de {pression_sortie_pompe/10**5} bar.")
-                print("Vous quittez le programme.")
-                return True
+            print("Vous quittez le programme.")
+            return True
 
 
 
@@ -356,4 +372,6 @@ def interface():
         # else:
         #     supprimer_fluides()
 
-interface()
+
+if __name__ == '__main__':
+    interface()

@@ -1,9 +1,4 @@
 import numpy as np
-from verifications import *
-from gestion_BDD_fluides import *
-from gestion_BDD_materiaux import *
-from gestion_BDD_geometries import *
-
 
 g = 9.81
 

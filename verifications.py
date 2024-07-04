@@ -106,10 +106,11 @@ def get_init_cond_input(fluide, diametre):
     if choix == 'débit':
         print("Veuillez entrer le débit en m3/s")
         debit = get_float_input('+')
-        vitesse = debit/(np.pi*(diametre/2)**2)
+        vitesse = debit / (np.pi * (diametre/2)**2)
     else:
         print("Quelle est la vitesse initiale, en m/s ?")
         vitesse = get_float_input('+')
+        debit = vitesse * np.pi * (diametre/2)**2
 
     print("Quelle est la température initiale, en °C ?")
     temperature = get_float_input()
@@ -133,10 +134,10 @@ def get_init_cond_input(fluide, diametre):
         print("La pression initiale est fixée à "
               "la pression atmosphérique : 1,013 en bar.")
         pression = 1.013*10**5
-        densite = 0
-        viscosite_cine = 0
+        densite = recuperer_valeur_fluide(fluide, temperature, 'Masse volumique')
+        viscosite_cine = recuperer_valeur_fluide(fluide, temperature, 'Viscosité cinématique')
 
-    return vitesse, temperature, pression, densite, viscosite_cine
+    return vitesse, temperature, pression, densite, viscosite_cine, debit
 
 def get_float_between_input(a,b):
     while b < a:

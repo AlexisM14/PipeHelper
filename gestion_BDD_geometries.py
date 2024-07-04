@@ -1,9 +1,8 @@
 import pandas as pd
-from calculs import *
 
 
 # On enregistre la base de données dans df
-df_geometrie = pd.read_excel('BDD_geometrie.xlsx')
+df_geometrie = pd.read_excel('Base_De_Donnees/BDD_geometrie.xlsx')
 
 # On enregistre les différentes informations de chaque géométrie
 liste_angle = df_geometrie.groupby('nom')['angle'].apply(list).reset_index()
