@@ -197,7 +197,7 @@ def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, lis
         liste_debut_fin_geo[i][1] = liste_x_geometrie[i+1]
 
     # Tant que la pression est au dessus de la pression mini et que le compteur n'est pas à la fin
-    while compteur < len(liste_pression) - 1 and pression_entree > pression_min:
+    while compteur != len(liste_pression) - 1 and pression_entree > pression_min:
         # On actualise le compteur et la pression
         compteur += 1
         pression_entree = liste_pression[compteur]
@@ -215,16 +215,15 @@ def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, lis
 
 def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement, liste_geometrie, liste_longueur):
 
+    liste_pression_origine = liste_pression.copy()
     idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur)
 
-    if idx_emplacement_pompe == len(liste_pression):
-        return False
-
-    else:
+    liste_abscisse_pompe = []
+    while idx_emplacement_pompe < len(liste_abscisse) - 1:
         pression_entree = liste_pression[idx_emplacement_pompe]
         pression_sortie_pompe = calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree)
 
-        print(f"Il faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.")
+        print(f"\nIl faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.")
         print(f"La pression en sortie sera de {pression_sortie_pompe / 10 ** 5} bar.")
         delta_pression_pompe = pression_sortie_pompe - liste_pression[idx_emplacement_pompe]
         liste_pression_new = liste_pression[:idx_emplacement_pompe]
@@ -232,15 +231,23 @@ def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance,
         for i in range(idx_emplacement_pompe, len(liste_abscisse)):
             liste_pression_new = np.append(liste_pression_new, liste_pression[i] + delta_pression_pompe)
 
-        plt.plot(liste_abscisse, liste_pression, label='Pression originale')
-        plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')
-        plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
-        plt.xlabel("Longueur linéaire en m")
-        plt.ylabel("Pression en Pa")
-        plt.axvline(liste_abscisse[idx_emplacement_pompe], color='r', linestyle='--')
-        plt.legend()
-        plt.show()
-        return liste_pression_new
+        liste_abscisse_pompe = np.append(liste_abscisse_pompe, liste_abscisse[idx_emplacement_pompe])
+
+        liste_pression = liste_pression_new.copy()
+        idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie,
+                                                          liste_abscisse,
+                                                          liste_longueur)
+
+    plt.plot(liste_abscisse, liste_pression_origine, label='Pression originale')
+    plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')
+    plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+    plt.xlabel("Longueur linéaire en m")
+    plt.ylabel("Pression en Pa")
+    for idx, i in enumerate(liste_abscisse_pompe):
+        plt.axvline(i, color='r', linestyle='--', label=f'Pompe n°{idx+1}')
+    plt.legend()
+    plt.show()
+    return liste_pression_new
 
 
 
