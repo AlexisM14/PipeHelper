@@ -139,6 +139,7 @@ def get_init_cond_input(fluide, diametre):
 
     return vitesse, temperature, pression, densite, viscosite_cine, debit
 
+
 def get_float_between_input(a,b):
     while b < a:
         print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")

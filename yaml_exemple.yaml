@@ -2,7 +2,7 @@
 nom du fluide: eau # eau ou air
 nombre de troncons: 3
 materiau de la canalisation: aluminium # À choisir d'après ceux de la base de données
-rugosite de la canalisation: 0 # en mètres
+rugosite de la canalisation: 0.0001 # en mètres
 forme de la section: rond # rond
 diametre de la section: 0.3 # en mètres
 
@@ -30,6 +30,6 @@ liste des rayons de courbure des troncons: # en m, mettre 0 si le tronçon est u
 
 # Placement de pompes
 placement de pompes: oui # oui pour que le programme place des pompes, non sinon
-pression minimale: 2.92 # en bar, pression sous laquelle ne doit pas descendre le fluide de la canalisation
+pression minimale: 2.98 # en bar, pression sous laquelle ne doit pas descendre le fluide de la canalisation
 puissance de la pompe: 5000 # en kW
 rendement de la pompe: .7 # entre 0 et 1

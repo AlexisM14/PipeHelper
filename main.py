@@ -1,4 +1,6 @@
 """ Ce script permet de générer l'affichage du programme"""
+import numpy as np
+
 from classes import *
 from calculs import *
 from verifications import *
@@ -166,21 +168,57 @@ def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste
     return liste_rayon, liste_long
 
 
-def trouver_emplacement_pompe(liste_pression, pression_min):
+def verifier_dans_intervalle(nbre, intervalle):
+    a = intervalle[0]
+    b = intervalle[1]
+    return a < nbre < b
+
+
+def recuperer_index_plus_proche_inf(liste_abscisse, nbre):
     compteur = 0
-    pression_entree = liste_pression[compteur]
-    while compteur < len(liste_pression) - 1 and pression_entree > pression_min:
+    while liste_abscisse[compteur] < nbre:
         compteur += 1
-        pression_entree = liste_pression[compteur]
     return compteur
 
 
-def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement):
+def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur):
+    compteur = 0
+    pression_entree = liste_pression[compteur]
+    liste_x_geometrie = np.array([0])
 
-    idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min)
+    # On construit la liste des abscisses ou un changement de géométrie a lieu, 0 et la fin en étant
+    for idx in range(len(liste_longueur)):
+        liste_x_geometrie = np.append(liste_x_geometrie, liste_x_geometrie[-1]+liste_longueur[idx])
+
+    # On construit la liste contenant les abscisses de début et de fin de chaque géométrie
+    liste_debut_fin_geo = np.zeros((len(liste_geometrie), 2))
+    for i in range(len(liste_geometrie)):
+        liste_debut_fin_geo[i][0] = liste_x_geometrie[i]
+        liste_debut_fin_geo[i][1] = liste_x_geometrie[i+1]
+
+    # Tant que la pression est au dessus de la pression mini et que le compteur n'est pas à la fin
+    while compteur < len(liste_pression) - 1 and pression_entree > pression_min:
+        # On actualise le compteur et la pression
+        compteur += 1
+        pression_entree = liste_pression[compteur]
+
+    # On vérifie que l'abscisse ou la pression min est atteinte n'est pas dans un coude
+    abscisse = liste_abscisse[compteur]
+    for i in range(len(liste_debut_fin_geo)):
+        # Si l'emplacement de la pompe est dans un coude
+        if verifier_dans_intervalle(abscisse, liste_debut_fin_geo[i]) and liste_geometrie[i] != 'droit':
+            # On renvoie l'index de l'abscisse se situant à l'entrée du coude
+            return recuperer_index_plus_proche_inf(liste_abscisse, liste_debut_fin_geo[i][0])
+
+    return compteur
+
+
+def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement, liste_geometrie, liste_longueur):
+
+    idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur)
 
     if idx_emplacement_pompe == len(liste_pression):
-        print("Le système n'a pas besoin de pompe pour satisfaire les exigences.")
+        return False
 
     else:
         pression_entree = liste_pression[idx_emplacement_pompe]
@@ -189,13 +227,10 @@ def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance,
         print(f"Il faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.")
         print(f"La pression en sortie sera de {pression_sortie_pompe / 10 ** 5} bar.")
         delta_pression_pompe = pression_sortie_pompe - liste_pression[idx_emplacement_pompe]
-        liste_pression_new = []
+        liste_pression_new = liste_pression[:idx_emplacement_pompe]
 
-        for i in range(len(liste_abscisse)):
-            if liste_pression[i] > pression_min:
-                liste_pression_new = np.append(liste_pression_new, liste_pression[i])
-            else:
-                liste_pression_new = np.append(liste_pression_new, liste_pression[i] + delta_pression_pompe)
+        for i in range(idx_emplacement_pompe, len(liste_abscisse)):
+            liste_pression_new = np.append(liste_pression_new, liste_pression[i] + delta_pression_pompe)
 
         plt.plot(liste_abscisse, liste_pression, label='Pression originale')
         plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')
@@ -278,13 +313,15 @@ def interface():
 
             liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
 
-        if True:
+        else:
             fluide, nbre_troncons, materiau, rugosite, forme, diametre, vitesse_init, debit, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie_canalisation, liste_longueur_canalisation, liste_rayon_canalisation, choix_pompe, pression_min, puissance_pompe, rendement = get_info_yaml(nom_fichier)
+            pression_init = pression_init * 10**5
+            pression_min = pression_min * 10**5
 
             if vitesse_init == 0:
                 vitesse_init = debit / (np.pi*(diametre/2)**2)
             if debit == 0:
-                debit_init = vitesse_init * np.pi*(diametre/2)**2
+                debit = vitesse_init * np.pi*(diametre/2)**2
 
             for i in range(nbre_troncons):
                 longueur = liste_longueur_canalisation[i]
@@ -295,6 +332,16 @@ def interface():
             liste_diametre_canalisation = [diametre] * nbre_troncons
             liste_materiau_canalisation = [diametre] * nbre_troncons
             liste_rugosite_canalisation = [rugosite] * nbre_troncons
+            # print(liste_longueur_canalisation)
+            # print(liste_forme_canalisation)
+            # print(liste_diametre_canalisation)
+            # print(liste_materiau_canalisation)
+            # print(liste_rugosite_canalisation)
+            # print(liste_geometrie_canalisation)
+            # print(liste_rayon_canalisation)
+            # print(pression_init)
+            # print(vitesse_init)
+            # print(debit)
 
         canalisation = Canalisation()
         # Enregistrement des tronçons et de la canalisation
@@ -357,7 +404,7 @@ def interface():
                 print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
                 rendement = get_float_between_input(0, 1)
 
-            placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement)
+            placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement, liste_geometrie_canalisation, liste_longueur_canalisation)
 
             print("Vous quittez le programme.")
             return True
@@ -402,3 +449,9 @@ def interface():
 
 if __name__ == '__main__':
     interface()
+    # liste_pression = np.append(np.linspace(3, 2.9, 200), np.linspace(2.9, 2.5, 157)[1:])
+    # pression_min = 2.7
+    # liste_geometrie = ['droit', 'coude D', 'droit']
+    # liste_abscisse = np.append(np.linspace(0, 2, 200), np.linspace(2, 3.57, 157)[1:])
+    # liste_longueur = [2, 1.57, 5]
+    # print(trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur))

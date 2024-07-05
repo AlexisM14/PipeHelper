@@ -7,7 +7,7 @@ def get_name_yaml():
     nom = input("--> ")
     while not os.path.exists(nom):
         print(" Le fichier indiqué n'existe pas, entrez le nom du fichier sous la forme : [mon_fichier.txt]")
-        nom = input("-->")
+        nom = input("--> ")
     return nom
 
 
