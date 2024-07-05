@@ -152,3 +152,17 @@ def get_float_between_input(a,b):
         print("Le chiffre entré n'est pas dans l'intervalle, veuillez le saisir à nouveau.")
         nbre = get_float_input()
     return nbre
+
+
+def get_int_between_input(a,b):
+    while b < a:
+        print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")
+        print("a = ")
+        a = get_int_input()
+        print("b = ")
+        b = get_float_input()
+    nbre = get_int_input()
+    while nbre > b or nbre < a:
+        print(f"Le chiffre entré n'est pas dans l'intervalle [{a};{b}], veuillez le saisir à nouveau.")
+        nbre = get_int_input()
+    return nbre

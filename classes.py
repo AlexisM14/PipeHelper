@@ -128,6 +128,11 @@ class Canalisation(Troncon):
         self.liste_troncons.append(troncon)
         self.longueur += 1
 
+    def supprimer_troncon(self, idx):
+        if self.longueur > 1:
+            self.longueur -= 1
+            self.liste_troncons = np.delete(self.liste_troncons, idx)
+
     def renvoyer_liste_longueur(self):
         liste = []
         for i in self.liste_troncons:

@@ -374,16 +374,13 @@ def interface():
                               fluide, vitesse_entree, pression_entree, temperature_entree, densite, viscosite_cine)
             canalisation.ajouter_troncon(troncon)
 
-        # Affichage de la géométrie des canalisations
-        print("La géométrie de votre problème est-elle bien la suivante ?")
-        tracer_canalisations(canalisation)
-        confirmation_geometrie = get_element_liste_input(['oui', 'non'])
-        if confirmation_geometrie == 'non':
-            print("Il n'est pas disponible de modifier la géométrie du problème pour l'instant")
-            print("voulez-vous recommencer depuis le début ? ")
-            choix_recommencer = get_element_liste_input(['oui', 'non'])
-            if choix_recommencer == 'oui':
-                interface()
+        # Affichage et confirmation de la géométrie des canalisations
+            print("La géométrie de votre problème est-elle bien la suivante ?")
+            tracer_canalisations(canalisation)
+            confirmation_geometrie = get_element_liste_input(['oui', 'non'])
+
+            if confirmation_geometrie == 'non':
+                print(f"Pour modifier la canlisation veuillez modifier votre fichier .yaml puis relancer le programme.")
                 return True
 
         # Phase de calculs
