@@ -62,33 +62,3 @@ def recuperer_valeur_fluide(nom_fluide, temperature, colonne):
         valeur_suivant = df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temp_suivant)].tolist()[0]
         return valeur_precedent + ((temperature - temp_precedent) / (temp_suivant - temp_precedent)) * (
                     valeur_suivant - valeur_precedent)
-
-
-def ajouter_fluide(nom_fluide, temperature, masse_volumique, viscosite_dynamique, viscosite_cinematique, chaleur_massique, conductivite_thermique, coefficient_dilatation):
-    nouveau_fluide = {'Nom fluide': nom_fluide, 'Température': temperature, 'Masse volumique': masse_volumique, 'Viscosité dynamique': viscosite_dynamique, 'Viscosité cinématique': viscosite_cinematique, 'Chaleur massique': chaleur_massique, 'Conductivité thermique': conductivite_thermique, 'Coefficient de dilatation': coefficient_dilatation}
-    df_fluide.append(nouveau_fluide, ignore_index=True)
-
-
-def modifier_fluide(index, nom_fluide=None, temperature=None, masse_volumique=None, viscosite_dynamique=None, viscosite_cinematique=None, chaleur_massique=None, conductivite_thermique=None, coefficient_dilatation=None):
-    if nom_fluide is not None:
-        df_fluide.at[index, 'Nom fluide'] = nom_fluide
-    if temperature is not None:
-        df_fluide.at[index, 'Température'] = temperature
-    if masse_volumique is not None:
-        df_fluide.at[index, 'Masse volumique'] = masse_volumique
-    if viscosite_dynamique is not None:
-        df_fluide.at[index, 'Viscosité dynamique'] = viscosite_dynamique
-    if viscosite_cinematique is not None:
-        df_fluide.at[index, 'Viscosité cinématique'] = viscosite_cinematique
-    if chaleur_massique is not None:
-        df_fluide.at[index, 'Chaleur massique'] = chaleur_massique
-    if conductivite_thermique is not None:
-        df_fluide.at[index, 'Conductivité thermique'] = conductivite_thermique
-    if coefficient_dilatation is not None:
-        df_fluide.at[index, 'Coefficient de dilatation'] = coefficient_dilatation
-
-
-def supprimer_fluide(index):
-    df_fluide.drop(index).reset_index(drop=True)
-
-

@@ -17,19 +17,3 @@ def afficher_materiaux():
 
 def recuperer_rugosite(nom_materiau):
     return df_materiaux['Rugosité'][df_materiaux['Matériaux'] == nom_materiau].tolist()[0]
-
-
-def ajouter_materiau(materiau, rugosite):
-    new_row = {'Matériaux': materiau, 'Rugosité': rugosite}
-    df_materiaux.append(new_row, ignore_index=True)
-
-
-def modifier_materiau(index, materiau=None, rugosite=None):
-    if materiau is not None:
-        df_materiaux.at[index, 'Matériaux'] = materiau
-    if rugosite is not None:
-        df_materiaux.at[index, 'Rugosité'] = rugosite
-
-def supprimer_materiau(index):
-    df_materiaux.drop(index).reset_index(drop=True)
-
