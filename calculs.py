@@ -3,29 +3,57 @@ import numpy as np
 g = 9.81
 
 
-# Définition de la fonction qui calcule le nombre de reynolds
 def calculer_reynolds(vitesse, diametre, viscosite_cine):
-    """Calcule le nombre de Reynolds"""
-    # vitesse en m/s - diametre en m - viscorsite_cine en m2/s
+    """
+    Cette fonction calcule le nombre de Reynolds
+
+    Args:
+        vitesse (float) : La vitesse du fluide, en m/s
+        diametre (float) : Le diamètre de la canalisation, en m
+        viscosite_cine (float) : La viscosité cinématique de fluide, en m**2/s
+
+    Returns:
+        flaot : Le nombre de Reynolds calculé à partir de ces paramètres
+    """
     re = vitesse * diametre / viscosite_cine
-    # print(f"Reynolds : {re}")
     return re
 
 
 def calculer_debit2vitesse(debit, diametre, section):
+    """
+        Cette fonction convertit un débit en vitesse
+
+        Args:
+            debit (float) : Le débit du fluide, en m**3/s
+            diametre (float) : Le diamètre de la canalisation, en m
+            section (str) : La forme de la section (par exemple 'rond')
+
+        Returns:
+            flaot : La vitesse correspondant à ces paramètres
+        """
     surface = 1
+    # Si la section est ronde
     if section == 'rond':
         surface = np.pi*(diametre/2)**2
+    elif section == 'carre':
+        surface = diametre**2
     return debit/surface
 
 
-# Définition de la fonction qui calcule le coefficient de perte de charge
 def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
-    """Renvoie le coefficient de perte de charge selon le nomre de Reynolds"""
-    # rugosite et diametre en mm - reynolds sans unite
-    # formule https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
+    """
+        Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds
+
+        Args:
+            reynolds (float) : Le nombre de Reynolds, sans dimension
+            rugosite (float) : La rugosité de la canalisation, en m
+            diametre (float) : Le diamètre de la canalisation, en m
+
+        Returns:
+            flaot : Le coefficient de perte de charge
+        """
+    # formules trouvées sur : https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
     if reynolds < 2320:
-    #if reynolds > 0:
         # Loi de Hagen-Poiseuille
         return 64 / reynolds
     else:
@@ -40,72 +68,77 @@ def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
         return A - ((B-A)**2)/(C-2*B+A)
 
 
-# Définition de la fonction de calcul de pression selon la formule de Poiseuille
-def calculer_pression_poiseuille(debit_vol, viscosite_cine, pression_entree, longueur_canal, rayon_canal):
-    """Renvoie la différence de pression de sortie dans un écoulement de Poiseuille"""
-    # debit_col en m3/s - viscosite_cine en m2/s - pression_entree en Pa - longueur_canal, rayon_canal en m
-    return 8 * viscosite_cine * longueur_canal * debit_vol / (np.pi * rayon_canal**4)
-
-
-# Définition de la fonction qui calcule les pertes de charges régulières
 def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite):
-    """Renvoie la différence de pression en sortie d'un endroit pouvant provoquer une perte de charge régulière"""
-    # longueur, diametre, rugosite en m - vitesse en m/s - viscosite_cine en m2/s - densite en kg/m2 -
-    # pression_entree en Pa
+    """
+        Cette fonction calcule la différence de pression due aux pertes de charges régulières
+
+        Args:
+            longueur (float) : La longueur de la canalisation, en m
+            diametre (float) : Le diamètre de la canalisation, en m
+            vitesse (float) : La vitesse du fluide, en m/s
+            viscosite_cine (float) : La viscosité cinématique de fluide, en m**2/s
+            rugosite (float) : La rugosité de la canalisation, en m
+            densite (float) : La densité du fluide en kg/m**3
+
+        Returns:
+            flaot : La différence de pression causée par les pertes de charge régulières
+    """
     reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
     fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)
-    # print(f"coef regu : {fd}")
+    # formule trouvée sur : https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
     return fd * longueur * densite * vitesse**2 / (diametre * 2)
 
 
-# Définition de la fonction qui calcule les pertes de charges liée à un changement brusque de section
-def calculer_perte_chgt_brusque_section(vitesse, section_entree, densite, section_sortie, pression_entree):
-    """Renvoie la différence de pression en sortie d'un changement brusaue de section"""
-    # vitesse en m/s - section_entree, section_sortie en m - densite en kg/m3 - pression_entree en Pa
-    if section_entree < section_sortie:
-        ksi = (1 - section_entree/section_sortie)**2
-        # il faut multiplier par la vitesse d'entrée
-        return pression_entree + densite * ksi * vitesse ** 2 / 2
+def calculer_perte_chgt_brusque_section(vitesse, diametre_entree, densite, diametre_sortie):
+    """
+        Cette fonction calcule la différence de pression due aux pertes de charges singulières causées par un
+        changement de section brusque.
+
+        Args:
+            vitesse (float) : La vitesse du fluide, en m/s
+            diametre_entree (float) : Le diamètre à la sortie de la canalisation précédente, en m
+            diametre_sortie (float) : Le diamètre à l'entrée de la canalisation courante, en m
+            densite (float) : La densité du fluide en kg/m**3
+
+        Returns:
+            flaot : La différence de pression causée par les pertes de charge régulières
+    """
+    # On utilise les formules trouvées sur : https://gpip.cnam.fr/ressources-pedagogiques-ouvertes/hydraulique/co/3grain_PertesChargeVariationsSectionConduite.html
+    if diametre_entree < diametre_sortie:
+        ksi = (1 - diametre_entree/diametre_sortie)**2
     else:
-        C = 0.63 + 0.37 * (section_sortie/section_entree)**2
+        C = 0.63 + 0.37 * (diametre_sortie/diametre_entree)**2
         ksi = (1/C - 1)**2
-        # il faut multiplier par la vitesse de sortie
-        return densite * ksi * vitesse ** 2 / 2
+    return densite * ksi * vitesse ** 2 / 2
 
 
-# Définition de la fonction qui renvoie la pression en sortie de la pompe
 def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree):
-    """Renvoie la différence de pression en sortie d'une pompe"""
-    # puissance en W - debit en m3/s - pression_entree en Pa - rendement sans unité
+    """
+        Cette fonction calcule la pression en sortie d'une pompe
+
+        Args:
+            puissance (float) : La puissance de la pompe, en W
+            rendement (float) : Le rendement de la pompe, entre 0 et 1
+            debit (float) : Le débit de fluide, en m**3/s
+            pression_entree (float) : La pression à l'entrée de la pompe, en Pa
+
+        Returns:
+            flaot : La valeur de la pression du fluide en sortie de pompe
+    """
     return pression_entree + rendement * puissance/debit
 
 
-def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse_init):
-    return coef_perte_signuliere * densite * vitesse_init**2 / 2
+def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse):
+    """
+        Cette fonction calcule la différence de pression due aux pertes de charges singulières
 
+        Args:
+            coef_perte_signuliere (float) : Le coefficient de perte de charge singulière
+            densite (float) : La densité du fluide en kg/m**3
+            vitesse (float) : La vitesse du fluide, en m/s
 
-def calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere):
-    A = ((pression_entree - pression_sortie - delta_reguliere) / (densite * (1 + coef_singuliere)))
-    B = (vitesse_entree**2 / (1 + coef_singuliere))
-    return np.sqrt(2 * A + B)
-
-
-def calculer_temperature_sortie(temperature_entree):
-    return temperature_entree
-
-
-def exercice_verif_regu():
-    diametre = 14*10**(-3)
-    longueur = 10
-    rugosite = .1*10**(-3)
-
-    densite = 900
-    viscosite_cine = 30*10**(-6)
-    debit = 55*10**(-3)/60
-
-    vitesse = calculer_debit2vitesse(debit, diametre, 'rond')
-    reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
-    coef_singu = calculer_coef_perte_de_charge(reynolds, 0, diametre)
-
-    delta_P = calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, 0, densite)
-    print(delta_P)
+        Returns:
+            flaot : La différence de pression causée par les pertes de charge singulières
+    """
+    # formule trouvée sur : https://fr.wikipedia.org/wiki/Perte_de_charge
+    return coef_perte_signuliere * densite * vitesse**2 / 2

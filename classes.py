@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from gestion_BDD_fluides import recuperer_valeur_fluide
-from calculs import calculer_reynolds, calculer_perte_singuliere, calculer_perte_reguliere, calculer_vitesse_sortie, calculer_temperature_sortie
+from calculs import calculer_reynolds, calculer_perte_singuliere, calculer_perte_reguliere
 from gestion_BDD_geometries import recuperer_coeff_perte_charge_singuliere
 
 
@@ -225,8 +225,8 @@ class Canalisation(Troncon):
             # print("")
             pression_sortie = pression_entree - delta_pression
 
-            vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere)
-            temperature_sortie = calculer_temperature_sortie(temperature_entree)
+            vitesse_sortie = vitesse_entree
+            temperature_sortie = temperature_entree
 
             liste_pression = np.append(liste_pression, pression_sortie)
             liste_vitesse = np.append(liste_vitesse, vitesse_sortie)

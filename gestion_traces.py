@@ -177,12 +177,12 @@ def tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, li
 
 # Fonction test pour tracer une canalisation
 def tracer_canal():
-    troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 0, 'eau', 2, 1.018*10**5, 20)
-    troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude G',1,'eau', 2, 1.018*10**5, 20)
-    troncon3 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  1, 'eau', 2, 1.018*10**5, 20)
-    troncon4 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude D',  2, 'eau', 2, 1.018*10**5, 20)
-    troncon5 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit',  3, 'eau', 2, 1.018*10**5, 20)
-    troncon6 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  4, 'eau', 2, 1.018*10**5, 20)
+    troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 0, 'eau', 2, 1.018*10**5, 20, .01, .01)
+    troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude G',1,'eau', 2, 1.018*10**5, 20, .01, .01)
+    troncon3 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  1, 'eau', 2, 1.018*10**5, 20, .01, .01)
+    troncon4 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude D',  2, 'eau', 2, 1.018*10**5, 20, .01, .01)
+    troncon5 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit',  3, 'eau', 2, 1.018*10**5, 20, .01, .01)
+    troncon6 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  4, 'eau', 2, 1.018*10**5, 20, .01, .01)
 
     canal = Canalisation()
     canal.ajouter_troncon(troncon1)
@@ -206,3 +206,4 @@ def tracer_coude():
     print(x[-1],y[-1])
     plt.plot(x,y)
     plt.show()
+

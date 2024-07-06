@@ -4,9 +4,8 @@ import numpy as np
 from classes import *
 from calculs import *
 from verifications import *
-from gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite, ajouter_materiau, supprimer_materiau, modifier_materiau
+from gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite
 from gestion_BDD_geometries import recuperer_attribut_geo
-from gestion_BDD_fluides import ajouter_fluide, modifier_fluide, supprimer_fluide, afficher_fluide
 from gestion_traces import tracer_canalisations, tracer_pression_vitesse_1d
 from gestion_YAML import get_name_yaml, get_info_yaml
 
@@ -330,18 +329,8 @@ def interface():
 
         liste_forme_canalisation = [forme] * nbre_troncons
         liste_diametre_canalisation = [diametre] * nbre_troncons
-        liste_materiau_canalisation = [diametre] * nbre_troncons
+        liste_materiau_canalisation = [materiau] * nbre_troncons
         liste_rugosite_canalisation = [rugosite] * nbre_troncons
-        # print(liste_longueur_canalisation)
-        # print(liste_forme_canalisation)
-        # print(liste_diametre_canalisation)
-        # print(liste_materiau_canalisation)
-        # print(liste_rugosite_canalisation)
-        # print(liste_geometrie_canalisation)
-        # print(liste_rayon_canalisation)
-        # print(pression_init)
-        # print(vitesse_init)
-        # print(debit)
 
     canalisation = Canalisation()
     # Enregistrement des tronçons et de la canalisation
@@ -368,13 +357,13 @@ def interface():
         canalisation.ajouter_troncon(troncon)
 
     # Affichage et confirmation de la géométrie des canalisations
-        print("La géométrie de votre problème est-elle bien la suivante ?")
-        tracer_canalisations(canalisation)
-        confirmation_geometrie = get_element_liste_input(['oui', 'non'])
+    print("La géométrie de votre problème est-elle bien la suivante ?")
+    tracer_canalisations(canalisation)
+    confirmation_geometrie = get_element_liste_input(['oui', 'non'])
 
-        if confirmation_geometrie == 'non':
-            print(f"Pour modifier la canlisation veuillez modifier votre fichier .yaml puis relancer le programme.")
-            return True
+    if confirmation_geometrie == 'non':
+        print(f"Pour modifier la canlisation veuillez modifier votre fichier .yaml puis relancer le programme.")
+        return True
 
     # Phase de calculs
     print("...Début de la phase de calculs...")
