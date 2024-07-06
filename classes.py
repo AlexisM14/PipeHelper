@@ -583,7 +583,7 @@ class Canalisation():
 
             # On calcule les pertes de charges et la pression, vitesse et température de sortie
             delta_reguliere = calculer_perte_reguliere(longueur, diametre, vitesse_entree, troncon.recuperer_viscosite_cine(), troncon.recuperer_rugosite(), densite)
-            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, diametre, troncon.recuperer_courbure())
+            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, troncon.recuperer_courbure())
             delta_singuliere = calculer_perte_singuliere(coef_singuliere, densite, vitesse_entree)
             delta_pression = delta_singuliere + delta_reguliere
 
