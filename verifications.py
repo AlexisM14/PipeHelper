@@ -4,7 +4,15 @@ import numpy as np
 
 # Définition de la procédure nettoyer_écran
 def nettoyer_ecran():
-    """Cette procédure permet de nettoyer la console, afin que rien n'y soit plus affiché"""
+    """
+    Cette procédure permet de nettoyer la console
+
+    Args :
+        Aucun
+
+    Returns :
+        Aucun
+    """
     print("")
     print("")
     print("")
@@ -32,6 +40,15 @@ def nettoyer_ecran():
 # Définition de la fonction qui vérifie que l'entrée est bien un flottant
 # La fonction est inspirée de celle définie dans le module 09 - Introduction à la POO
 def get_float_input(signe='all'):
+    """
+    Cette fonction permet de récupérer un flottant, qu'a entré l'utilisateur
+
+    Args :
+        signe (str) : '+' pour des flottants supérieurs ou égaux à 0, '-' sinon
+
+    Returns :
+        float : Le flottant entré par l'utilisateur
+    """
     while True:
         # On vérifie constamment l'entrée
         try:
@@ -52,6 +69,15 @@ def get_float_input(signe='all'):
 # Définition de la fonction qui vérifie que l'entrée est bien un entier
 # Fonction inspirée de la fonction vérifiant les flottants
 def get_int_input(signe='all'):
+    """
+    Cette fonction permet de récupérer un entier, qu'a entré l'utilisateur
+
+    Args :
+        signe (str) : '+' pour des flottants supérieurs ou égaux à 0, '-' sinon
+
+    Returns :
+        int : L'entier entré par l'utilisateur
+    """
     while True:
         # On vérifie constamment l'entrée
         try:
@@ -69,8 +95,16 @@ def get_int_input(signe='all'):
     return value
 
 
-# Définition de la fonction qui vérifie que l'entrée est une section valable
 def get_element_liste_input(liste):
+    """
+    Cette fonction permet de récupérer un élément d'une liste, entré par l'utilisateur
+
+    Args :
+        liste (list) : La liste des choix donnés à l'utilisateur
+
+    Returns :
+        str : Le choix de l'utilisateur
+    """
     mots_chaine = liste[0]
     for i in liste[1:]:
         mots_chaine += ', '
@@ -85,21 +119,23 @@ def get_element_liste_input(liste):
     return value
 
 
-def get_choix_mode():
-    print("Que voulez-vous faire dans ce programme ?")
-    print("1 - Étudier un problème de canalisation")
-    print("2 - Ajouter/supprimer un matériau à la base de données")
-    print("3 - Ajouter/supprimer un fluide à la base de données")
-    print("Entrez 1, 2 ou 3.")
-    value = input("--> ")
-    liste = ['1', '2', '3']
-    while value not in liste:
-        print("Entrée invalide, vous devez entrer 1, 2 ou 3.")
-        value = input("--> ")
-    return int(value)
-
-
 def get_init_cond_input(fluide, diametre):
+    """
+    Cette fonction permet de récupérer les conditions initiales, entrées par l'utilisateur
+
+    Args :
+        fluide (str) : Le nom du fluide
+        diametre (float) : Le diamètre de la canalisation
+
+    Returns :
+        float : La vitesse initiale du fluide, en m/s
+        float : La température initiale du fluide, en °C
+        float : La pression initiale du fluide, en Pa
+        float : La densité du fluide, en kg/m883
+        float : La viscosité cinématique du fluide, en m**2/s
+        float : Le débit du fluide, en m**3/s
+    """
+
     liste_temperature = recuperer_liste_temperature(fluide)
     print("Voulez-vous entrez la vitesse (m/s) ou le débit (m3/s) à l'entrée de la canalisation ?")
     choix = get_element_liste_input(['vitesse','débit'])
@@ -141,6 +177,16 @@ def get_init_cond_input(fluide, diametre):
 
 
 def get_float_between_input(a,b):
+    """
+    Cette fonction permet de récupérer un flottant dans un intervalle, entrées par l'utilisateur
+
+    Args :
+        a (float) : Le plus petit nombre de l'intervalle
+        b (float) : Le plus grand nombre de l'intervalle
+
+    Returns :
+        float : Le nombre entré par l'utilisateur, dans l'intervalle
+    """
     while b < a:
         print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")
         print("a = ")
@@ -155,6 +201,16 @@ def get_float_between_input(a,b):
 
 
 def get_int_between_input(a,b):
+    """
+    Cette fonction permet de récupérer un entier dans un intervalle, entrées par l'utilisateur
+
+    Args :
+        a (float) : Le plus petit nombre de l'intervalle
+        b (float) : Le plus grand nombre de l'intervalle
+
+    Returns :
+        int : Le nombre entré par l'utilisateur, dans l'intervalle
+    """
     while b < a:
         print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")
         print("a = ")

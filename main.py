@@ -278,6 +278,7 @@ def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, lis
         liste_geometrie (list) : La liste des géométries de la canalisation
         liste_abscisse (list) : La liste des abscisses de la canalisation
         liste_longueur (list) : La liste des longueurs des géométries de la canalisation
+
     Returns :
         int : Index de l'endroit ou placer la pompe
     """
@@ -325,6 +326,7 @@ def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance,
         rendement (float) : Le rendement de la pompe
         liste_geometrie (list) : La liste des géométries de la canalisation
         liste_longueur (list) : La liste des longueurs des géométries de la canalisation
+
     Returns :
         Aucun
     """
@@ -375,6 +377,7 @@ def interface():
 
     Args :
         Aucun
+
     Returns :
         Aucun
     """
