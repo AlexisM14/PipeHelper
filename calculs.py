@@ -14,33 +14,37 @@ g = 9.81
 
 # Définition des fonctions
 def calculer_reynolds(vitesse, diametre, viscosite_cine):
-    """
-    Cette fonction calcule le nombre de Reynolds.
+    """Cette fonction calcule le nombre de Reynolds.
 
-    Args :
-        vitesse (float) : La vitesse du fluide, en m/s
-        diametre (float) : Le diamètre de la canalisation, en m
-        viscosite_cine (float) : La viscosité cinématique de fluide, en m**2/s
-
-    Returns :
-        flaot : Le nombre de Reynolds calculé à partir de ces paramètres
+    :param vitesse: La vitesse du fluide, en m/s
+    :type vitesse: float
+    :param diametre: Le diamètre de la canalisation, en m
+    :type diametre: float
+    :param viscosite_cine: La viscosité cinématique de fluide, en m**2/s
+    :type viscosite_cine: float
+    ...
+    :return: Le nombre de Reynolds calculé à partir de ces paramètres
+    :rtype: float
     """
+
     re = vitesse * diametre / viscosite_cine
     return re
 
 
 def calculer_debit2vitesse(debit, diametre, section):
+    """Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds.
+
+    :param debit: Le débit du fluide, en m**3/s
+    :type debit: float
+    :param diametre: Le diamètre de la canalisation, en m
+    :type diametre: float
+    :param section: La forme de la section (par exemple 'rond')
+    :type section: str
+    ...
+    :return: La vitesse correspondant à ces paramètres
+    :rtype: float
     """
-        Cette fonction convertit un débit en vitesse.
 
-        Args :
-            debit (float) : Le débit du fluide, en m**3/s
-            diametre (float) : Le diamètre de la canalisation, en m
-            section (str) : La forme de la section (par exemple 'rond')
-
-        Returns :
-            flaot : La vitesse correspondant à ces paramètres
-        """
     surface = 1
     # Si la section est ronde
     if section == 'rond':
@@ -51,17 +55,19 @@ def calculer_debit2vitesse(debit, diametre, section):
 
 
 def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
+    """Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds.
+
+    :param reynolds: Le nombre de Reynolds, sans dimension
+    :type reynolds: float
+    :param rugosite: La rugosité de la canalisation, en m
+    :type rugosite: float
+    :param diametre: Le diamètre de la canalisation, en m
+    :type diametre: float
+    ...
+    :return: Le coefficient de perte de charge
+    :rtype: float
     """
-        Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds.
 
-        Args :
-            reynolds (float) : Le nombre de Reynolds, sans dimension
-            rugosite (float) : La rugosité de la canalisation, en m
-            diametre (float) : Le diamètre de la canalisation, en m
-
-        Returns:
-            flaot : Le coefficient de perte de charge
-        """
     # formules trouvées sur : https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
     if reynolds < 2320:
         # Loi de Hagen-Poiseuille
@@ -79,20 +85,25 @@ def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
 
 
 def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite):
-    """
-        Cette fonction calcule la différence de pression due aux pertes de charges régulières.
+    """Cette fonction calcule la différence de pression due aux pertes de charges régulières.
 
-        Args:
-            longueur (float) : La longueur de la canalisation, en m
-            diametre (float) : Le diamètre de la canalisation, en m
-            vitesse (float) : La vitesse du fluide, en m/s
-            viscosite_cine (float) : La viscosité cinématique de fluide, en m**2/s
-            rugosite (float) : La rugosité de la canalisation, en m
-            densite (float) : La densité du fluide en kg/m**3
-
-        Returns:
-            flaot : La différence de pression causée par les pertes de charge régulières
+    :param longueur: La longueur de la canalisation, en m
+    :type longueur: float
+    :param diametre: Le diamètre de la canalisation, en m
+    :type diametre: float
+    :param vitesse: La vitesse du fluide, en m/s
+    :type vitesse: float
+    :param viscosite_cine: La viscosité cinématique de fluide, en m**2/s
+    :type viscosite_cine: float
+    :param rugosite: La rugosité de la canalisation, en m
+    :type rugosite: float
+    :param densite: La densité du fluide, en kg/m**3
+    :type densite: float
+    ...
+    :return: La différence de pression causée par les pertes de charge régulières
+    :rtype: float
     """
+
     reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
     fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)
     # formule trouvée sur : https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
@@ -100,19 +111,22 @@ def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosi
 
 
 def calculer_perte_chgt_brusque_section(vitesse, diametre_entree, densite, diametre_sortie):
-    """
-        Cette fonction calcule la différence de pression due aux pertes de charges singulières causées par un
+    """Cette fonction calcule la différence de pression due aux pertes de charges singulières causées par un
         changement de section brusque.
 
-        Args:
-            vitesse (float) : La vitesse du fluide, en m/s
-            diametre_entree (float) : Le diamètre à la sortie de la canalisation précédente, en m
-            diametre_sortie (float) : Le diamètre à l'entrée de la canalisation courante, en m
-            densite (float) : La densité du fluide en kg/m**3
-
-        Returns:
-            flaot : La différence de pression causée par les pertes de charge régulières
+    :param vitesse: La vitesse du fluide, en m/s
+    :type vitesse: float
+    :param diametre_entree: Le diamètre de la canalisation, en m
+    :type diametre_entree: float
+    :param densite: La densité du fluide, en kg/m**3
+    :type densite: float
+    :param diametre_sortie: Le diamètre de la canalisation, en m
+    :type diametre_sortie: float
+    ...
+    :return: La différence de pression causée par les pertes de charge
+    :rtype: float
     """
+
     # On utilise les formules trouvées sur : https://gpip.cnam.fr/ressources-pedagogiques-ouvertes/hydraulique/co/3grain_PertesChargeVariationsSectionConduite.html
     if diametre_entree < diametre_sortie:
         ksi = (1 - diametre_entree/diametre_sortie)**2
@@ -123,32 +137,37 @@ def calculer_perte_chgt_brusque_section(vitesse, diametre_entree, densite, diame
 
 
 def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree):
-    """
-        Cette fonction calcule la pression en sortie d'une pompe.
+    """Cette fonction calcule la pression en sortie d'une pompe.
 
-        Args:
-            puissance (float) : La puissance de la pompe, en W
-            rendement (float) : Le rendement de la pompe, entre 0 et 1
-            debit (float) : Le débit de fluide, en m**3/s
-            pression_entree (float) : La pression à l'entrée de la pompe, en Pa
-
-        Returns:
-            flaot : La valeur de la pression du fluide en sortie de pompe
+    :param puissance: La puissance de la pompe, en W
+    :type puissance: float
+    :param rendement: Le rendement de la pompe, entre 0 et 1
+    :type rendement: float
+    :param debit: Le debit de la canalisation, en m**3/s
+    :type debit: float
+    :param pression_entree: La pression en entrée de la pompe, en Pa
+    :type pression_entree: float
+    ...
+    :return: La valeur de la pression du fluide en sortie de pompe
+    :rtype: float
     """
+
     return pression_entree + rendement * puissance/debit
 
 
 def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse):
-    """
-        Cette fonction calcule la différence de pression due aux pertes de charges singulières.
+    """Cette fonction calcule la différence de pression due aux pertes de charges singulières.
 
-        Args:
-            coef_perte_signuliere (float) : Le coefficient de perte de charge singulière
-            densite (float) : La densité du fluide en kg/m**3
-            vitesse (float) : La vitesse du fluide, en m/s
-
-        Returns:
-            flaot : La différence de pression causée par les pertes de charge singulières
+    :param coef_perte_signuliere: Le coefficient de perte de charge singuliètre, sans unité
+    :type coef_perte_signuliere: float
+    :param densite: La densité du fluide, en kg/m**3
+    :type densite: float
+    :param vitesse: La vitesse du fluide, en m/s
+    :type vitesse: float
+    ...
+    :return: La différence de pression causée par les pertes de charge singulières
+    :rtype: float
     """
+
     # formule trouvée sur : https://fr.wikipedia.org/wiki/Perte_de_charge
     return coef_perte_signuliere * densite * vitesse**2 / 2

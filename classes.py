@@ -15,6 +15,9 @@ from gestion_BDD_geometries import recuperer_coeff_perte_charge_singuliere
 
 # Définition des classes
 class Troncon:
+    """ Une portion de la canalisation
+
+    """
 
     # Méthode constructeur
     def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init, densite, viscosite_cine):
@@ -331,6 +334,9 @@ class Troncon:
 
 
 class Canalisation():
+    """ Une canalisation en entier
+
+    """
 
     def __init__(self):
         """
