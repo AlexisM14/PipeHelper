@@ -1,12 +1,19 @@
-"""Ce script définit toutes les classes qui seront utiles au programme"""
+"""
+File: classes.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script définit toutes les classes qui seront utiles au programme
+"""
+
+# Imports
 import numpy as np
 import matplotlib.pyplot as plt
-
 from gestion_BDD_fluides import recuperer_valeur_fluide
 from calculs import calculer_reynolds, calculer_perte_singuliere, calculer_perte_reguliere
 from gestion_BDD_geometries import recuperer_coeff_perte_charge_singuliere
 
 
+# Définition des classes
 class Troncon:
 
     # Méthode constructeur
@@ -369,7 +376,7 @@ class Canalisation():
         Cette fonction peremt d'ajouter / modifier un tronçon à la canalisation
 
         Args:
-            Troncon : Le troncon à ajouter
+            troncon : Le troncon à ajouter
 
         Returns:
             Aucun

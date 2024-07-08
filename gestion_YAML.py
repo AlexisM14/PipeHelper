@@ -1,12 +1,19 @@
+"""
+File: gestion_YAML.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir des fonctions qui permettent de manipuler des fichiers .yaml.
+"""
 
-
+# Imports
 from LecteurYAML import LecteurYAML
 import os
 
 
+# Définition des fonctions
 def get_name_yaml():
     """
-    Cette fonction permet de récupérer le nom du fichier .yaml
+    Cette fonction permet de récupérer le nom du fichier .yaml.
 
     Args :
         Aucun
@@ -23,7 +30,7 @@ def get_name_yaml():
 
 def get_info_yaml(nom):
     """
-    Cette procédure permet de récupérer les informations du fichier .yaml
+    Cette procédure permet de récupérer les informations du fichier .yaml.
 
     Args :
         nom (str) : Le nom du fichier .yaml

@@ -1,6 +1,15 @@
+"""
+File: LecteurYAML.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir la classe qui permet d'utiliser des fichiers .yaml.
+"""
+
+# Imports
 import yaml
 
 
+# Définition de la classe
 class LecteurYAML:
     def __init__(self, file_path):
         self.file_path = file_path

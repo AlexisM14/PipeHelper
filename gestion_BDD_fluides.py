@@ -1,12 +1,21 @@
+"""
+File: gestion_BDD_fluides.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir des fonctions qui permettent de gérer la base de données "BDD_fluides.xlsx"
+"""
+
+# Imports
 import pandas as pd
 
 # On enregistre la base de données dans df
 df_fluide = pd.read_excel('Base_De_Donnees/BDD_fluides.xlsx')
 
 
+# Définition des fonctions
 def lister_fluides():
     """
-    Cette fonction renvoie la liste des noms des fluides de la base données
+    Cette fonction renvoie la liste des noms des fluides de la base données.
 
     Args:
         Aucun
@@ -19,7 +28,7 @@ def lister_fluides():
 
 def afficher_fluide():
     """
-    Cette procédure affiche le nom des fluides de la base données
+    Cette procédure affiche le nom des fluides de la base données.
 
     Args:
         Aucun
@@ -34,7 +43,7 @@ def afficher_fluide():
 
 def trouver_nombre_apres(liste, nombre):
     """
-    Cette fonction renvoie le plus petit nombre, plus grand que 'nombre' dans la liste
+    Cette fonction renvoie le plus petit nombre, plus grand que 'nombre' dans la liste.
 
     Args:
         liste (list) : La liste des nombres
@@ -54,7 +63,7 @@ def trouver_nombre_apres(liste, nombre):
 
 def trouver_nombre_avant(liste, nombre):
     """
-    Cette fonction renvoie le plus grand nombre, plus petit que 'nombre' dans la liste
+    Cette fonction renvoie le plus grand nombre, plus petit que 'nombre' dans la liste.
 
     Args:
        liste (list) : La liste des nombres
@@ -74,7 +83,7 @@ def trouver_nombre_avant(liste, nombre):
 def recuperer_fourchette_fluide(nom_fluide, colonne, nombre):
     """
     Cette fonction renvoie le nombre juste avant et juste après 'nombre', dans la colonne 'colonne', pour 'fluide'
-    dans la base de données
+    dans la base de données.
 
     Args:
        nom_fluide (str) : Le nom du fluide
@@ -94,7 +103,7 @@ def recuperer_fourchette_fluide(nom_fluide, colonne, nombre):
 
 def recuperer_liste_temperature(nom_fluide):
     """
-    Cette fonction renvoie la liste des températures pour 'nom_fluide' dans la base de données
+    Cette fonction renvoie la liste des températures pour 'nom_fluide' dans la base de données.
 
     Args:
        nom_fluide (str) : Le nom du fluide
@@ -108,7 +117,7 @@ def recuperer_liste_temperature(nom_fluide):
 
 def recuperer_valeur_fluide(nom_fluide, temperature, colonne):
     """
-    Cette fonction renvoie la valeur du fluide 'nom_fluide' dans la colonne 'colonne', à la température 'temperature'
+    Cette fonction renvoie la valeur du fluide 'nom_fluide' dans la colonne 'colonne', à la température 'temperature'.
 
     Args:
        nom_fluide (str) : Le nom du fluide

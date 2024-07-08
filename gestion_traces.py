@@ -1,14 +1,24 @@
+"""
+File: gestion_traces.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir des fonctions qui tracerons les variations de pressions et la géométrie d'une canalisation
+"""
+
+# Imports
 import numpy as np
 import matplotlib.pyplot as plt
 from classes import Troncon, Canalisation
 
-# La direction x va de gauche à droite
-# La direction y va de haut en bas
+
+# La direction x va de gauche à droite, 'x+' va vers la droite
+# La direction y va de haut en bas, 'y+' va vers le haut
 
 
+# Définitions des fonctions
 def calculer_coordonnees_coude(x_debut, y_debut, rayon, angle_deg, orientation, direction):
     """
-    Cette fonction permet de calculer les coordonnées d'un coude
+    Cette fonction permet de calculer les coordonnées d'un coude.
 
     Args:
         x_debut (float) : La coordonnée x ou démarre le coude
@@ -93,7 +103,7 @@ def calculer_coordonnees_coude(x_debut, y_debut, rayon, angle_deg, orientation, 
 
 def calculer_coordonnees_guide(canalisation, x_debut, y_debut, direction='y+'):
     """
-    Cette fonction permet de calculer les coordonnées d'une canalisation
+    Cette fonction permet de calculer les coordonnées d'une canalisation.
 
     Args:
         canalisation (Canalisation) : La canalisation étudiée
@@ -172,7 +182,7 @@ def calculer_coordonnees_guide(canalisation, x_debut, y_debut, direction='y+'):
 
 def tracer_canalisations(canalisation):
     """
-    Cette procédure permet de tracer la canalisation
+    Cette procédure permet de tracer la canalisation.
 
     Args :
         canalisation (Canalisation) : La canalisation à tracer
@@ -192,7 +202,7 @@ def tracer_canalisations(canalisation):
 
 def tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur):
     """
-    Cette procédure permet de tracer les variations de pression et de vitesse le long de la canalisation
+    Cette procédure permet de tracer les variations de pression et de vitesse le long de la canalisation.
 
     Args :
         liste_pression (liste) : La variation de pression dans la canalisation

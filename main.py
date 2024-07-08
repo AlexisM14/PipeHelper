@@ -1,10 +1,17 @@
-""" Ce script permet de générer l'affichage du programme"""
+"""
+File: main.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de générer l'affichage du programme
+"""
 
+# Imports
 from classes import *
 from calculs import *
 from verifications import *
 from gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite
 from gestion_BDD_geometries import recuperer_attribut_geo
+from gestion_BDD_fluides import lister_fluides
 from gestion_traces import tracer_canalisations, tracer_pression_vitesse_1d
 from gestion_YAML import get_name_yaml, get_info_yaml
 
@@ -21,9 +28,45 @@ rapport_rayon_diam_min = min(liste_rap_coude)
 rapport_rayon_diam_max = max(liste_rap_coude)
 
 
+# Définition des fonctions
+# Définition de la procédure nettoyer_écran
+def nettoyer_ecran():
+    """
+    Cette procédure permet de nettoyer la console.
+
+    Args :
+        Aucun
+
+    Returns :
+        Aucun
+    """
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+
+
 def choisir_materiaux_canalisation(nbre, choix):
     """
-    Cette fonction permet de récupérer le nom des matériaux composant la canalisation
+    Cette fonction permet de récupérer le nom des matériaux composant la canalisation.
 
     Args :
         nbre (int) : Le nombre de tronçons dans la canalisation
@@ -56,7 +99,7 @@ def choisir_materiaux_canalisation(nbre, choix):
 
 def choisir_rugosite_canalisation(nbre, choix_rugo, choix_mat, liste_mat):
     """
-    Cette fonction permet de récupérer les rugosités de la canalisation
+    Cette fonction permet de récupérer les rugosités de la canalisation.
 
     Args :
         nbre (int) : Le nombre de tronçons dans la canalisation
@@ -107,7 +150,7 @@ def choisir_rugosite_canalisation(nbre, choix_rugo, choix_mat, liste_mat):
 
 def choisir_geometrie_canalisation(nbre):
     """
-    Cette fonction permet de récupérer les géométries de la canalisation
+    Cette fonction permet de récupérer les géométries de la canalisation.
 
     Args :
         nbre (int) : Le nombre de tronçons dans la canalisation
@@ -164,7 +207,7 @@ def choisir_geometrie_canalisation(nbre):
 
 def choisir_longueur_canalisation(nbre, liste_geo):
     """
-    Cette fonction permet de récupérer les longueurs des géométries de la canalisation
+    Cette fonction permet de récupérer les longueurs des géométries de la canalisation.
 
     Args :
         nbre (int) : Le nombre de tronçons dans la canalisation
@@ -196,7 +239,7 @@ def choisir_longueur_canalisation(nbre, liste_geo):
 
 def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste_rayon):
     """
-    Cette fonction permet de vérifier que les rapports rayon de courbure / diametre des coudes sont bien couverts par la base de données
+    Cette fonction permet de vérifier que les rapports rayon de courbure / diametre des coudes sont bien couverts par la base de données.
 
     Args :
         nbre (int) : Le nombre de tronçons dans la canalisation
@@ -237,7 +280,7 @@ def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste
 
 def verifier_dans_intervalle(nbre, intervalle):
     """
-    Cette fonction permet de vérifier qu'un nombre est bien dans un intervalle
+    Cette fonction permet de vérifier qu'un nombre est bien dans un intervalle.
 
     Args :
         nbre (float) : Le nombre à tester
@@ -253,7 +296,7 @@ def verifier_dans_intervalle(nbre, intervalle):
 
 def recuperer_index_plus_proche_inf(liste_abscisse, nbre):
     """
-    Cette fonction permet de récupérer l'index du nombre le plus petit et le plus proche de 'nbre' dans une liste
+    Cette fonction permet de récupérer l'index du nombre le plus petit et le plus proche de 'nbre' dans une liste.
 
     Args :
         nbre (float) : Le nombre à tester
@@ -270,7 +313,7 @@ def recuperer_index_plus_proche_inf(liste_abscisse, nbre):
 
 def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur):
     """
-    Cette fonction permet de récupérer l'index ou placer une pompe pour que la pression ne descende pas sous 'pression_min'
+    Cette fonction permet de récupérer l'index ou placer une pompe pour que la pression ne descende pas sous 'pression_min'.
 
     Args :
         liste_pression (list) : La liste de distribution des pressions dans la canalisation
@@ -315,7 +358,7 @@ def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, lis
 
 def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement, liste_geometrie, liste_longueur):
     """
-    Cette procédure permet de tracer la distribution de pressions dans la canalisation, avec des ponmpes
+    Cette procédure permet de tracer la distribution de pressions dans la canalisation, avec des ponmpes.
 
     Args :
         debit (float) : Le débit de la canalisation, en kg/m**3
@@ -371,9 +414,10 @@ def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance,
     plt.show()
 
 
+# Défintion de la procédure principale
 def interface():
     """
-    Cette procédure permet de lancer le programme
+    Cette procédure permet de lancer le programme.
 
     Args :
         Aucun
@@ -392,8 +436,6 @@ def interface():
     # On propose d'utilise un fichier .yaml
     print("\n Voulez-vous utiliser un fichier .yaml, celui doit être enregistré dans le même dossier que ce script.")
     choix_yaml = get_element_liste_input(liste_o_n)
-    print("Quel est le nom du fichier, suivit de '.yaml'")
-    nom_fichier = get_name_yaml()
 
     # Si l'utilisateur n'utilise pas de fichier .yaml, on demande les paramètres un à un
     if choix_yaml == 'non':
@@ -447,6 +489,9 @@ def interface():
 
     # Si l'utilisateur utilise un fichier .yaml
     else:
+        print("Quel est le nom du fichier, suivit de '.yaml'")
+        nom_fichier = get_name_yaml()
+
         # On enregistre les informations de ce fichier
         fluide, nbre_troncons, materiau, rugosite, forme, diametre, vitesse_init, debit, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie_canalisation, liste_longueur_canalisation, liste_rayon_canalisation, choix_pompe, pression_min, puissance_pompe, rendement = get_info_yaml(nom_fichier)
         pression_init = pression_init * 10**5
@@ -511,7 +556,7 @@ def interface():
     # S'il n'y a pas de fichier .yaml
     if choix_yaml == 'non':
         print("")
-        print("Voulez-vous placer une pompe sur la canalisation ?")
+        print("Voulez-vous placer des pompes sur la canalisation ?")
         choix_pompe = get_element_liste_input(liste_o_n)
 
     # Si l'utilisateur ne veut pas placer de pompe

@@ -1,8 +1,16 @@
-import pandas as pd
+"""
+File: gestion_BDD_geometries.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir des fonctions qui permettent de gérer la base de données "BDD_geometries.xlsx"
+"""
 
+# Imports
+import pandas as pd
+from gestion_BDD_fluides import trouver_nombre_apres, trouver_nombre_avant
 
 # On enregistre la base de données dans df
-df_geometrie = pd.read_excel('Base_De_Donnees/BDD_geometrie.xlsx')
+df_geometrie = pd.read_excel('Base_De_Donnees/BDD_geometries.xlsx')
 
 # On enregistre les différentes informations de chaque géométrie
 liste_angle = df_geometrie.groupby('nom')['angle'].apply(list).reset_index()
@@ -18,9 +26,10 @@ liste_rapport = df_geometrie.groupby('nom')['rapport rayon diametre'].apply(list
 liste_rapport_coude = liste_rapport[liste_rapport['nom'] == 'coude']['rapport rayon diametre'].tolist()[0]
 
 
+# Définition des fonctions
 def recuperer_attribut_geo(geometrie, colonne):
     """
-    Cette fonction récupère une valeur pour la géométrie 'geometrie' dans la colonne 'colonne'
+    Cette fonction récupère une valeur pour la géométrie 'geometrie' dans la colonne 'colonne'.
 
     Args:
        geometrie (str) : Le nom de la géométrie
@@ -33,51 +42,13 @@ def recuperer_attribut_geo(geometrie, colonne):
     return liste[liste['nom'] == geometrie][colonne].tolist()[0]
 
 
-def trouver_nombre_apres(liste, nombre):
-    """
-    Cette fonction renvoie le plus petit nombre, plus grand que 'nombre' dans la liste
-
-    Args:
-        liste (list) : La liste des nombres
-        nombre (float) : Le nombre dont il faut trouver le nombre le plus proche avant lui dans la liste
-
-    Returns:
-        float : Le plus petit nombre, plus grand que 'nombre' dans la liste
-    """
-    liste_triee = sorted(liste, reverse=True)
-    nombre_apres = liste_triee[0]
-    for i in liste_triee:
-        if i > nombre:
-            nombre_apres = i
-    return nombre_apres
-
-
-def trouver_nombre_avant(liste, nombre):
-    """
-    Cette fonction renvoie le plus grand nombre, plus petit que 'nombre' dans la liste
-
-    Args:
-       liste (list) : La liste des nombres
-       nombre (float) : Le nombre dont il faut trouver le nombre le plus proche avant lui dans la liste
-
-    Returns:
-       float : Le plus grand nombre, plus petit que 'nombre' dans la liste
-   """
-    liste_triee = sorted(liste)
-    nombre_avant = liste_triee[0]
-    for i in liste_triee:
-        if i < nombre:
-            nombre_avant = i
-    return nombre_avant
-
-
 def recuperer_fourchette_geo(geometrie, colonne, nombre):
     """
     Cette fonction renvoie le nombre juste avant et juste après 'nombre', dans la colonne 'colonne', pour 'fluide'
-    dans la base de données
+    dans la base de données.
 
     Args:
-       nom_fluide (str) : Le nom du fluide
+       geometrie (str) : Le nom de la geometrie
        colonne (str) : La colonne dans laquelle chercher
        nombre (float) : Le nombre qu'on souhaite encadrer dans la colonne 'colonne'
 
@@ -95,7 +66,7 @@ def recuperer_fourchette_geo(geometrie, colonne, nombre):
 def recuperer_coeff_perte_charge_singuliere(geometrie, angle, diametre_entree, rayon_courbure):
     """
     Cette fonction renvoie le coefficient de perte de charge singulière pour la géométrie, l'angle,
-    le diamètre et le rayon de courbure donné
+    le diamètre et le rayon de courbure donné.
 
     Args:
         geometrie (str) : Le nom de la géométrie

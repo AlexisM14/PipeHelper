@@ -1,18 +1,28 @@
+"""
+File : calculs.py
+Author : Alexis Markiewicz
+Date : 2024-07-08
+Description : Ce script permet de définir des fonctions qui permettent de calculer les pertes de charges et coefficients associés
+"""
+
+# Imports
 import numpy as np
 
+# Définition des constantes
 g = 9.81
 
 
+# Définition des fonctions
 def calculer_reynolds(vitesse, diametre, viscosite_cine):
     """
-    Cette fonction calcule le nombre de Reynolds
+    Cette fonction calcule le nombre de Reynolds.
 
-    Args:
+    Args :
         vitesse (float) : La vitesse du fluide, en m/s
         diametre (float) : Le diamètre de la canalisation, en m
         viscosite_cine (float) : La viscosité cinématique de fluide, en m**2/s
 
-    Returns:
+    Returns :
         flaot : Le nombre de Reynolds calculé à partir de ces paramètres
     """
     re = vitesse * diametre / viscosite_cine
@@ -21,14 +31,14 @@ def calculer_reynolds(vitesse, diametre, viscosite_cine):
 
 def calculer_debit2vitesse(debit, diametre, section):
     """
-        Cette fonction convertit un débit en vitesse
+        Cette fonction convertit un débit en vitesse.
 
-        Args:
+        Args :
             debit (float) : Le débit du fluide, en m**3/s
             diametre (float) : Le diamètre de la canalisation, en m
             section (str) : La forme de la section (par exemple 'rond')
 
-        Returns:
+        Returns :
             flaot : La vitesse correspondant à ces paramètres
         """
     surface = 1
@@ -42,9 +52,9 @@ def calculer_debit2vitesse(debit, diametre, section):
 
 def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
     """
-        Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds
+        Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds.
 
-        Args:
+        Args :
             reynolds (float) : Le nombre de Reynolds, sans dimension
             rugosite (float) : La rugosité de la canalisation, en m
             diametre (float) : Le diamètre de la canalisation, en m
@@ -62,15 +72,15 @@ def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
             return 0.3164 * reynolds ** (-1/4)
 
         # Corrélation de Serguides
-        A = -2 * np.log10((rugosite/(diametre*3.7) + 12/reynolds))
-        B = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*A/reynolds))
-        C = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*B/reynolds))
-        return A - ((B-A)**2)/(C-2*B+A)
+        a = -2 * np.log10((rugosite/(diametre*3.7) + 12/reynolds))
+        b = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*a/reynolds))
+        c = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*b/reynolds))
+        return a - ((b-a)**2)/(c-2*b+a)
 
 
 def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite):
     """
-        Cette fonction calcule la différence de pression due aux pertes de charges régulières
+        Cette fonction calcule la différence de pression due aux pertes de charges régulières.
 
         Args:
             longueur (float) : La longueur de la canalisation, en m
@@ -114,7 +124,7 @@ def calculer_perte_chgt_brusque_section(vitesse, diametre_entree, densite, diame
 
 def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree):
     """
-        Cette fonction calcule la pression en sortie d'une pompe
+        Cette fonction calcule la pression en sortie d'une pompe.
 
         Args:
             puissance (float) : La puissance de la pompe, en W
@@ -130,7 +140,7 @@ def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree)
 
 def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse):
     """
-        Cette fonction calcule la différence de pression due aux pertes de charges singulières
+        Cette fonction calcule la différence de pression due aux pertes de charges singulières.
 
         Args:
             coef_perte_signuliere (float) : Le coefficient de perte de charge singulière
