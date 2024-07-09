@@ -223,7 +223,6 @@ def choisir_longueur_canalisation(nbre, liste_geo):
             print(f"\n Quelle est la longueur du tronçon {i} en m ?")
             longueur = get_float_input('+')
             rayon = 0
-
         liste_long = np.append(liste_long, longueur)
         liste_rayon = np.append(liste_rayon, rayon)
 
