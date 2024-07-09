@@ -17,21 +17,26 @@ from classes import Troncon, Canalisation
 
 # Définitions des fonctions
 def calculer_coordonnees_coude(x_debut, y_debut, rayon, angle_deg, orientation, direction):
-    """
-    Cette fonction permet de calculer les coordonnées d'un coude.
+    """Cette fonction permet de calculer les coordonnées d'un coude.
 
-    Args:
-        x_debut (float) : La coordonnée x ou démarre le coude
-        y_debut (float) : La coordonnée y ou démarre le coude
-        rayon (float) : Le rayon de courbure du coude
-        angle_deg (float) : L'angle du coude, en °
-        orientation (str) : Le sens dans lequel le fluide est dirigé ('G' ou 'D')
-        direction (str) : La direction d'ou vient le fluide ('x+' : le fluide va dans le sens des x croissant,
-        'x-' : Le fluide va dans le sens des x décroissant, idem pour 'y+' et 'y-')
+    :param x_debut: La coordonnée x ou démarre le coude
+    :type x_debut: float
+    :param y_debut: La coordonnée y ou démarre le coude
+    :type y_debut: float
+    :param rayon: Le rayon de courbure du coude
+    :type rayon: float
+    :param angle_deg: L'angle du coude, en °
+    :type angle_deg: float
+    :param orientation: Le sens dans lequel le fluide est dirigé ('G' ou 'D')
+    :type orientation: str
+    :param direction: La direction d'ou vient le fluide ('x+' : le fluide va dans le sens des x croissant,
+    'x-' : Le fluide va dans le sens des x décroissant, idem pour 'y+' et 'y-')
+    :type direction: str
 
-    Returns:
-        list : La liste des coordonnées x du coude
-        list : La liste des coordonnées y du coude
+    :return: La liste des coordonnées x du coude
+    :rtype: list
+    :return: La liste des coordonnées y du coude
+    :rtype: list
     """
     # Conversion de l'angle en radian
     angle_rad = np.radians(angle_deg)
@@ -102,18 +107,21 @@ def calculer_coordonnees_coude(x_debut, y_debut, rayon, angle_deg, orientation, 
 
 
 def calculer_coordonnees_guide(canalisation, x_debut, y_debut, direction='y+'):
-    """
-    Cette fonction permet de calculer les coordonnées d'une canalisation.
+    """Cette fonction permet de calculer les coordonnées d'une canalisation.
 
-    Args:
-        canalisation (Canalisation) : La canalisation étudiée
-        x_debut (float) : La coordonnée x ou démarre le coude
-        y_debut (float) : La coordonnée y ou démarre le coude
-        direction (str) : La direction d'ou vient le fluide ('x+' : le fluide va dans le sens des x croissant, 'x-' : Le fluide va dans le sens des x décroissant, idem pour 'y+' et 'y-')
+    :param canalisation: La canalisation étudiée
+    :type canalisation: Canalisatiobn
+    :param x_debut: La coordonnée x ou démarre le coude
+    :type x_debut: Canalisatiobn
+    :param y_debut: La coordonnée y ou démarre le coude
+    :type y_debut: Canalisatiobn
+    :param direction: La direction d'ou vient le fluide ('x+' : le fluide va dans le sens des x croissant, 'x-' : Le fluide va dans le sens des x décroissant, idem pour 'y+' et 'y-'), optionnel
+    :type direction: Canalisatiobn
 
-    Returns:
-        list : La liste des coordonnées x de la canalisation
-        list : La liste des coordonnées y de la canalisation
+    :return: La liste des coordonnées x de la canalisation
+    :rtype: list
+    :return: La liste des coordonnées y de la canalisation
+    :rtype: list
     """
     # On récupère les longueurs, géométries, rayons et le nombre de tronçons de la canalisation
     liste_longueur = canalisation.renvoyer_liste_longueur()
@@ -181,14 +189,10 @@ def calculer_coordonnees_guide(canalisation, x_debut, y_debut, direction='y+'):
 
 
 def tracer_canalisations(canalisation):
-    """
-    Cette procédure permet de tracer la canalisation.
+    """Cette procédure permet de tracer la canalisation.
 
-    Args :
-        canalisation (Canalisation) : La canalisation à tracer
-
-    Returns :
-        Aucun
+    :param canalisation: La canalisation à tracer
+    :type canalisation: Canalisation
     """
     x_guide, y_guide = calculer_coordonnees_guide(canalisation,0,0)
     plt.plot(x_guide,y_guide)
@@ -201,17 +205,16 @@ def tracer_canalisations(canalisation):
 
 
 def tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur):
-    """
-    Cette procédure permet de tracer les variations de pression et de vitesse le long de la canalisation.
+    """Cette procédure permet de tracer les variations de pression et de vitesse le long de la canalisation.
 
-    Args :
-        liste_pression (liste) : La variation de pression dans la canalisation
-        liste_vitesse (liste) : La variation de vitesse dans la canalisation
-        liste_abscisse (liste) : La liste des abscisses de la canalisation
-        liste_longueur (liste) : La liste des longueurs de chaque géométrie de la canalisation
-
-    Returns :
-        Aucun
+    :param liste_pression: La variation de pression dans la canalisation
+    :type liste_pression: list
+    :param liste_vitesse: La variation de vitesse dans la canalisation
+    :type liste_vitesse: list
+    :param liste_abscisse: La liste des abscisses de la canalisation
+    :type liste_abscisse: list
+    :param liste_longueur: La liste des longueurs de chaque géométrie de la canalisation
+    :type liste_longueur: list
     """
     print("...Tracé de la pression...")
     plt.plot(liste_abscisse, liste_pression, label='Pression')

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="25eb8f33-3f54-4a90-98c5-52cdb73cccec" name="Changes" comment="Ajout de documentation sphinx, ne fonctionne pas pour l'instant">
+      <change beforePath="$PROJECT_DIR$/LecteurYAML.py" beforeDir="false" afterPath="$PROJECT_DIR$/LecteurYAML.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calculs.py" beforeDir="false" afterPath="$PROJECT_DIR$/calculs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gestion_BDD_fluides.py" beforeDir="false" afterPath="$PROJECT_DIR$/gestion_BDD_fluides.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gestion_BDD_geometries.py" beforeDir="false" afterPath="$PROJECT_DIR$/gestion_BDD_geometries.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gestion_BDD_materiaux.py" beforeDir="false" afterPath="$PROJECT_DIR$/gestion_BDD_materiaux.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gestion_YAML.py" beforeDir="false" afterPath="$PROJECT_DIR$/gestion_YAML.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gestion_traces.py" beforeDir="false" afterPath="$PROJECT_DIR$/gestion_traces.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Ajout-YAML" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2i1emXbzxlc27V0sijKcq0srOyz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GestionBDDFluide.executor": "Run",
+    "Python.GestionBDDGeometrie.executor": "Run",
+    "Python.GestionGeometrie.executor": "Run",
+    "Python.affichage.executor": "Run",
+    "Python.calculs.executor": "Run",
+    "Python.classes.executor": "Run",
+    "Python.gestion_BDD_geometries.executor": "Run",
+    "Python.gestion_YAML.executor": "Run",
+    "Python.gestion_traces.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.verifications.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/amark/PycharmProjects/PipeHelper"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\amark\PycharmProjects\PipeHelper" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\amark\PycharmProjects\PipeHelper" />
+      <recent name="C:\Users\amark\PycharmProjects\PipeHelper\source" />
+      <recent name="C:\Users\amark\PycharmProjects\PipeHelper\sphinx" />
+      <recent name="C:\Users\amark\PycharmProjects\PipeHelper\Base_De_Donnees" />
+      <recent name="C:\Users\amark\PycharmProjects\PipeHelper\Gestion_BDD" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PipeHelper" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-babbdf50b680-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.15989.155" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="25eb8f33-3f54-4a90-98c5-52cdb73cccec" name="Changes" comment="" />
+      <created>1718662670183</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718662670183</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Premiers pas, ajout de affichage, verifiacations, classes">
+      <option name="closed" value="true" />
+      <created>1718666317898</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718666317898</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Ajout des différents modes d'exécution : résolution de problème, ajout/suppression de fluide ou de matériau&#10;&#10;Ajout des fichiers de gestion de base de données&#10;&#10;Modification de la classe Troncon pour pouvoir la mettre sous forme de listes&#10;&#10;Ajout de fonctions dans itérations pour choisir le mode de fonctionnement et modification de get_element_liste_input pour qu'il n'affiche plus les choix sous forme de liste">
+      <option name="closed" value="true" />
+      <created>1719183800292</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1719183800292</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Ajout de fonctions dans les gestions de BDD qu'il faudra remplir&#10;&#10;Ajout de la section affichage de géométrie&#10;&#10;Ajout d'un fichier gestion de la géométrie qui servira à implementer les fonctions de géométrie &#10;&#10;Ajout d'un fichier idée pour retenir les idées pour le futur">
+      <option name="closed" value="true" />
+      <created>1719252285879</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1719252285879</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Ajout d'une classe canalisation, en relation avec troncon">
+      <option name="closed" value="true" />
+      <created>1719283023019</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1719283023019</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Ajout du tracé de coudes et de canalisations en gén.éral, ne fonctionne pas encore, il faut corriger">
+      <option name="closed" value="true" />
+      <created>1719324844321</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1719324844321</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Correction du tracer géométrie, ne fonctionne pas encore bien, il faut corriger">
+      <option name="closed" value="true" />
+      <created>1719326630742</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1719326630742</updated>
+    </task>
+    <task id="LOCAL-00007" summary="La fonction coude renvoie maintenant des coordonees telles que le fluide vienne du bas ou de gauche">
+      <option name="closed" value="true" />
+      <created>1719364559851</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1719364559851</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Ajout des fonctions de calcul pour les pertes de charge&#10;&#10;Ajout des fonctions d'édition de BDD fluide&#10;&#10;Modification dans l'affichage, on ne travaille maintenant qu'avec des sections rondes (on verra plus tard pour carré), les fonctions d'ajout et de suppression de fluide ou matériau seront ajoutées plus tard">
+      <option name="closed" value="true" />
+      <created>1719614996476</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1719614996476</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Ajout de descriptions des fonctions de calcul&#10;&#10;Ajout d'un fichier de gestion de la BDD de géométrie&#10;&#10;Ajout des BDD géométrie, fluides, matériaux">
+      <option name="closed" value="true" />
+      <created>1719762381760</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1719762381760</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Ajout de fonctions de manipulation des bases de données">
+      <option name="closed" value="true" />
+      <created>1719781322987</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1719781322987</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Modification de fonctions d'affichages et de gestion de BDD des géométries">
+      <option name="closed" value="true" />
+      <created>1719785328756</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1719785328756</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Modification des classes pour y intégrer des calculs&#10;&#10;Le programme recueille maintenant correctement toutes les données">
+      <option name="closed" value="true" />
+      <created>1719841364763</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1719841364763</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Les fonctions de tracer fonctionnent correctement en utilisant les classes&#10;&#10;Modification dans main.py, le rayon de courbure n'est plus demandé mais est directement calculer en fonction de la longueur du coude et de l'angle du coude">
+      <option name="closed" value="true" />
+      <created>1719844450366</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1719844450366</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Ajout de fonction dans gestion_BDD_materiaux.py pour afficher les materiaux&#10;&#10;Modification de main pour ne demander qu'une fois les conditions initiales et ajout de la phase de calcul&#10;&#10;Ajout de fonctions de tracé de pression et vitesse dans gestion_traces.py">
+      <option name="closed" value="true" />
+      <created>1719934129123</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1719934129123</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Amélioration diverses">
+      <option name="closed" value="true" />
+      <created>1719950935735</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1719950935735</updated>
+    </task>
+    <task id="LOCAL-00016" summary="interface() est plus propore&#10;&#10;Création d'une classe liste circulaire &#10;&#10;Les tracés sont correct sauf la pression et vitesse">
+      <option name="closed" value="true" />
+      <created>1719960476372</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1719960476372</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Les fonctions de tracage fonctionnent correctement !!!!&#10;&#10;Il faudra ajouter une fonction qui regarde les intersection">
+      <option name="closed" value="true" />
+      <created>1719967565482</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1719967565482</updated>
+    </task>
+    <task id="LOCAL-00018" summary="interface() receuille correctement les données de l'utilisateur&#10;&#10;Il faut que les calculs soient bon maintenant">
+      <option name="closed" value="true" />
+      <created>1719968092920</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1719968092920</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Les fonctions de calculs et de tracage sont implémentées dans la Classe canalisation&#10;&#10;Ajout de fonction dans main&#10;&#10;Corrections mineures dans les autres fichiers&#10;&#10;Problème de calcul de pression et vitesse">
+      <option name="closed" value="true" />
+      <created>1719979899753</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1719979899753</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Ajout d'une fonction test de perte de charge regu">
+      <option name="closed" value="true" />
+      <created>1720010590940</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1720010590940</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Version fonctionnelle, le programme suggère ou placer 1 pompe ! &#10;&#10;Il faut maintenant faire en sorte que le programme place plusieurs pompes pour que ca respecte tout le long">
+      <option name="closed" value="true" />
+      <created>1720014802965</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1720014802965</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Version fonctionnelle, le programme suggère ou placer 1 pompe ! &#10;&#10;Il faut maintenant faire en sorte que le programme place plusieurs pompes pour que ca respecte tout le long&#10;&#10;Toujours un probléme sur le calcul de vitesse">
+      <option name="closed" value="true" />
+      <created>1720014840092</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1720014840092</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Dernières modifications avant présentation">
+      <option name="closed" value="true" />
+      <created>1720028073995</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1720028073997</updated>
+    </task>
+    <task id="LOCAL-00024" summary="On retourne le bon emplacement pour la pompe">
+      <option name="closed" value="true" />
+      <created>1720033658469</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1720033658469</updated>
+    </task>
+    <task id="LOCAL-00025" summary="On affiche maintenant l'endroit ou la géométrie change sur le tracé de pression et vitesse">
+      <option name="closed" value="true" />
+      <created>1720114004007</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1720114004007</updated>
+    </task>
+    <task id="LOCAL-00026" summary="On affiche maintenant l'endroit ou la géométrie change sur le tracé de pression et vitesse correctement">
+      <option name="closed" value="true" />
+      <created>1720117174423</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1720117174423</updated>
+    </task>
+    <task id="LOCAL-00027" summary="L'utilisateur peut maintenant utiliser un fichier yaml présent dans le dossier. &#10;&#10;La fonctionnalité n'est pas encore 100% opérationnelle">
+      <option name="closed" value="true" />
+      <created>1720122261371</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1720122261371</updated>
+    </task>
+    <task id="LOCAL-00028" summary="La pompe n'est maintenant plus placée dans un coude">
+      <option name="closed" value="true" />
+      <created>1720196442806</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1720196442806</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Le programme place maintenant autant de pompe que nécessaire">
+      <option name="closed" value="true" />
+      <created>1720197826334</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1720197826334</updated>
+    </task>
+    <task id="LOCAL-00030" summary="V1 version fonctionnelle, avec seulement des coude et des parties droites">
+      <option name="closed" value="true" />
+      <created>1720199166249</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1720199166249</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Ajout de la possibilité d'ajouter, de modifier ou de supprimer un fluide ou un matériau">
+      <option name="closed" value="true" />
+      <created>1720205624628</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1720205624628</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Version finale, sans commentaire">
+      <option name="closed" value="true" />
+      <created>1720287417585</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1720287417585</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Ajout de docstring dans le fichier calculs.py">
+      <option name="closed" value="true" />
+      <created>1720295033882</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1720295033882</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Ajout de docstring et commentaires dans le fichier classes.py">
+      <option name="closed" value="true" />
+      <created>1720298147997</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1720298147997</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Ajout de docstring et commentaires dans le fichier gestion_BDD_fluides.py.py">
+      <option name="closed" value="true" />
+      <created>1720304587694</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1720304587694</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Ajout de docstring et commentaires dans le fichier gestion_BDD_geometries.py.py.py">
+      <option name="closed" value="true" />
+      <created>1720305280551</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1720305280551</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Ajout de docstring et commentaires dans le fichier gestion_BDD_materiaux.py.py.py.py">
+      <option name="closed" value="true" />
+      <created>1720305528802</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1720305528802</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Ajout de docstring et commentaires dans le fichier gestion_traces.py.py.py.py.py">
+      <option name="closed" value="true" />
+      <created>1720306392213</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1720306392213</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Ajout de docstring et commentaires dans les fichiers de gestion YAML">
+      <option name="closed" value="true" />
+      <created>1720306917399</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1720306917399</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Ajout de docstring et commentaires dans le fichier main.py">
+      <option name="closed" value="true" />
+      <created>1720309012826</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1720309012826</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Ajout de docstring et commentaires dans le fichier verifications.py">
+      <option name="closed" value="true" />
+      <created>1720309618229</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1720309618229</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Correction de certaines fonctions&#10;&#10;Ajout d'en-têtes">
+      <option name="closed" value="true" />
+      <created>1720457113010</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1720457113010</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Ajout de documentation sphinx, ne fonctionne pas pour l'instant">
+      <option name="closed" value="true" />
+      <created>1720462465501</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1720462465501</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Les fonctions de calculs et de tracage sont implémentées dans la Classe canalisation&#10;&#10;Ajout de fonction dans main&#10;&#10;Corrections mineures dans les autres fichiers&#10;&#10;Problème de calcul de pression et vitesse" />
+    <MESSAGE value="Ajout d'une fonction test de perte de charge regu" />
+    <MESSAGE value="Version fonctionnelle, le programme suggère ou placer 1 pompe ! &#10;&#10;Il faut maintenant faire en sorte que le programme place plusieurs pompes pour que ca respecte tout le long" />
+    <MESSAGE value="Version fonctionnelle, le programme suggère ou placer 1 pompe ! &#10;&#10;Il faut maintenant faire en sorte que le programme place plusieurs pompes pour que ca respecte tout le long&#10;&#10;Toujours un probléme sur le calcul de vitesse" />
+    <MESSAGE value="Dernières modifications avant présentation" />
+    <MESSAGE value="On retourne le bon emplacement pour la pompe" />
+    <MESSAGE value="On affiche maintenant l'endroit ou la géométrie change sur le tracé de pression et vitesse" />
+    <MESSAGE value="On affiche maintenant l'endroit ou la géométrie change sur le tracé de pression et vitesse correctement" />
+    <MESSAGE value="L'utilisateur peut maintenant utiliser un fichier yaml présent dans le dossier. &#10;&#10;La fonctionnalité n'est pas encore 100% opérationnelle" />
+    <MESSAGE value="La pompe n'est maintenant plus placée dans un coude" />
+    <MESSAGE value="Le programme place maintenant autant de pompe que nécessaire" />
+    <MESSAGE value="V1 version fonctionnelle, avec seulement des coude et des parties droites" />
+    <MESSAGE value="Ajout de la possibilité d'ajouter, de modifier ou de supprimer un fluide ou un matériau" />
+    <MESSAGE value="Version finale, sans commentaire" />
+    <MESSAGE value="Ajout de docstring dans le fichier calculs.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier classes.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier gestion_BDD_fluides.py.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier gestion_BDD_geometries.py.py.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier gestion_BDD_materiaux.py.py.py.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier gestion_traces.py.py.py.py.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans les fichiers de gestion YAML" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier main.py" />
+    <MESSAGE value="Ajout de docstring et commentaires dans le fichier verifications.py" />
+    <MESSAGE value="Correction de certaines fonctions&#10;&#10;Ajout d'en-têtes" />
+    <MESSAGE value="Ajout de documentation sphinx, ne fonctionne pas pour l'instant" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de documentation sphinx, ne fonctionne pas pour l'instant" />
+  </component>
+</project>

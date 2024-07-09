@@ -28,34 +28,36 @@ liste_rapport_coude = liste_rapport[liste_rapport['nom'] == 'coude']['rapport ra
 
 # Définition des fonctions
 def recuperer_attribut_geo(geometrie, colonne):
-    """
-    Cette fonction récupère une valeur pour la géométrie 'geometrie' dans la colonne 'colonne'.
+    """Cette fonction récupère une valeur pour la géométrie 'geometrie' dans la colonne 'colonne'.
 
-    Args:
-       geometrie (str) : Le nom de la géométrie
-       colonne (str) : Le nom de la colonne ou chercher
+    :param geometrie: Le nom de la géométrie
+    :type geometrie: str
+    :param colonne: Le nom de la colonne ou chercher
+    :type colonne: str
 
-    Returns:
-       float : La valeur dans la colonne pour la géométrie
+    :return: La valeur dans la colonne pour la géométrie
+    :rtype: float
     """
     liste =  df_geometrie.groupby('nom')[colonne].apply(list).reset_index()
     return liste[liste['nom'] == geometrie][colonne].tolist()[0]
 
 
 def recuperer_fourchette_geo(geometrie, colonne, nombre):
-    """
-    Cette fonction renvoie le nombre juste avant et juste après 'nombre', dans la colonne 'colonne', pour 'fluide'
+    """Cette fonction renvoie le nombre juste avant et juste après 'nombre', dans la colonne 'colonne', pour 'fluide'
     dans la base de données.
 
-    Args:
-       geometrie (str) : Le nom de la geometrie
-       colonne (str) : La colonne dans laquelle chercher
-       nombre (float) : Le nombre qu'on souhaite encadrer dans la colonne 'colonne'
+    :param geometrie: Le nom de la géométrie
+    :type geometrie: str
+    :param colonne: Le nom de la colonne ou chercher
+    :type colonne: str
+    :param nombre: Le nombre qu'on souhaite encadrer dans la colonne 'colonne'
+    :type nombre: float
 
-    Returns:
-       float : Le plus grand nombre, plus petit que nombre dans la liste
-       float : Le plus petit nombre, plus grand que nombre dans la liste
-   """
+    :return: Le plus grand nombre, plus petit que nombre dans la liste
+    :rtype: float
+    :return: Le plus petit nombre, plus grand que nombre dans la liste
+    :rtype: float
+    """
     liste_nombres = df_geometrie.groupby('nom')[colonne].apply(list).reset_index()
     liste_nombres_geometrie = liste_nombres[liste_nombres['nom'] == geometrie][colonne].tolist()[0]
     nombre_avant = trouver_nombre_avant(liste_nombres_geometrie, nombre)
@@ -64,18 +66,21 @@ def recuperer_fourchette_geo(geometrie, colonne, nombre):
 
 
 def recuperer_coeff_perte_charge_singuliere(geometrie, angle, diametre_entree, rayon_courbure):
-    """
-    Cette fonction renvoie le coefficient de perte de charge singulière pour la géométrie, l'angle,
+    """Cette fonction renvoie le coefficient de perte de charge singulière pour la géométrie, l'angle,
     le diamètre et le rayon de courbure donné.
 
-    Args:
-        geometrie (str) : Le nom de la géométrie
-        angle (float) : L'angle de la géométrie
-        diametre_entree (float) : Le diamètre de la géométrie
-        rayon_courbure (float) : Le rayon de courbure de la géométrie
+    :param geometrie: Le nom de la géométrie
+    :type geometrie: str
+    :param angle: L'angle de la géométrie
+    :type angle: str
+    :param diametre_entree: Le diamètre de la géométrie
+    :type diametre_entree: float
+    :param rayon_courbure: Le rayon de courbure de la géométrie
+    :type rayon_courbure: float
 
-    Returns:
-        float : Le coefficient de perte de charge singulière
+
+    :return: Le coefficient de perte de charge singulière
+    :rtype: float
     """
     df = df_geometrie
     if geometrie == 'coude':

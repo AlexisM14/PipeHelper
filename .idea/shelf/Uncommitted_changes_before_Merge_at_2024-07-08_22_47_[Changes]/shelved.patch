@@ -1,0 +1,2589 @@
+Index: gestion_BDD_materiaux.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pandas as pd\r\n\r\n# On enregistre la base de données dans df\r\ndf_materiaux = pd.read_excel('Base_De_Donnees/BDD_materiaux.xlsx')\r\n\r\n\r\ndef lister_les_materiaux():\r\n    \"\"\"Renvoie la liste des matériaux de la base de données\"\"\"\r\n    return df_materiaux['Matériaux'].unique().tolist()\r\n\r\n\r\ndef afficher_materiaux():\r\n    liste_materiaux = lister_les_materiaux()\r\n    for i in range(len(liste_materiaux)):\r\n        print(f\"{i} - {liste_materiaux[i]}\")\r\n\r\n\r\ndef recuperer_rugosite(nom_materiau):\r\n    return df_materiaux['Rugosité'][df_materiaux['Matériaux'] == nom_materiau].tolist()[0]\r\n\r\ndef ajouter_materiaux():\r\n    return True\r\n\r\n\r\ndef supprimer_materiaux():\r\n    return True
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gestion_BDD_materiaux.py b/gestion_BDD_materiaux.py
+--- a/gestion_BDD_materiaux.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/gestion_BDD_materiaux.py	(date 1720493193730)
+@@ -1,26 +1,54 @@
++"""
++File: gestion_BDD_materiaux.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir des fonctions qui permettent de gérer la base de données "BDD_amteriaux.xlsx"
++"""
++
++# Imports
+ import pandas as pd
+ 
+ # On enregistre la base de données dans df
+-df_materiaux = pd.read_excel('Base_De_Donnees/BDD_materiaux.xlsx')
++df_materiaux = pd.read_excel("BDD_materiaux.xlsx")
+ 
+ 
++# Définition des fonctions
+ def lister_les_materiaux():
+-    """Renvoie la liste des matériaux de la base de données"""
++    """
++    Cette fonction permet de liste le nom des matériaux de la base de données.
++
++    Args:
++        Aucun
++
++    Returns:
++        list : La liste des noms des matériaux
++    """
+     return df_materiaux['Matériaux'].unique().tolist()
+ 
+ 
+ def afficher_materiaux():
++    """
++    Cette fonction permet d'afficher le nom des matériaux de la base de données.
++
++    Args:
++        Aucun
++
++    Returns:
++        Aucun
++    """
+     liste_materiaux = lister_les_materiaux()
+     for i in range(len(liste_materiaux)):
+         print(f"{i} - {liste_materiaux[i]}")
+ 
+ 
+ def recuperer_rugosite(nom_materiau):
+-    return df_materiaux['Rugosité'][df_materiaux['Matériaux'] == nom_materiau].tolist()[0]
++    """
++    Cette fonction permet de récupérer la rugosité de 'nom_materiau' dans la base de données.
+ 
+-def ajouter_materiaux():
+-    return True
++    Args:
++        nom_materiau (str) : Le nom du matériau dans la base de données
+ 
+-
+-def supprimer_materiaux():
+-    return True
+\ No newline at end of file
++    Returns:
++        float : La rugosité du matériau 'nom_materiau'
++    """
++    return df_materiaux['Rugosité'][df_materiaux['Matériaux'] == nom_materiau].tolist()[0]
+\ No newline at end of file
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\" Ce script permet de générer l'affichage du programme\"\"\"\r\nimport numpy as np\r\n\r\nfrom classes import *\r\nfrom calculs import *\r\nfrom verifications import *\r\nfrom gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite\r\nfrom gestion_BDD_geometries import recuperer_attribut_geo\r\nfrom gestion_traces import tracer_canalisations, tracer_pression_vitesse_1d\r\nfrom gestion_YAML import get_name_yaml, get_info_yaml\r\n\r\nliste_o_n = ['oui', 'non']\r\n# Pour l'instant, on fait que section rondes\r\nliste_sections = ['rond']\r\nliste_materiaux = lister_les_materiaux()\r\nliste_geometrie_angle = ['coude D', 'coude B']\r\nliste_geometries = ['droit'] + liste_geometrie_angle\r\nliste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')\r\nrapport_rayon_diam_min = min(liste_rap_coude)\r\nrapport_rayon_diam_max = max(liste_rap_coude)\r\n\r\n\r\ndef choisir_materiaux_canalisation(nbre, choix):\r\n    liste = np.array([])\r\n    if choix == 'non':\r\n        for i in range(nbre):\r\n            print(f\"\\n Quel est le matériau du tronçon {i} ? Les matériaux possibles sont :\")\r\n            afficher_materiaux()\r\n            choix_numeros_materiau = get_element_liste_input([str(i) for i in range(len(liste_materiaux))])\r\n            materiau = liste_materiaux[int(choix_numeros_materiau)]\r\n            liste = np.append(liste, materiau)\r\n    else:\r\n        print(f\"\\n Quel est le matériau de la canalisation ? Les matériaux possibles sont :\")\r\n        afficher_materiaux()\r\n        choix_numeros_materiau = get_element_liste_input([str(a) for a in range(len(liste_materiaux))])\r\n        materiau = liste_materiaux[int(choix_numeros_materiau)]\r\n        for kl in range(nbre):\r\n            liste = np.append(liste, materiau)\r\n    return liste\r\n\r\n\r\ndef choisir_rugosite_canalisation(nbre, choix_rugo, choix_mat, liste_mat):\r\n    liste = []\r\n    # Si la rugosité varie\r\n    if choix_rugo == 'non':\r\n        for j in range(nbre):\r\n            print(f\"Connaissez-vous la rugosité du tronçon {j} ?\")\r\n            choix_connaitre_rugosite = get_element_liste_input(liste_o_n)\r\n            if choix_connaitre_rugosite == 'oui':\r\n                print(f\"\\n Quelle est la rugosité du tronçon {j} en m ? Si aucune rugosité, entrez 0.\")\r\n                rugosite = get_float_input('+')\r\n                liste = np.append(liste, rugosite)\r\n            else:\r\n                print(\"La rugosité choisie sera alors celle de la base de données.\")\r\n                rugosite = recuperer_rugosite(liste_mat[j]) * 10 ** (-3)\r\n                print(f\"Elle vaut {rugosite} m.\")\r\n                liste = np.append(liste, rugosite)\r\n    # Si la rugosité est constante\r\n    else:\r\n        # Si le matériau est identique\r\n        if choix_mat == 'oui':\r\n            print(f\"Connaissez-vous la rugosité de la canalisation ?\")\r\n            choix_connaitre_rugosite = get_element_liste_input(liste_o_n)\r\n            # Si la rugosité est connue\r\n            if choix_connaitre_rugosite == 'oui':\r\n                print(f\"\\n Quelle est la rugosité de la canalisation en m ? Si aucune rugosité, entrez 0.\")\r\n                rugosite = get_float_input('+')\r\n            else:\r\n                print(\"La rugosité choisie sera alors celle de la base de données.\")\r\n                rugosite = recuperer_rugosite(liste_mat[0]) * 10 ** (-3)\r\n                print(f\"Elle vaut {rugosite} m.\")\r\n        else:\r\n            print(f\"\\n Quelle est la rugosité de la canalisation en m ? Si aucune rugosité, entrez 0.\")\r\n            rugosite = get_float_input('+')\r\n\r\n        for lsp in range(nbre):\r\n            liste = np.append(liste, rugosite)\r\n    return liste\r\n\r\n\r\ndef choisir_geometrie_canalisation(nbre):\r\n    liste = []\r\n    for i in range(nbre):\r\n        print(f\"\\n Quelle est la géométrie du tronçon {i} ?\")\r\n        print(\"'coude D' et 'coude G' correspondent respectivement à un coude qui fait dévier le fluide vers \"\r\n              \"sa droite et sa gauche.\")\r\n        geometrie = get_element_liste_input(liste_geometries)\r\n\r\n        # Verification de la possibilité de la configuration\r\n        if i > 0:\r\n\r\n            if geometrie in liste_geometrie_angle:\r\n                coude_precedent = liste[0]\r\n                for j in liste:\r\n                    if j in liste_geometrie_angle:\r\n                        coude_precedent = j\r\n\r\n                # configurations impossibles\r\n                if coude_precedent == 'coude H':\r\n                    while geometrie == 'coude B':\r\n                        print(\"Cette configuration n'est pas possible :\")\r\n                        print(f\"{coude_precedent} ne peut être suivie de {geometrie}\")\r\n                        print(f\"\\n Veuillez entrer à nouveau la géométrie du tronçon {i}.\")\r\n                        geometrie = get_element_liste_input(liste_geometries)\r\n                elif coude_precedent == 'coude D':\r\n                    while geometrie == 'coude G':\r\n                        print(\"Cette configuration n'est pas possible :\")\r\n                        print(f\"{coude_precedent} ne peut être suivie de {geometrie}\")\r\n                        print(f\"\\n Veuillez entrer à nouveau la géométrie du tronçon {i}.\")\r\n                        geometrie = get_element_liste_input(liste_geometries)\r\n                elif coude_precedent == 'coude B':\r\n                    while geometrie == 'coude H':\r\n                        print(\"Cette configuration n'est pas possible :\")\r\n                        print(f\"{coude_precedent} ne peut être suivie de {geometrie}\")\r\n                        print(f\"\\n Veuillez entrer à nouveau la géométrie du tronçon {i}.\")\r\n                        geometrie = get_element_liste_input(liste_geometries)\r\n                elif coude_precedent == 'coude G':\r\n                    while geometrie == 'coude D':\r\n                        print(\"Cette configuration n'est pas possible :\")\r\n                        print(f\"{coude_precedent} ne peut être suivie de {geometrie}\")\r\n                        print(f\"\\n Veuillez entrer à nouveau la géométrie du tronçon {i}.\")\r\n                        geometrie = get_element_liste_input(liste_geometries)\r\n                coude_precedent = geometrie\r\n        liste = np.append(liste, geometrie)\r\n    return liste\r\n\r\n\r\ndef choisir_longueur_canalisation(nbre, liste_geo):\r\n    liste_long = []\r\n    liste_rayon = []\r\n    for i in range(nbre):\r\n        geometrie = liste_geo[i]\r\n        if geometrie in liste_geometrie_angle:\r\n            print(f\"\\n Quel est le rayon de courbure du coude du tronçon {i} en m ?\")\r\n            rayon = get_float_input('+')\r\n            longueur = rayon*2*np.pi/4  # coude à 90° : 1/4 du périmètre du cercle\r\n        else:\r\n            print(f\"\\n Quelle est la longueur du tronçon {i} en m ?\")\r\n            longueur = get_float_input('+')\r\n            rayon = 0\r\n\r\n        liste_long = np.append(liste_long, longueur)\r\n        liste_rayon = np.append(liste_rayon, rayon)\r\n\r\n    return liste_long, liste_rayon\r\n\r\n\r\ndef verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste_rayon):\r\n    liste = []\r\n    # Vérification du rapport rayon de courbure / diametre\r\n    for i in range(nbre):\r\n        geometrie = liste_geo[i]\r\n        if geometrie in liste_geometrie_angle:\r\n            rayon_courbure = liste_rayon[i]\r\n            diametre = liste_diam[i]\r\n            rapport = rayon_courbure / diametre\r\n            while rapport > rapport_rayon_diam_max or rapport < rapport_rayon_diam_min:\r\n                print(f\"\\n La base de données ne peut calculer les pertes de charges que pour des rapports rayon de \"\r\n                      f\"courbure sur diamètre compris entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.\")\r\n                print(f\"Le rapport actuel vaut {rapport}.\")\r\n                print(f\"Veuillez modifier le rayon de courbure du coude du tronçon {i}, il vaut actuellement {rayon_courbure}.\")\r\n                print(f\"\\n Quel est le rayon du tronçon {i} en m ?\")\r\n                rayon_courbure = get_float_input('+')\r\n                rapport = rayon_courbure / diametre\r\n            liste_rayon[i] = rayon_courbure\r\n            liste_long[i] = np.pi*rayon_courbure/2\r\n\r\n    return liste_rayon, liste_long\r\n\r\n\r\ndef verifier_dans_intervalle(nbre, intervalle):\r\n    a = intervalle[0]\r\n    b = intervalle[1]\r\n    return a < nbre < b\r\n\r\n\r\ndef recuperer_index_plus_proche_inf(liste_abscisse, nbre):\r\n    compteur = 0\r\n    while liste_abscisse[compteur] < nbre:\r\n        compteur += 1\r\n    return compteur\r\n\r\n\r\ndef trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur):\r\n    compteur = 0\r\n    pression_entree = liste_pression[compteur]\r\n    liste_x_geometrie = np.array([0])\r\n\r\n    # On construit la liste des abscisses ou un changement de géométrie a lieu, 0 et la fin en étant\r\n    for idx in range(len(liste_longueur)):\r\n        liste_x_geometrie = np.append(liste_x_geometrie, liste_x_geometrie[-1]+liste_longueur[idx])\r\n\r\n    # On construit la liste contenant les abscisses de début et de fin de chaque géométrie\r\n    liste_debut_fin_geo = np.zeros((len(liste_geometrie), 2))\r\n    for i in range(len(liste_geometrie)):\r\n        liste_debut_fin_geo[i][0] = liste_x_geometrie[i]\r\n        liste_debut_fin_geo[i][1] = liste_x_geometrie[i+1]\r\n\r\n    # Tant que la pression est au dessus de la pression mini et que le compteur n'est pas à la fin\r\n    while compteur < len(liste_pression) - 1 and pression_entree > pression_min:\r\n        # On actualise le compteur et la pression\r\n        compteur += 1\r\n        pression_entree = liste_pression[compteur]\r\n\r\n    # On vérifie que l'abscisse ou la pression min est atteinte n'est pas dans un coude\r\n    abscisse = liste_abscisse[compteur]\r\n    for i in range(len(liste_debut_fin_geo)):\r\n        # Si l'emplacement de la pompe est dans un coude\r\n        if verifier_dans_intervalle(abscisse, liste_debut_fin_geo[i]) and liste_geometrie[i] != 'droit':\r\n            # On renvoie l'index de l'abscisse se situant à l'entrée du coude\r\n            return recuperer_index_plus_proche_inf(liste_abscisse, liste_debut_fin_geo[i][0])\r\n\r\n    return compteur\r\n\r\n\r\ndef placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement, liste_geometrie, liste_longueur):\r\n\r\n    idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur)\r\n\r\n    if idx_emplacement_pompe == len(liste_pression):\r\n        return False\r\n\r\n    else:\r\n        pression_entree = liste_pression[idx_emplacement_pompe]\r\n        pression_sortie_pompe = calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree)\r\n\r\n        print(f\"Il faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.\")\r\n        print(f\"La pression en sortie sera de {pression_sortie_pompe / 10 ** 5} bar.\")\r\n        delta_pression_pompe = pression_sortie_pompe - liste_pression[idx_emplacement_pompe]\r\n        liste_pression_new = liste_pression[:idx_emplacement_pompe]\r\n\r\n        for i in range(idx_emplacement_pompe, len(liste_abscisse)):\r\n            liste_pression_new = np.append(liste_pression_new, liste_pression[i] + delta_pression_pompe)\r\n\r\n        plt.plot(liste_abscisse, liste_pression, label='Pression originale')\r\n        plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')\r\n        plt.title(\"Évolution de la pression le long de la canalisation, en longueur linéaire\")\r\n        plt.xlabel(\"Longueur linéaire en m\")\r\n        plt.ylabel(\"Pression en Pa\")\r\n        plt.axvline(liste_abscisse[idx_emplacement_pompe], color='r', linestyle='--')\r\n        plt.legend()\r\n        plt.show()\r\n        return liste_pression_new\r\n\r\n\r\n\r\ndef interface():\r\n    liste_o_n = ['oui','non']\r\n    # Affichage du principe du script\r\n    print(\"Ce script permet de configurer des canalisations ! \\n\"\r\n          \"En entrant différentes données de votre problème : géométrie, conditions initiales, fluide, ... \\n\"\r\n          \"Le script sera en mesure de vous afficher les variations de pression, vitesse, contrainte. \\n\"\r\n          \"Ainsi il vous indiquera ou placer des pompes par exemple.\\n \\n\"\r\n          \"Pour commencer il faut découper la géométrie des canalisations en tronçons ! \\n\"\r\n          \"Un tronçon est une partie de la géométrie dont la section, la direction ou le matériau ne varie pas. \\n\")\r\n\r\n    # Choix du mode de fonctionnement\r\n    # 1 - normal, 2 - ajout de matériau, 3 - ajout de fluide\r\n    mode = get_choix_mode()\r\n\r\n    # MODE PROBLÈME\r\n    if mode == 1:\r\n        print(\"\\n Voulez-vous utiliser un fichier .yaml, celui doit être enregistré dans le même dossier que ce script.\")\r\n        choix_yaml = get_element_liste_input(liste_o_n)\r\n        print(\"Quel est le nom du fichier, suivit de '.yaml'\")\r\n        nom_fichier = get_name_yaml()\r\n\r\n        if choix_yaml == 'non':\r\n            nettoyer_ecran()\r\n            liste_fluides = lister_fluides()\r\n            print(\"\\n Vous entrez dans le mode de résolution de problème.\\n\")\r\n\r\n            # Fluide\r\n            print(\"Quel est le fluide s'écoulant dans les canalisations ?\")\r\n            fluide = get_element_liste_input(liste_fluides)\r\n\r\n            print(\"\\n Combien de tronçons composent la géométrie des canalisations du problème ?\")\r\n            nbre_troncons = get_int_input('+')\r\n\r\n            # Choix matériau\r\n            print(\"\\n Le matériau est-il le même dans toute la canalisation ?\")\r\n            choix_materiau = get_element_liste_input(liste_o_n)\r\n            liste_materiau_canalisation = choisir_materiaux_canalisation(nbre_troncons, choix_materiau)\r\n\r\n            # Choix rugosité\r\n            print(\"\")\r\n            print(\"\\n La rugosité est-elle la même dans toute la canalisation ?\")\r\n            choix_rugosite = get_element_liste_input(liste_o_n)\r\n            liste_rugosite_canalisation = choisir_rugosite_canalisation(nbre_troncons, choix_rugosite, choix_materiau, liste_materiau_canalisation)\r\n\r\n            # Choix forme section\r\n            print(\"\\n Quelle est la forme de la section de la canalisation ?\")\r\n            forme_section = get_element_liste_input(liste_sections)\r\n            liste_forme_canalisation = [forme_section]*nbre_troncons\r\n\r\n            # Choix diamètre\r\n            print(\"\\n Quel est le diamètre de la section de la canalisation en m ?\")\r\n            diametre = get_float_input('+')\r\n            liste_diametre_canalisation = [diametre]*nbre_troncons\r\n\r\n            # Conditions initiales\r\n            print(\"\\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?\")\r\n            vitesse_init, temperature_init, pression_init, densite, viscosite_cine, debit = get_init_cond_input(fluide, diametre)\r\n            liste_pression = [pression_init]\r\n            liste_vitesse = [vitesse_init]\r\n            liste_temperature = [temperature_init]\r\n\r\n            # Choix geometrie et angle du tronçon\r\n            liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)\r\n\r\n            # Choix longueur de chaque tronçon\r\n            liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)\r\n\r\n            liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)\r\n\r\n        else:\r\n            fluide, nbre_troncons, materiau, rugosite, forme, diametre, vitesse_init, debit, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie_canalisation, liste_longueur_canalisation, liste_rayon_canalisation, choix_pompe, pression_min, puissance_pompe, rendement = get_info_yaml(nom_fichier)\r\n            pression_init = pression_init * 10**5\r\n            pression_min = pression_min * 10**5\r\n\r\n            if vitesse_init == 0:\r\n                vitesse_init = debit / (np.pi*(diametre/2)**2)\r\n            if debit == 0:\r\n                debit = vitesse_init * np.pi*(diametre/2)**2\r\n\r\n            for i in range(nbre_troncons):\r\n                longueur = liste_longueur_canalisation[i]\r\n                if longueur == 0:\r\n                    liste_longueur_canalisation[i] = liste_rayon_canalisation[i]*np.pi/2\r\n\r\n            liste_forme_canalisation = [forme] * nbre_troncons\r\n            liste_diametre_canalisation = [diametre] * nbre_troncons\r\n            liste_materiau_canalisation = [diametre] * nbre_troncons\r\n            liste_rugosite_canalisation = [rugosite] * nbre_troncons\r\n            # print(liste_longueur_canalisation)\r\n            # print(liste_forme_canalisation)\r\n            # print(liste_diametre_canalisation)\r\n            # print(liste_materiau_canalisation)\r\n            # print(liste_rugosite_canalisation)\r\n            # print(liste_geometrie_canalisation)\r\n            # print(liste_rayon_canalisation)\r\n            # print(pression_init)\r\n            # print(vitesse_init)\r\n            # print(debit)\r\n\r\n        canalisation = Canalisation()\r\n        # Enregistrement des tronçons et de la canalisation\r\n        for i in range(nbre_troncons):\r\n            longueur = liste_longueur_canalisation[i]\r\n            section = liste_forme_canalisation[i]\r\n            diametre = liste_diametre_canalisation[i]\r\n            materiau = liste_materiau_canalisation[i]\r\n            rugosite = liste_rugosite_canalisation[i]\r\n            geometrie = liste_geometrie_canalisation[i]\r\n            rayon_courbure = liste_rayon_canalisation[i]\r\n\r\n            if i == 0:\r\n                vitesse_entree = vitesse_init\r\n                pression_entree = pression_init\r\n                temperature_entree = temperature_init\r\n            else:\r\n                vitesse_entree = 0\r\n                pression_entree = 0\r\n                temperature_entree = 0\r\n\r\n            troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, rayon_courbure,\r\n                              fluide, vitesse_entree, pression_entree, temperature_entree, densite, viscosite_cine)\r\n            canalisation.ajouter_troncon(troncon)\r\n\r\n        # Affichage de la géométrie des canalisations\r\n        print(\"La géométrie de votre problème est-elle bien la suivante ?\")\r\n        tracer_canalisations(canalisation)\r\n        confirmation_geometrie = get_element_liste_input(['oui', 'non'])\r\n        if confirmation_geometrie == 'non':\r\n            print(\"Il n'est pas disponible de modifier la géométrie du problème pour l'instant\")\r\n            print(\"voulez-vous recommencer depuis le début ? \")\r\n            choix_recommencer = get_element_liste_input(['oui', 'non'])\r\n            if choix_recommencer == 'oui':\r\n                interface()\r\n                return True\r\n\r\n        # Phase de calculs\r\n        print(\"...Début de la phase de calculs...\")\r\n\r\n        liste_pression, liste_vitesse, liste_temperature, liste_abscisse, _ = canalisation.calculer_distrib_pression_vitesse()\r\n\r\n        tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur_canalisation)\r\n\r\n        if choix_yaml == 'non':\r\n            # Phase de placement pompe\r\n            print(\"\")\r\n            print(\"Voulez-vous placer une pompe sur la canalisation ?\")\r\n            choix_pompe = get_element_liste_input(liste_o_n)\r\n\r\n        if choix_pompe == 'non':\r\n            print(\"Vous quittez le programme.\")\r\n            return True\r\n        else:\r\n            if choix_yaml == 'non':\r\n                print(\"Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?\")\r\n                pression_min = get_float_between_input(0, pression_init)*10**5\r\n                print(\"Quelle est la puissance de votre pompe, en W ?\")\r\n                puissance_pompe = get_float_input('+')\r\n                print(\"Quel est le rendement de votre pompe, entre 0 et 1 ?\")\r\n                rendement = get_float_between_input(0, 1)\r\n\r\n            placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement, liste_geometrie_canalisation, liste_longueur_canalisation)\r\n\r\n            print(\"Vous quittez le programme.\")\r\n            return True\r\n\r\n\r\n\r\n    # MODE AJOUT/SUPPRESSION DE MATÉRIAU\r\n    elif mode == 2:\r\n        nettoyer_ecran()\r\n        print(\"Non disponible pour l'instant, veuillez entrer dans le mode normal.\")\r\n        print(\"\")\r\n        interface()\r\n        return True\r\n        # print(\"Voici les matériaux actuels de la base de données\")\r\n        # afficher_materiaux()\r\n        # print(\"\\n Voulez-vous ajouter ou supprimer un matériau.\")\r\n        # choix_edition_2 = get_element_liste_input(['ajouter', 'supprimer'])\r\n        #\r\n        # if choix_edition_2 == 'ajouter':\r\n        #     ajouter_materiaux()\r\n        # else:\r\n        #     supprimer_materiaux()\r\n\r\n    # MODE AJOUT/SUPPRESSION DE FLUIDE\r\n    elif mode == 3:\r\n        nettoyer_ecran()\r\n        print(\"Non disponible pour l'instant, veuillez entrer dans le mode normal.\")\r\n        print(\"\")\r\n\r\n        interface()\r\n        return True\r\n        # print(\"Voici les matériaux actuels de la base de données\")\r\n        # afficher_fluide()\r\n        # print(\"\\n Voulez-vous ajouter ou supprimer un matériau.\")\r\n        # choix_edition_3 = get_element_liste_input(['ajouter', 'supprimer'])\r\n        #\r\n        # if choix_edition_3 == 'ajouter':\r\n        #     ajouter_fluides()\r\n        # else:\r\n        #     supprimer_fluides()\r\n\r\n\r\nif __name__ == '__main__':\r\n    interface()\r\n    # liste_pression = np.append(np.linspace(3, 2.9, 200), np.linspace(2.9, 2.5, 157)[1:])\r\n    # pression_min = 2.7\r\n    # liste_geometrie = ['droit', 'coude D', 'droit']\r\n    # liste_abscisse = np.append(np.linspace(0, 2, 200), np.linspace(2, 3.57, 157)[1:])\r\n    # liste_longueur = [2, 1.57, 5]\r\n    # print(trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur))\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/main.py	(date 1720493193746)
+@@ -1,18 +1,26 @@
+-""" Ce script permet de générer l'affichage du programme"""
+-import numpy as np
++"""
++File: main.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de générer l'affichage du programme
++"""
+ 
++# Imports
+ from classes import *
+ from calculs import *
+ from verifications import *
+ from gestion_BDD_materiaux import lister_les_materiaux, afficher_materiaux, recuperer_rugosite
+ from gestion_BDD_geometries import recuperer_attribut_geo
++from gestion_BDD_fluides import lister_fluides
+ from gestion_traces import tracer_canalisations, tracer_pression_vitesse_1d
+ from gestion_YAML import get_name_yaml, get_info_yaml
+ 
++# On définit quelques paramètres utiles pour le script
+ liste_o_n = ['oui', 'non']
+ # Pour l'instant, on fait que section rondes
+ liste_sections = ['rond']
+ liste_materiaux = lister_les_materiaux()
++# Pour l'instant, on ne fait que des coudes
+ liste_geometrie_angle = ['coude D', 'coude B']
+ liste_geometries = ['droit'] + liste_geometrie_angle
+ liste_rap_coude = recuperer_attribut_geo('coude', 'rapport rayon diametre')
+@@ -20,8 +28,56 @@
+ rapport_rayon_diam_max = max(liste_rap_coude)
+ 
+ 
++# Définition des fonctions
++# Définition de la procédure nettoyer_écran
++def nettoyer_ecran():
++    """
++    Cette procédure permet de nettoyer la console.
++
++    Args :
++        Aucun
++
++    Returns :
++        Aucun
++    """
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++    print("")
++
++
+ def choisir_materiaux_canalisation(nbre, choix):
++    """
++    Cette fonction permet de récupérer le nom des matériaux composant la canalisation.
++
++    Args :
++        nbre (int) : Le nombre de tronçons dans la canalisation
++        choix (str) : 'oui' : la canalisation est composée d'un seul matériau, sinon 'non
++
++    Returns :
++        list : La liste des matériaux de la canalisation
++    """
+     liste = np.array([])
++
++    # S'il y a plusieurs matériaux dans la canalisation
+     if choix == 'non':
+         for i in range(nbre):
+             print(f"\n Quel est le matériau du tronçon {i} ? Les matériaux possibles sont :")
+@@ -29,6 +85,8 @@
+             choix_numeros_materiau = get_element_liste_input([str(i) for i in range(len(liste_materiaux))])
+             materiau = liste_materiaux[int(choix_numeros_materiau)]
+             liste = np.append(liste, materiau)
++
++    # Sinon
+     else:
+         print(f"\n Quel est le matériau de la canalisation ? Les matériaux possibles sont :")
+         afficher_materiaux()
+@@ -40,6 +98,18 @@
+ 
+ 
+ def choisir_rugosite_canalisation(nbre, choix_rugo, choix_mat, liste_mat):
++    """
++    Cette fonction permet de récupérer les rugosités de la canalisation.
++
++    Args :
++        nbre (int) : Le nombre de tronçons dans la canalisation
++        choix_rug (str) : 'oui' : si la rugosité est constante, sinon 'non
++        choix_mat (str) : 'oui' : la canalisation est composée d'un seul matériau, sinon 'non
++        liste_mat (list) : La liste des matériaux de la canalisation
++
++    Returns :
++        list : La liste des rugosités de la canalisation
++    """
+     liste = []
+     # Si la rugosité varie
+     if choix_rugo == 'non':
+@@ -79,6 +149,15 @@
+ 
+ 
+ def choisir_geometrie_canalisation(nbre):
++    """
++    Cette fonction permet de récupérer les géométries de la canalisation.
++
++    Args :
++        nbre (int) : Le nombre de tronçons dans la canalisation
++
++    Returns :
++        list : La liste des géométries de la canalisation
++    """
+     liste = []
+     for i in range(nbre):
+         print(f"\n Quelle est la géométrie du tronçon {i} ?")
+@@ -89,6 +168,7 @@
+         # Verification de la possibilité de la configuration
+         if i > 0:
+ 
++            # On enregistre dans quelle direction était le coude précédent
+             if geometrie in liste_geometrie_angle:
+                 coude_precedent = liste[0]
+                 for j in liste:
+@@ -126,14 +206,26 @@
+ 
+ 
+ def choisir_longueur_canalisation(nbre, liste_geo):
++    """
++    Cette fonction permet de récupérer les longueurs des géométries de la canalisation.
++
++    Args :
++        nbre (int) : Le nombre de tronçons dans la canalisation
++        liste_geo (list) : La liste des géométries de la canalisation
++
++    Returns :
++        list : La liste des longueurs des géométries de la canalisation
++    """
+     liste_long = []
+     liste_rayon = []
+     for i in range(nbre):
+         geometrie = liste_geo[i]
++        # Si la géométrie est un coude, on demande le rayon
+         if geometrie in liste_geometrie_angle:
+             print(f"\n Quel est le rayon de courbure du coude du tronçon {i} en m ?")
+             rayon = get_float_input('+')
+             longueur = rayon*2*np.pi/4  # coude à 90° : 1/4 du périmètre du cercle
++        # Sinon, on demande la longueur
+         else:
+             print(f"\n Quelle est la longueur du tronçon {i} en m ?")
+             longueur = get_float_input('+')
+@@ -146,14 +238,30 @@
+ 
+ 
+ def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste_rayon):
++    """
++    Cette fonction permet de vérifier que les rapports rayon de courbure / diametre des coudes sont bien couverts par la base de données.
++
++    Args :
++        nbre (int) : Le nombre de tronçons dans la canalisation
++        liste_geo (list) : La liste des géométries de la canalisation
++        liste_diam (list) : La liste des diamètres de la canalisation
++        liste_rayon (list) : La liste des rayons de courbures de la canalisation
++
++    Returns :
++        list : La liste des rayons de courbure des géométries de la canalisation
++        list : La liste des longueurs des géométries de la canalisation
++    """
+     liste = []
++
+     # Vérification du rapport rayon de courbure / diametre
+     for i in range(nbre):
+         geometrie = liste_geo[i]
++
+         if geometrie in liste_geometrie_angle:
+             rayon_courbure = liste_rayon[i]
+             diametre = liste_diam[i]
+             rapport = rayon_courbure / diametre
++
+             while rapport > rapport_rayon_diam_max or rapport < rapport_rayon_diam_min:
+                 print(f"\n La base de données ne peut calculer les pertes de charges que pour des rapports rayon de "
+                       f"courbure sur diamètre compris entre {rapport_rayon_diam_min} et {rapport_rayon_diam_max}.")
+@@ -162,6 +270,8 @@
+                 print(f"\n Quel est le rayon du tronçon {i} en m ?")
+                 rayon_courbure = get_float_input('+')
+                 rapport = rayon_courbure / diametre
++
++            # On enregistre la longuuer et le rayon dans la liste
+             liste_rayon[i] = rayon_courbure
+             liste_long[i] = np.pi*rayon_courbure/2
+ 
+@@ -169,12 +279,32 @@
+ 
+ 
+ def verifier_dans_intervalle(nbre, intervalle):
++    """
++    Cette fonction permet de vérifier qu'un nombre est bien dans un intervalle.
++
++    Args :
++        nbre (float) : Le nombre à tester
++        intervalle (list) : L'intervalle dans lequel vérifier la présence du nombre
++
++    Returns :
++        bool : True si 'nbre' est dans 'intervalle', False sinon
++    """
+     a = intervalle[0]
+     b = intervalle[1]
+     return a < nbre < b
+ 
+ 
+ def recuperer_index_plus_proche_inf(liste_abscisse, nbre):
++    """
++    Cette fonction permet de récupérer l'index du nombre le plus petit et le plus proche de 'nbre' dans une liste.
++
++    Args :
++        nbre (float) : Le nombre à tester
++        liste_abscisse (float) : La liste dans laquelle chercher
++
++    Returns :
++        int : l'index du nombre le plus proche et le plus petit de 'nbre'
++    """
+     compteur = 0
+     while liste_abscisse[compteur] < nbre:
+         compteur += 1
+@@ -182,6 +312,19 @@
+ 
+ 
+ def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur):
++    """
++    Cette fonction permet de récupérer l'index ou placer une pompe pour que la pression ne descende pas sous 'pression_min'.
++
++    Args :
++        liste_pression (list) : La liste de distribution des pressions dans la canalisation
++        pression_min (float) : La pression minimale sous laquelle ne pas descendre, en Pa
++        liste_geometrie (list) : La liste des géométries de la canalisation
++        liste_abscisse (list) : La liste des abscisses de la canalisation
++        liste_longueur (list) : La liste des longueurs des géométries de la canalisation
++
++    Returns :
++        int : Index de l'endroit ou placer la pompe
++    """
+     compteur = 0
+     pression_entree = liste_pression[compteur]
+     liste_x_geometrie = np.array([0])
+@@ -197,7 +340,7 @@
+         liste_debut_fin_geo[i][1] = liste_x_geometrie[i+1]
+ 
+     # Tant que la pression est au dessus de la pression mini et que le compteur n'est pas à la fin
+-    while compteur < len(liste_pression) - 1 and pression_entree > pression_min:
++    while compteur != len(liste_pression) - 1 and pression_entree > pression_min:
+         # On actualise le compteur et la pression
+         compteur += 1
+         pression_entree = liste_pression[compteur]
+@@ -214,38 +357,74 @@
+ 
+ 
+ def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement, liste_geometrie, liste_longueur):
++    """
++    Cette procédure permet de tracer la distribution de pressions dans la canalisation, avec des ponmpes.
+ 
++    Args :
++        debit (float) : Le débit de la canalisation, en kg/m**3
++        liste_abscisse (list) : La liste des abscisses de la canalisation
++        liste_pression (list) : La liste de distribution des pressions dans la canalisation
++        pression_min (float) : La pression minimale sous laquelle ne pas descendre, en Pa
++        puissance (float) : La puissance de la pompe
++        rendement (float) : Le rendement de la pompe
++        liste_geometrie (list) : La liste des géométries de la canalisation
++        liste_longueur (list) : La liste des longueurs des géométries de la canalisation
++
++    Returns :
++        Aucun
++    """
++    liste_pression_origine = liste_pression.copy()
+     idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur)
+ 
+-    if idx_emplacement_pompe == len(liste_pression):
+-        return False
++    liste_abscisse_pompe = []
+ 
+-    else:
++    # Tant que l'index de la pompe n'est pas au bout de la liste, donc qu'il faut placer une pompe
++    while idx_emplacement_pompe < len(liste_abscisse) - 1:
+         pression_entree = liste_pression[idx_emplacement_pompe]
+         pression_sortie_pompe = calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree)
+ 
+-        print(f"Il faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.")
++        # On cherche l'emplacement de la pompe
++        print(f"\nIl faut placer une pompe à {liste_abscisse[idx_emplacement_pompe]} m.")
+         print(f"La pression en sortie sera de {pression_sortie_pompe / 10 ** 5} bar.")
+         delta_pression_pompe = pression_sortie_pompe - liste_pression[idx_emplacement_pompe]
+         liste_pression_new = liste_pression[:idx_emplacement_pompe]
+ 
++        # On calcule la nouvelle distribution de pression dans la canalisation
+         for i in range(idx_emplacement_pompe, len(liste_abscisse)):
+             liste_pression_new = np.append(liste_pression_new, liste_pression[i] + delta_pression_pompe)
+ 
+-        plt.plot(liste_abscisse, liste_pression, label='Pression originale')
+-        plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')
+-        plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+-        plt.xlabel("Longueur linéaire en m")
+-        plt.ylabel("Pression en Pa")
+-        plt.axvline(liste_abscisse[idx_emplacement_pompe], color='r', linestyle='--')
+-        plt.legend()
+-        plt.show()
+-        return liste_pression_new
++        liste_abscisse_pompe = np.append(liste_abscisse_pompe, liste_abscisse[idx_emplacement_pompe])
++
++        liste_pression = liste_pression_new.copy()
++        idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie,
++                                                          liste_abscisse,
++                                                          liste_longueur)
++
++    # On trace la pression en fonction de la longueur
++    plt.plot(liste_abscisse, liste_pression_origine, label='Pression originale')
++    plt.plot(liste_abscisse, liste_pression_new, label='Pression avec la pompe')
++    plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
++    plt.xlabel("Longueur linéaire en m")
++    plt.ylabel("Pression en Pa")
++
++    # On trace les emplacements des pompes
++    for idx, i in enumerate(liste_abscisse_pompe):
++        plt.axvline(i, color='r', linestyle='--', label=f'Pompe n°{idx+1}')
++    plt.legend()
++    plt.show()
+ 
+ 
+-
++# Défintion de la procédure principale
+ def interface():
+-    liste_o_n = ['oui','non']
++    """
++    Cette procédure permet de lancer le programme.
++
++    Args :
++        Aucun
++
++    Returns :
++        Aucun
++    """
+     # Affichage du principe du script
+     print("Ce script permet de configurer des canalisations ! \n"
+           "En entrant différentes données de votre problème : géométrie, conditions initiales, fluide, ... \n"
+@@ -254,204 +433,151 @@
+           "Pour commencer il faut découper la géométrie des canalisations en tronçons ! \n"
+           "Un tronçon est une partie de la géométrie dont la section, la direction ou le matériau ne varie pas. \n")
+ 
+-    # Choix du mode de fonctionnement
+-    # 1 - normal, 2 - ajout de matériau, 3 - ajout de fluide
+-    mode = get_choix_mode()
+-
+-    # MODE PROBLÈME
+-    if mode == 1:
+-        print("\n Voulez-vous utiliser un fichier .yaml, celui doit être enregistré dans le même dossier que ce script.")
+-        choix_yaml = get_element_liste_input(liste_o_n)
+-        print("Quel est le nom du fichier, suivit de '.yaml'")
+-        nom_fichier = get_name_yaml()
++    # On propose d'utilise un fichier .yaml
++    print("\n Voulez-vous utiliser un fichier .yaml, celui doit être enregistré dans le même dossier que ce script.")
++    choix_yaml = get_element_liste_input(liste_o_n)
+ 
+-        if choix_yaml == 'non':
+-            nettoyer_ecran()
+-            liste_fluides = lister_fluides()
+-            print("\n Vous entrez dans le mode de résolution de problème.\n")
++    # Si l'utilisateur n'utilise pas de fichier .yaml, on demande les paramètres un à un
++    if choix_yaml == 'non':
++        nettoyer_ecran()
++        liste_fluides = lister_fluides()
++        print("\n Vous entrez dans le mode de résolution de problème.\n")
+ 
+-            # Fluide
+-            print("Quel est le fluide s'écoulant dans les canalisations ?")
+-            fluide = get_element_liste_input(liste_fluides)
++        # Fluide
++        print("Quel est le fluide s'écoulant dans les canalisations ?")
++        fluide = get_element_liste_input(liste_fluides)
+ 
+-            print("\n Combien de tronçons composent la géométrie des canalisations du problème ?")
+-            nbre_troncons = get_int_input('+')
++        # Tronçons
++        print("\n Combien de tronçons composent la géométrie des canalisations du problème ?")
++        nbre_troncons = get_int_input('+')
+ 
+-            # Choix matériau
+-            print("\n Le matériau est-il le même dans toute la canalisation ?")
+-            choix_materiau = get_element_liste_input(liste_o_n)
+-            liste_materiau_canalisation = choisir_materiaux_canalisation(nbre_troncons, choix_materiau)
++        # Choix matériau
++        print("\n Le matériau est-il le même dans toute la canalisation ?")
++        choix_materiau = get_element_liste_input(liste_o_n)
++        liste_materiau_canalisation = choisir_materiaux_canalisation(nbre_troncons, choix_materiau)
+ 
+-            # Choix rugosité
+-            print("")
+-            print("\n La rugosité est-elle la même dans toute la canalisation ?")
+-            choix_rugosite = get_element_liste_input(liste_o_n)
+-            liste_rugosite_canalisation = choisir_rugosite_canalisation(nbre_troncons, choix_rugosite, choix_materiau, liste_materiau_canalisation)
++        # Choix rugosité
++        print("")
++        print("\n La rugosité est-elle la même dans toute la canalisation ?")
++        choix_rugosite = get_element_liste_input(liste_o_n)
++        liste_rugosite_canalisation = choisir_rugosite_canalisation(nbre_troncons, choix_rugosite, choix_materiau, liste_materiau_canalisation)
+ 
+-            # Choix forme section
+-            print("\n Quelle est la forme de la section de la canalisation ?")
+-            forme_section = get_element_liste_input(liste_sections)
+-            liste_forme_canalisation = [forme_section]*nbre_troncons
++        # Choix forme section
++        print("\n Quelle est la forme de la section de la canalisation ?")
++        forme_section = get_element_liste_input(liste_sections)
++        liste_forme_canalisation = [forme_section]*nbre_troncons
+ 
+-            # Choix diamètre
+-            print("\n Quel est le diamètre de la section de la canalisation en m ?")
+-            diametre = get_float_input('+')
+-            liste_diametre_canalisation = [diametre]*nbre_troncons
++        # Choix diamètre
++        print("\n Quel est le diamètre de la section de la canalisation en m ?")
++        diametre = get_float_input('+')
++        liste_diametre_canalisation = [diametre]*nbre_troncons
+ 
+-            # Conditions initiales
+-            print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
+-            vitesse_init, temperature_init, pression_init, densite, viscosite_cine, debit = get_init_cond_input(fluide, diametre)
+-            liste_pression = [pression_init]
+-            liste_vitesse = [vitesse_init]
+-            liste_temperature = [temperature_init]
++        # Conditions initiales
++        print("\n Quelles sont les conditions initiales du fluides, en entrée de la canalisation ?")
++        vitesse_init, temperature_init, pression_init, densite, viscosite_cine, debit = get_init_cond_input(fluide, diametre)
++        liste_pression = [pression_init]
++        liste_vitesse = [vitesse_init]
++        liste_temperature = [temperature_init]
+ 
+-            # Choix geometrie et angle du tronçon
+-            liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)
++        # Choix geometrie et angle du tronçon
++        liste_geometrie_canalisation = choisir_geometrie_canalisation(nbre_troncons)
+ 
+-            # Choix longueur de chaque tronçon
+-            liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)
++        # Choix longueur de chaque tronçon
++        liste_longueur_canalisation, liste_rayon_canalisation = choisir_longueur_canalisation(nbre_troncons, liste_geometrie_canalisation)
+ 
+-            liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
++        liste_rayon_canalisation, liste_longueur_canalisation = verifier_rapport_canalisation(nbre_troncons, liste_geometrie_canalisation, liste_longueur_canalisation, liste_diametre_canalisation, liste_rayon_canalisation)
+ 
+-        else:
+-            fluide, nbre_troncons, materiau, rugosite, forme, diametre, vitesse_init, debit, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie_canalisation, liste_longueur_canalisation, liste_rayon_canalisation, choix_pompe, pression_min, puissance_pompe, rendement = get_info_yaml(nom_fichier)
+-            pression_init = pression_init * 10**5
+-            pression_min = pression_min * 10**5
++    # Si l'utilisateur utilise un fichier .yaml
++    else:
++        print("Quel est le nom du fichier, suivit de '.yaml'")
++        nom_fichier = get_name_yaml()
++
++        # On enregistre les informations de ce fichier
++        fluide, nbre_troncons, materiau, rugosite, forme, diametre, vitesse_init, debit, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie_canalisation, liste_longueur_canalisation, liste_rayon_canalisation, choix_pompe, pression_min, puissance_pompe, rendement = get_info_yaml(nom_fichier)
++        pression_init = pression_init * 10**5
++        pression_min = pression_min * 10**5
+ 
+-            if vitesse_init == 0:
+-                vitesse_init = debit / (np.pi*(diametre/2)**2)
+-            if debit == 0:
+-                debit = vitesse_init * np.pi*(diametre/2)**2
++        if vitesse_init == 0:
++            vitesse_init = debit / (np.pi*(diametre/2)**2)
++        if debit == 0:
++            debit = vitesse_init * np.pi*(diametre/2)**2
+ 
+-            for i in range(nbre_troncons):
+-                longueur = liste_longueur_canalisation[i]
+-                if longueur == 0:
+-                    liste_longueur_canalisation[i] = liste_rayon_canalisation[i]*np.pi/2
++        for i in range(nbre_troncons):
++            longueur = liste_longueur_canalisation[i]
++            if longueur == 0:
++                liste_longueur_canalisation[i] = liste_rayon_canalisation[i]*np.pi/2
+ 
+-            liste_forme_canalisation = [forme] * nbre_troncons
+-            liste_diametre_canalisation = [diametre] * nbre_troncons
+-            liste_materiau_canalisation = [diametre] * nbre_troncons
+-            liste_rugosite_canalisation = [rugosite] * nbre_troncons
+-            # print(liste_longueur_canalisation)
+-            # print(liste_forme_canalisation)
+-            # print(liste_diametre_canalisation)
+-            # print(liste_materiau_canalisation)
+-            # print(liste_rugosite_canalisation)
+-            # print(liste_geometrie_canalisation)
+-            # print(liste_rayon_canalisation)
+-            # print(pression_init)
+-            # print(vitesse_init)
+-            # print(debit)
++        liste_forme_canalisation = [forme] * nbre_troncons
++        liste_diametre_canalisation = [diametre] * nbre_troncons
++        liste_materiau_canalisation = [materiau] * nbre_troncons
++        liste_rugosite_canalisation = [rugosite] * nbre_troncons
+ 
+-        canalisation = Canalisation()
+-        # Enregistrement des tronçons et de la canalisation
+-        for i in range(nbre_troncons):
+-            longueur = liste_longueur_canalisation[i]
+-            section = liste_forme_canalisation[i]
+-            diametre = liste_diametre_canalisation[i]
+-            materiau = liste_materiau_canalisation[i]
+-            rugosite = liste_rugosite_canalisation[i]
+-            geometrie = liste_geometrie_canalisation[i]
+-            rayon_courbure = liste_rayon_canalisation[i]
++    canalisation = Canalisation()
++    # Enregistrement des tronçons et de la canalisation
++    for i in range(nbre_troncons):
++        longueur = liste_longueur_canalisation[i]
++        section = liste_forme_canalisation[i]
++        diametre = liste_diametre_canalisation[i]
++        materiau = liste_materiau_canalisation[i]
++        rugosite = liste_rugosite_canalisation[i]
++        geometrie = liste_geometrie_canalisation[i]
++        rayon_courbure = liste_rayon_canalisation[i]
+ 
+-            if i == 0:
+-                vitesse_entree = vitesse_init
+-                pression_entree = pression_init
+-                temperature_entree = temperature_init
+-            else:
+-                vitesse_entree = 0
+-                pression_entree = 0
+-                temperature_entree = 0
++        if i == 0:
++            vitesse_entree = vitesse_init
++            pression_entree = pression_init
++            temperature_entree = temperature_init
++        else:
++            vitesse_entree = 0
++            pression_entree = 0
++            temperature_entree = 0
+ 
+-            troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, rayon_courbure,
+-                              fluide, vitesse_entree, pression_entree, temperature_entree, densite, viscosite_cine)
+-            canalisation.ajouter_troncon(troncon)
++        troncon = Troncon(longueur, section, diametre, materiau, rugosite, geometrie, rayon_courbure,
++                          fluide, vitesse_entree, pression_entree, temperature_entree, densite, viscosite_cine)
++        canalisation.ajouter_troncon(troncon)
+ 
+-        # Affichage de la géométrie des canalisations
+-        print("La géométrie de votre problème est-elle bien la suivante ?")
+-        tracer_canalisations(canalisation)
+-        confirmation_geometrie = get_element_liste_input(['oui', 'non'])
+-        if confirmation_geometrie == 'non':
+-            print("Il n'est pas disponible de modifier la géométrie du problème pour l'instant")
+-            print("voulez-vous recommencer depuis le début ? ")
+-            choix_recommencer = get_element_liste_input(['oui', 'non'])
+-            if choix_recommencer == 'oui':
+-                interface()
+-                return True
++    # Affichage et confirmation de la géométrie des canalisations
++    print("La géométrie de votre problème est-elle bien la suivante ?")
++    tracer_canalisations(canalisation)
++    confirmation_geometrie = get_element_liste_input(['oui', 'non'])
++
++    if confirmation_geometrie == 'non':
++        print(f"Pour modifier la canlisation veuillez modifier votre fichier .yaml puis relancer le programme.")
++        return True
+ 
+-        # Phase de calculs
+-        print("...Début de la phase de calculs...")
++    # Phase de calculs
++    print("...Début de la phase de calculs...")
+ 
+-        liste_pression, liste_vitesse, liste_temperature, liste_abscisse, _ = canalisation.calculer_distrib_pression_vitesse()
++    liste_pression, liste_vitesse, liste_temperature, liste_abscisse, _ = canalisation.calculer_distrib_pression_vitesse()
+ 
+-        tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur_canalisation)
++    tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur_canalisation)
+ 
+-        if choix_yaml == 'non':
+-            # Phase de placement pompe
+-            print("")
+-            print("Voulez-vous placer une pompe sur la canalisation ?")
+-            choix_pompe = get_element_liste_input(liste_o_n)
++    # Phase de placement pompe
++    # S'il n'y a pas de fichier .yaml
++    if choix_yaml == 'non':
++        print("")
++        print("Voulez-vous placer des pompes sur la canalisation ?")
++        choix_pompe = get_element_liste_input(liste_o_n)
+ 
+-        if choix_pompe == 'non':
+-            print("Vous quittez le programme.")
+-            return True
+-        else:
+-            if choix_yaml == 'non':
+-                print("Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?")
+-                pression_min = get_float_between_input(0, pression_init)*10**5
+-                print("Quelle est la puissance de votre pompe, en W ?")
+-                puissance_pompe = get_float_input('+')
+-                print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
+-                rendement = get_float_between_input(0, 1)
++    # Si l'utilisateur ne veut pas placer de pompe
++    if choix_pompe == 'non':
++        print("Vous quittez le programme.")
++        return True
++    else:
++        # S'il n'y a pas de fichier .yaml
++        if choix_yaml == 'non':
++            print("Quelle est la valeur de pression sous laquelle il ne faut pas que le fluide descende, en bar ?")
++            pression_min = get_float_between_input(0, pression_init)*10**5
++            print("Quelle est la puissance de votre pompe, en W ?")
++            puissance_pompe = get_float_input('+')
++            print("Quel est le rendement de votre pompe, entre 0 et 1 ?")
++            rendement = get_float_between_input(0, 1)
+ 
+-            placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement, liste_geometrie_canalisation, liste_longueur_canalisation)
++        placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance_pompe, rendement, liste_geometrie_canalisation, liste_longueur_canalisation)
+ 
+-            print("Vous quittez le programme.")
+-            return True
++        print("Vous quittez le programme.")
++        return True
+ 
+ 
+-
+-    # MODE AJOUT/SUPPRESSION DE MATÉRIAU
+-    elif mode == 2:
+-        nettoyer_ecran()
+-        print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
+-        print("")
+-        interface()
+-        return True
+-        # print("Voici les matériaux actuels de la base de données")
+-        # afficher_materiaux()
+-        # print("\n Voulez-vous ajouter ou supprimer un matériau.")
+-        # choix_edition_2 = get_element_liste_input(['ajouter', 'supprimer'])
+-        #
+-        # if choix_edition_2 == 'ajouter':
+-        #     ajouter_materiaux()
+-        # else:
+-        #     supprimer_materiaux()
+-
+-    # MODE AJOUT/SUPPRESSION DE FLUIDE
+-    elif mode == 3:
+-        nettoyer_ecran()
+-        print("Non disponible pour l'instant, veuillez entrer dans le mode normal.")
+-        print("")
+-
+-        interface()
+-        return True
+-        # print("Voici les matériaux actuels de la base de données")
+-        # afficher_fluide()
+-        # print("\n Voulez-vous ajouter ou supprimer un matériau.")
+-        # choix_edition_3 = get_element_liste_input(['ajouter', 'supprimer'])
+-        #
+-        # if choix_edition_3 == 'ajouter':
+-        #     ajouter_fluides()
+-        # else:
+-        #     supprimer_fluides()
+-
+-
+ if __name__ == '__main__':
+-    interface()
+-    # liste_pression = np.append(np.linspace(3, 2.9, 200), np.linspace(2.9, 2.5, 157)[1:])
+-    # pression_min = 2.7
+-    # liste_geometrie = ['droit', 'coude D', 'droit']
+-    # liste_abscisse = np.append(np.linspace(0, 2, 200), np.linspace(2, 3.57, 157)[1:])
+-    # liste_longueur = [2, 1.57, 5]
+-    # print(trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur))
++    interface()
+\ No newline at end of file
+Index: gestion_BDD_geometries.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pandas as pd\r\n\r\n\r\n# On enregistre la base de données dans df\r\ndf_geometrie = pd.read_excel('Base_De_Donnees/BDD_geometrie.xlsx')\r\n\r\n# On enregistre les différentes informations de chaque géométrie\r\nliste_angle = df_geometrie.groupby('nom')['angle'].apply(list).reset_index()\r\nliste_angle_te = liste_angle[liste_angle['nom'] == 'te']['angle'].tolist()[0]\r\nliste_angle_deviation = liste_angle[liste_angle['nom'] == 'deviation']['angle'].tolist()[0]\r\nliste_angle_agrandissement = liste_angle[liste_angle['nom'] == 'agrandissement']['angle'].tolist()[0]\r\nliste_angle_retrecissement = liste_angle[liste_angle['nom'] == 'retrecissement']['angle'].tolist()[0]\r\n\r\nliste_rapport = df_geometrie.groupby('nom')['rapport rayon diametre'].apply(list).reset_index()\r\nliste_rapport_coude_droit = liste_rapport[liste_rapport['nom'] == 'coude droit']['rapport rayon diametre'].tolist()[0]\r\n\r\nliste_rapport = df_geometrie.groupby('nom')['rapport rayon diametre'].apply(list).reset_index()\r\nliste_rapport_coude = liste_rapport[liste_rapport['nom'] == 'coude']['rapport rayon diametre'].tolist()[0]\r\n\r\n\r\ndef recuperer_attribut_geo(geometrie, colonne):\r\n    liste =  df_geometrie.groupby('nom')[colonne].apply(list).reset_index()\r\n    return liste[liste['nom'] == geometrie][colonne].tolist()[0]\r\n\r\n\r\ndef trouver_nombre_apres(liste, nombre):\r\n    \"\"\"Trouve le plus petit élément de la liste, plus grand que nombre\"\"\"\r\n    liste_triee = sorted(liste, reverse=True)\r\n    nombre_apres = liste_triee[0]\r\n    for i in liste_triee:\r\n        if i > nombre:\r\n            nombre_apres = i\r\n    return nombre_apres\r\n\r\n\r\ndef trouver_nombre_avant(liste, nombre):\r\n    \"\"\"Trouve le plus grand élément de la liste, plus petit que nombre\"\"\"\r\n    liste_triee = sorted(liste)\r\n    nombre_avant = liste_triee[0]\r\n    for i in liste_triee:\r\n        if i < nombre:\r\n            nombre_avant = i\r\n    return nombre_avant\r\n\r\n\r\ndef recuperer_fourchette_geo(geometrie, colonne, nombre):\r\n    liste_nombres = df_geometrie.groupby('nom')[colonne].apply(list).reset_index()\r\n    liste_nombres_geometrie = liste_nombres[liste_nombres['nom'] == geometrie][colonne].tolist()[0]\r\n    nombre_avant = trouver_nombre_avant(liste_nombres_geometrie, nombre)\r\n    nombre_apres = trouver_nombre_apres(liste_nombres_geometrie, nombre)\r\n    return nombre_avant, nombre_apres\r\n\r\n\r\n# Définition de la fonction qui va calculer le coefficient de perte de charge via la base de données de géométries\r\ndef recuperer_coeff_perte_charge_singuliere(geometrie, angle, diametre_entree, diametre_sortie, rayon_courbure):\r\n    df = df_geometrie\r\n    if geometrie == 'coude':\r\n        rapport_rsurd = rayon_courbure/diametre_entree\r\n\r\n        # Si le rapport est déjà dans la table on l'utilise\r\n        if rapport_rsurd in liste_rapport_coude:\r\n            return df[(df['nom'] == 'coude') & (df['rapport rayon diametre'] == rapport_rsurd)]['zeta'].tolist()[0]\r\n        # Sinon, il faut l'estimer en faisant un produit en croix\r\n        else:\r\n            rapport_precedent, rapport_suivant = recuperer_fourchette_geo(geometrie, 'rapport rayon diametre', rapport_rsurd)\r\n            coef_precedent = df[(df['nom'] == 'coude') & (df['rapport rayon diametre'] == rapport_precedent)]['zeta'].tolist()[0]\r\n            coef_suivant = df[(df['nom'] == 'coude') & (df['rapport rayon diametre'] == rapport_suivant)]['zeta'].tolist()[0]\r\n            return coef_precedent + ((rapport_rsurd - rapport_precedent)/(rapport_suivant - rapport_precedent))*(coef_suivant - coef_precedent)\r\n\r\n    elif geometrie == 'te':\r\n        colonne = 'angle'\r\n\r\n        # Si l'angle est déjà dans la table on l'utilise\r\n        if angle in liste_angle_te:\r\n            return df[(df['nom'] == geometrie) & (df[colonne] == angle)]['zeta'].tolist()[0]\r\n        # Sinon il faut l'estimer en faisant un produit en croix\r\n        else:\r\n            angle_precedent, angle_suivant = recuperer_fourchette_geo(geometrie, colonne, angle)\r\n            coef_precedent = df[(df['nom'] == geometrie) & (df[colonne] == angle_precedent)]['zeta'].tolist()[0]\r\n            coef_suivant = df[(df['nom'] == geometrie) & (df[colonne] == angle_suivant)]['zeta'].tolist()[0]\r\n            return coef_precedent + ((angle - angle_precedent) / (angle_suivant - angle_precedent)) * (\r\n                        coef_suivant - coef_precedent)\r\n\r\n    elif geometrie == 'coude droit':\r\n        colonne = 'rapport rayon diametre'\r\n\r\n        rapport_rsurd = rayon_courbure / diametre_entree\r\n        # Si le rapport est déjà dans la table on l'utilise\r\n        if rapport_rsurd in liste_rapport_coude_droit:\r\n            return df[(df['nom'] == geometrie) & (df[colonne] == rapport_rsurd)]['zeta'].tolist()[0]\r\n        # Sinon, il faut l'estimer en faisant un produit en croix\r\n        else:\r\n            rapport_precedent, rapport_suivant = recuperer_fourchette_geo(geometrie, colonne, rapport_rsurd)\r\n            coef_precedent = df[(df['nom'] == geometrie) & (df[colonne] == rapport_precedent)]['zeta'].tolist()[0]\r\n            coef_suivant = df[(df['nom'] == geometrie) & (df[colonne] == rapport_suivant)]['zeta'].tolist()[0]\r\n            return coef_precedent + ((rapport_rsurd - rapport_precedent) / (rapport_suivant - rapport_precedent)) * (\r\n                        coef_suivant - coef_precedent)\r\n\r\n    elif geometrie == 'deviation':\r\n        colonne = 'angle'\r\n\r\n        # Si l'angle est déjà dans la table on l'utilise\r\n        if angle in liste_angle_deviation:\r\n            return df[(df['nom'] == geometrie) & (df[colonne] == angle)]['zeta'].tolist()[0]\r\n        # Sinon il faut l'estimer en faisant un produit en croix\r\n        else:\r\n            angle_precedent, angle_suivant = recuperer_fourchette_geo(geometrie, colonne, angle)\r\n            coef_precedent = df[(df['nom'] == geometrie) & (df[colonne] == angle_precedent)]['zeta'].tolist()[0]\r\n            coef_suivant = df[(df['nom'] == geometrie) & (df[colonne] == angle_suivant)]['zeta'].tolist()[0]\r\n            return coef_precedent + ((angle - angle_precedent) / (angle_suivant - angle_precedent)) * (\r\n                    coef_suivant - coef_precedent)\r\n\r\n    elif geometrie == 'agrandissement':\r\n        colonne = 'angle'\r\n\r\n        # Si l'angle est déjà dans la table on l'utilise\r\n        if angle in liste_angle_agrandissement:\r\n            return df[(df['nom'] == geometrie) & (df[colonne] == angle)]['zeta'].tolist()[0]\r\n        # Sinon il faut l'estimer en faisant un produit en croix\r\n        else:\r\n            angle_precedent, angle_suivant = recuperer_fourchette_geo(geometrie, colonne, angle)\r\n            coef_precedent = df[(df['nom'] == geometrie) & (df[colonne] == angle_precedent)]['zeta'].tolist()[0]\r\n            coef_suivant = df[(df['nom'] == geometrie) & (df[colonne] == angle_suivant)]['zeta'].tolist()[0]\r\n            return coef_precedent + ((angle - angle_precedent) / (angle_suivant - angle_precedent)) * (\r\n                    coef_suivant - coef_precedent)\r\n\r\n    elif geometrie == 'retrecissement':\r\n        colonne = 'angle'\r\n\r\n        # Si l'angle est déjà dans la table on l'utilise\r\n        if angle in liste_angle_retrecissement:\r\n            return df[(df['nom'] == geometrie) & (df[colonne] == angle)]['zeta'].tolist()[0]\r\n        # Sinon il faut l'estimer en faisant un produit en croix\r\n        else:\r\n            angle_precedent, angle_suivant = recuperer_fourchette_geo(geometrie, colonne, angle)\r\n            coef_precedent = df[(df['nom'] == geometrie) & (df[colonne] == angle_precedent)]['zeta'].tolist()[0]\r\n            coef_suivant = df[(df['nom'] == geometrie) & (df[colonne] == angle_suivant)]['zeta'].tolist()[0]\r\n            return coef_precedent + ((angle - angle_precedent) / (angle_suivant - angle_precedent)) * (\r\n                    coef_suivant - coef_precedent)\r\n\r\n    else:\r\n        return 0\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gestion_BDD_geometries.py b/gestion_BDD_geometries.py
+--- a/gestion_BDD_geometries.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/gestion_BDD_geometries.py	(date 1720493193753)
+@@ -1,8 +1,16 @@
++"""
++File: gestion_BDD_geometries.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir des fonctions qui permettent de gérer la base de données "BDD_geometries.xlsx"
++"""
++
++# Imports
+ import pandas as pd
+-
++from gestion_BDD_fluides import trouver_nombre_apres, trouver_nombre_avant
+ 
+ # On enregistre la base de données dans df
+-df_geometrie = pd.read_excel('Base_De_Donnees/BDD_geometrie.xlsx')
++df_geometrie = pd.read_excel("BDD_geometries.xlsx")
+ 
+ # On enregistre les différentes informations de chaque géométrie
+ liste_angle = df_geometrie.groupby('nom')['angle'].apply(list).reset_index()
+@@ -18,32 +26,36 @@
+ liste_rapport_coude = liste_rapport[liste_rapport['nom'] == 'coude']['rapport rayon diametre'].tolist()[0]
+ 
+ 
++# Définition des fonctions
+ def recuperer_attribut_geo(geometrie, colonne):
++    """
++    Cette fonction récupère une valeur pour la géométrie 'geometrie' dans la colonne 'colonne'.
++
++    Args:
++       geometrie (str) : Le nom de la géométrie
++       colonne (str) : Le nom de la colonne ou chercher
++
++    Returns:
++       float : La valeur dans la colonne pour la géométrie
++    """
+     liste =  df_geometrie.groupby('nom')[colonne].apply(list).reset_index()
+     return liste[liste['nom'] == geometrie][colonne].tolist()[0]
+ 
+ 
+-def trouver_nombre_apres(liste, nombre):
+-    """Trouve le plus petit élément de la liste, plus grand que nombre"""
+-    liste_triee = sorted(liste, reverse=True)
+-    nombre_apres = liste_triee[0]
+-    for i in liste_triee:
+-        if i > nombre:
+-            nombre_apres = i
+-    return nombre_apres
+-
+-
+-def trouver_nombre_avant(liste, nombre):
+-    """Trouve le plus grand élément de la liste, plus petit que nombre"""
+-    liste_triee = sorted(liste)
+-    nombre_avant = liste_triee[0]
+-    for i in liste_triee:
+-        if i < nombre:
+-            nombre_avant = i
+-    return nombre_avant
+-
+-
+ def recuperer_fourchette_geo(geometrie, colonne, nombre):
++    """
++    Cette fonction renvoie le nombre juste avant et juste après 'nombre', dans la colonne 'colonne', pour 'fluide'
++    dans la base de données.
++
++    Args:
++       geometrie (str) : Le nom de la geometrie
++       colonne (str) : La colonne dans laquelle chercher
++       nombre (float) : Le nombre qu'on souhaite encadrer dans la colonne 'colonne'
++
++    Returns:
++       float : Le plus grand nombre, plus petit que nombre dans la liste
++       float : Le plus petit nombre, plus grand que nombre dans la liste
++   """
+     liste_nombres = df_geometrie.groupby('nom')[colonne].apply(list).reset_index()
+     liste_nombres_geometrie = liste_nombres[liste_nombres['nom'] == geometrie][colonne].tolist()[0]
+     nombre_avant = trouver_nombre_avant(liste_nombres_geometrie, nombre)
+@@ -51,8 +63,20 @@
+     return nombre_avant, nombre_apres
+ 
+ 
+-# Définition de la fonction qui va calculer le coefficient de perte de charge via la base de données de géométries
+-def recuperer_coeff_perte_charge_singuliere(geometrie, angle, diametre_entree, diametre_sortie, rayon_courbure):
++def recuperer_coeff_perte_charge_singuliere(geometrie, angle, diametre_entree, rayon_courbure):
++    """
++    Cette fonction renvoie le coefficient de perte de charge singulière pour la géométrie, l'angle,
++    le diamètre et le rayon de courbure donné.
++
++    Args:
++        geometrie (str) : Le nom de la géométrie
++        angle (float) : L'angle de la géométrie
++        diametre_entree (float) : Le diamètre de la géométrie
++        rayon_courbure (float) : Le rayon de courbure de la géométrie
++
++    Returns:
++        float : Le coefficient de perte de charge singulière
++    """
+     df = df_geometrie
+     if geometrie == 'coude':
+         rapport_rsurd = rayon_courbure/diametre_entree
+@@ -139,4 +163,4 @@
+                     coef_suivant - coef_precedent)
+ 
+     else:
+-        return 0
++        return 0
+\ No newline at end of file
+Index: gestion_BDD_fluides.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pandas as pd\r\n\r\n# On enregistre la base de données dans df\r\ndf_fluide = pd.read_excel('Base_De_Donnees/BDD_fluides.xlsx')\r\n\r\n\r\ndef lister_fluides():\r\n    \"\"\"Renvoie la liste des fluides de la base de données\"\"\"\r\n    return df_fluide['Nom fluide'].unique().tolist()\r\n\r\n\r\ndef afficher_fluide():\r\n    \"\"\"Affiche les différents fluides de la base de données\"\"\"\r\n    liste_noms = lister_fluides()\r\n    fluides = str(liste_noms[0])\r\n    for i in liste_noms[1:]:\r\n        fluides += ', '\r\n        fluides += i\r\n    print(fluides)\r\n\r\n\r\ndef trouver_nombre_apres(liste, nombre):\r\n    \"\"\"Trouve le plus petit élément de la liste, plus grand que nombre\"\"\"\r\n    liste_triee = sorted(liste, reverse=True)\r\n    nombre_apres = liste_triee[0]\r\n    for i in liste_triee:\r\n        if i > nombre:\r\n            nombre_apres = i\r\n    return nombre_apres\r\n\r\n\r\ndef trouver_nombre_avant(liste, nombre):\r\n    \"\"\"Trouve le plus grand élément de la liste, plus petit que nombre\"\"\"\r\n    liste_triee = sorted(liste)\r\n    nombre_avant = liste_triee[0]\r\n    for i in liste_triee:\r\n        if i < nombre:\r\n            nombre_avant = i\r\n    return nombre_avant\r\n\r\n\r\ndef recuperer_fourchette_fluide(nom_fluide, colonne, nombre):\r\n    \"\"\"Renvoie la valeur dans la colonne avant et après le nombre pour le nom_fluide\"\"\"\r\n    liste_nombres = df_fluide.groupby('Nom fluide')[colonne].apply(list).reset_index()\r\n    liste_nombres_geometrie = liste_nombres[liste_nombres['Nom fluide'] == nom_fluide][colonne].tolist()[0]\r\n    nombre_avant = trouver_nombre_avant(liste_nombres_geometrie, nombre)\r\n    nombre_apres = trouver_nombre_apres(liste_nombres_geometrie, nombre)\r\n    return nombre_avant, nombre_apres\r\n\r\n\r\ndef recuperer_liste_temperature(nom_fluide):\r\n    \"\"\"Renvoie la liste des températures pour chaque fluide dans la BDD\"\"\"\r\n    liste_temperature = df_fluide.groupby('Nom fluide')['Température'].apply(list).reset_index()\r\n    return liste_temperature[liste_temperature['Nom fluide'] == nom_fluide]['Température'].tolist()[0]\r\n\r\n\r\ndef recuperer_valeur_fluide(nom_fluide, temperature, colonne):\r\n    \"\"\"Renvoie la valeur dans 'colonne' du 'nom_fluide' à 'température'\"\"\"\r\n    liste_temperature = recuperer_liste_temperature(nom_fluide)\r\n    if temperature in liste_temperature:\r\n        return df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temperature)].tolist()[0]\r\n    else:\r\n        temp_precedent, temp_suivant = recuperer_fourchette_fluide(nom_fluide, 'Température', temperature)\r\n        valeur_precedent = df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temp_precedent)].tolist()[0]\r\n        valeur_suivant = df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temp_suivant)].tolist()[0]\r\n        return valeur_precedent + ((temperature - temp_precedent) / (temp_suivant - temp_precedent)) * (\r\n                    valeur_suivant - valeur_precedent)\r\n\r\n\r\n# def ajouter_densite(nom_fluide, temperature):\r\n#     \"\"\"Permet d'ajouter une densité au fluide dans la base de données pour une certaine température\"\"\"\r\n#     return True\r\n#\r\n#\r\n# def ajouter_viscosite(nom_fluide, temperature):\r\n#     \"\"\"Permet d'ajouter une viscosité au fluide dans la base de données pour une certaine température\"\"\"\r\n#     return True\r\n#\r\n#\r\n# def ajouter_fluides():\r\n#     \"\"\"Permet d'ajouter un fluide à la base de données\"\"\"\r\n#     nom_fluide = input(\"Quel est le nom du fluide que vous voulez ajouter la base de données ?\")\r\n#     print(\"Quelle est la température du fluide que vous voulez ajouter, en K ?\")\r\n#     temperature = get_float_input()\r\n#     reponse = 'non'\r\n#     while reponse == 'non':\r\n#         print(f\"Vous voulez ajouter les propriétés du {nom_fluide} à {temperature} K ?\")\r\n#         reponse = get_element_liste_input(['oui', 'non'])\r\n#         nom_fluide = input(\"Quel est le nom du fluide que vous voulez ajouter la base de données ?\")\r\n#         print(\"Quelle est la température du fluide que vous voulez ajouter ?\")\r\n#         temperature = get_float_input()\r\n#\r\n#     # On ajoute le nom et la température à la base de données puis la densité et la viscosité\r\n#\r\n#     ajouter_densite(nom_fluide, temperature)\r\n#     ajouter_viscosite(nom_fluide, temperature)\r\n#     return True\r\n#\r\n#\r\n# def recuperer_densite(nom_fluide, temperature):\r\n#     return 23,4\r\n#\r\n#\r\n# def modifier_densite(nom_fluide, temperature):\r\n#     \"\"\"Permet de modifier une densité au fluide dans la base de données pour une certaine température\"\"\"\r\n#     densite = recuperer_densite(nom_fluide, temperature)\r\n#     print(f\"La densité actuelle pour {nom_fluide} à {temperature} K est {densite} kg/m3, voulez vous la modifier ?\")\r\n#     reponse = get_element_liste_input(['oui', 'non'])\r\n#     if reponse == 'oui':\r\n#         print(\"Entrez la nouvelle densité en kg/m3\")\r\n#         nouvelle_densite = get_float_input('+')\r\n#         print(f\"La nouvelle densité sera donc {nouvelle_densite} kg/m3 ?\")\r\n#         confirmation = 'non'\r\n#         while confirmation == 'non':\r\n#             print(\"Entrez la nouvelle densité en kg/m3\")\r\n#             nouvelle_densite = get_float_input('+')\r\n#             print(f\"La nouvelle densité sera donc {nouvelle_densite} kg/m3 ?\")\r\n#             confirmation = get_element_liste_input(['oui', 'non'])\r\n#         # on modifie la densite\r\n#     else:\r\n#         print(f\"Vous sortez de la modification de la densité de {nom_fluide} à {temperature} K\")\r\n#\r\n#\r\n# def modifier_viscosite(nom_fluide, temperature):\r\n#     \"\"\"Permet de modifier une viscosité au fluide dans la base de données pour une certaine température\"\"\"\r\n#     viscosite = recuperer_densite(nom_fluide, temperature)\r\n#     print(f\"La viscosité actuelle pour {nom_fluide} à {temperature} K est {viscosite} Pa.s, voulez vous la modifier ?\")\r\n#     reponse = get_element_liste_input(['oui', 'non'])\r\n#     if reponse == 'oui':\r\n#         print(\"Entrez la nouvelle viscosité en Pa.s\")\r\n#         nouvelle_viscosite = get_float_input('+')\r\n#         print(f\"La nouvelle viscosité sera donc {nouvelle_viscosite} Pa.s ?\")\r\n#         confirmation = 'non'\r\n#         while confirmation == 'non':\r\n#             print(\"Entrez la nouvelle viscosité en Pa.s\")\r\n#             nouvelle_viscosite = get_float_input('+')\r\n#             print(f\"La nouvelle viscosité sera donc {nouvelle_viscosite} Pa.s ?\")\r\n#             confirmation = get_element_liste_input(['oui', 'non'])\r\n#         # on modifie la viscosite\r\n#     else:\r\n#         print(f\"Vous sortez de la modification de la viscosité de {nom_fluide} à {temperature} K\")\r\n#\r\n#\r\n# def supprimer_fluides():\r\n#     \"\"\"Permet de supprimer un fluide de la base de données\"\"\"\r\n#     return True
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gestion_BDD_fluides.py b/gestion_BDD_fluides.py
+--- a/gestion_BDD_fluides.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/gestion_BDD_fluides.py	(date 1720493193770)
+@@ -1,26 +1,58 @@
++"""
++File: gestion_BDD_fluides.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir des fonctions qui permettent de gérer la base de données "BDD_fluides.xlsx"
++"""
++
++# Imports
+ import pandas as pd
+ 
+ # On enregistre la base de données dans df
+-df_fluide = pd.read_excel('Base_De_Donnees/BDD_fluides.xlsx')
++df_fluide = pd.read_excel('C:\PycharmProjects\PipeHelper\BDD_fluides.xlsx')
+ 
+ 
++# Définition des fonctions
+ def lister_fluides():
+-    """Renvoie la liste des fluides de la base de données"""
++    """
++    Cette fonction renvoie la liste des noms des fluides de la base données.
++
++    Args:
++        Aucun
++
++    Returns:
++        list : Les noms de fluides de la base de données
++    """
+     return df_fluide['Nom fluide'].unique().tolist()
+ 
+ 
+ def afficher_fluide():
+-    """Affiche les différents fluides de la base de données"""
++    """
++    Cette procédure affiche le nom des fluides de la base données.
++
++    Args:
++        Aucun
++
++    Returns:
++        Aucun
++    """
+     liste_noms = lister_fluides()
+-    fluides = str(liste_noms[0])
+-    for i in liste_noms[1:]:
+-        fluides += ', '
+-        fluides += i
+-    print(fluides)
++    for i in range(len(liste_noms)):
++        print(f"{i} - {liste_noms[i]}")
+ 
+ 
+ def trouver_nombre_apres(liste, nombre):
+-    """Trouve le plus petit élément de la liste, plus grand que nombre"""
++    """
++    Cette fonction renvoie le plus petit nombre, plus grand que 'nombre' dans la liste.
++
++    Args:
++        liste (list) : La liste des nombres
++        nombre (float) : Le nombre dont il faut trouver le nombre le plus proche avant lui dans la liste
++
++    Returns:
++        float : Le plus petit nombre, plus grand que 'nombre' dans la liste
++    """
++    # On trie la liste
+     liste_triee = sorted(liste, reverse=True)
+     nombre_apres = liste_triee[0]
+     for i in liste_triee:
+@@ -30,7 +62,16 @@
+ 
+ 
+ def trouver_nombre_avant(liste, nombre):
+-    """Trouve le plus grand élément de la liste, plus petit que nombre"""
++    """
++    Cette fonction renvoie le plus grand nombre, plus petit que 'nombre' dans la liste.
++
++    Args:
++       liste (list) : La liste des nombres
++       nombre (float) : Le nombre dont il faut trouver le nombre le plus proche avant lui dans la liste
++
++    Returns:
++       float : Le plus grand nombre, plus petit que 'nombre' dans la liste
++   """
+     liste_triee = sorted(liste)
+     nombre_avant = liste_triee[0]
+     for i in liste_triee:
+@@ -40,7 +81,19 @@
+ 
+ 
+ def recuperer_fourchette_fluide(nom_fluide, colonne, nombre):
+-    """Renvoie la valeur dans la colonne avant et après le nombre pour le nom_fluide"""
++    """
++    Cette fonction renvoie le nombre juste avant et juste après 'nombre', dans la colonne 'colonne', pour 'fluide'
++    dans la base de données.
++
++    Args:
++       nom_fluide (str) : Le nom du fluide
++       colonne (str) : La colonne dans laquelle chercher
++       nombre (float) : Le nombre qu'on souhaite encadrer dans la colonne 'colonne'
++
++    Returns:
++       float : Le plus grand nombre, plus petit que nombre dans la liste
++       float : Le plus petit nombre, plus grand que nombre dans la liste
++   """
+     liste_nombres = df_fluide.groupby('Nom fluide')[colonne].apply(list).reset_index()
+     liste_nombres_geometrie = liste_nombres[liste_nombres['Nom fluide'] == nom_fluide][colonne].tolist()[0]
+     nombre_avant = trouver_nombre_avant(liste_nombres_geometrie, nombre)
+@@ -49,13 +102,31 @@
+ 
+ 
+ def recuperer_liste_temperature(nom_fluide):
+-    """Renvoie la liste des températures pour chaque fluide dans la BDD"""
++    """
++    Cette fonction renvoie la liste des températures pour 'nom_fluide' dans la base de données.
++
++    Args:
++       nom_fluide (str) : Le nom du fluide
++
++    Returns:
++       list : La liste des températures pour le fluide 'nom_fluides'
++    """
+     liste_temperature = df_fluide.groupby('Nom fluide')['Température'].apply(list).reset_index()
+     return liste_temperature[liste_temperature['Nom fluide'] == nom_fluide]['Température'].tolist()[0]
+ 
+ 
+ def recuperer_valeur_fluide(nom_fluide, temperature, colonne):
+-    """Renvoie la valeur dans 'colonne' du 'nom_fluide' à 'température'"""
++    """
++    Cette fonction renvoie la valeur du fluide 'nom_fluide' dans la colonne 'colonne', à la température 'temperature'.
++
++    Args:
++       nom_fluide (str) : Le nom du fluide
++       temperature (float) : La température du fluide
++       colonne (str) : La colonne ou chercher la valeur
++
++    Returns:
++       float : La valeur recherchée dans la colonne à la température
++    """
+     liste_temperature = recuperer_liste_temperature(nom_fluide)
+     if temperature in liste_temperature:
+         return df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temperature)].tolist()[0]
+@@ -64,83 +135,4 @@
+         valeur_precedent = df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temp_precedent)].tolist()[0]
+         valeur_suivant = df_fluide[colonne][(df_fluide['Nom fluide'] == nom_fluide) & (df_fluide['Température'] == temp_suivant)].tolist()[0]
+         return valeur_precedent + ((temperature - temp_precedent) / (temp_suivant - temp_precedent)) * (
+-                    valeur_suivant - valeur_precedent)
+-
+-
+-# def ajouter_densite(nom_fluide, temperature):
+-#     """Permet d'ajouter une densité au fluide dans la base de données pour une certaine température"""
+-#     return True
+-#
+-#
+-# def ajouter_viscosite(nom_fluide, temperature):
+-#     """Permet d'ajouter une viscosité au fluide dans la base de données pour une certaine température"""
+-#     return True
+-#
+-#
+-# def ajouter_fluides():
+-#     """Permet d'ajouter un fluide à la base de données"""
+-#     nom_fluide = input("Quel est le nom du fluide que vous voulez ajouter la base de données ?")
+-#     print("Quelle est la température du fluide que vous voulez ajouter, en K ?")
+-#     temperature = get_float_input()
+-#     reponse = 'non'
+-#     while reponse == 'non':
+-#         print(f"Vous voulez ajouter les propriétés du {nom_fluide} à {temperature} K ?")
+-#         reponse = get_element_liste_input(['oui', 'non'])
+-#         nom_fluide = input("Quel est le nom du fluide que vous voulez ajouter la base de données ?")
+-#         print("Quelle est la température du fluide que vous voulez ajouter ?")
+-#         temperature = get_float_input()
+-#
+-#     # On ajoute le nom et la température à la base de données puis la densité et la viscosité
+-#
+-#     ajouter_densite(nom_fluide, temperature)
+-#     ajouter_viscosite(nom_fluide, temperature)
+-#     return True
+-#
+-#
+-# def recuperer_densite(nom_fluide, temperature):
+-#     return 23,4
+-#
+-#
+-# def modifier_densite(nom_fluide, temperature):
+-#     """Permet de modifier une densité au fluide dans la base de données pour une certaine température"""
+-#     densite = recuperer_densite(nom_fluide, temperature)
+-#     print(f"La densité actuelle pour {nom_fluide} à {temperature} K est {densite} kg/m3, voulez vous la modifier ?")
+-#     reponse = get_element_liste_input(['oui', 'non'])
+-#     if reponse == 'oui':
+-#         print("Entrez la nouvelle densité en kg/m3")
+-#         nouvelle_densite = get_float_input('+')
+-#         print(f"La nouvelle densité sera donc {nouvelle_densite} kg/m3 ?")
+-#         confirmation = 'non'
+-#         while confirmation == 'non':
+-#             print("Entrez la nouvelle densité en kg/m3")
+-#             nouvelle_densite = get_float_input('+')
+-#             print(f"La nouvelle densité sera donc {nouvelle_densite} kg/m3 ?")
+-#             confirmation = get_element_liste_input(['oui', 'non'])
+-#         # on modifie la densite
+-#     else:
+-#         print(f"Vous sortez de la modification de la densité de {nom_fluide} à {temperature} K")
+-#
+-#
+-# def modifier_viscosite(nom_fluide, temperature):
+-#     """Permet de modifier une viscosité au fluide dans la base de données pour une certaine température"""
+-#     viscosite = recuperer_densite(nom_fluide, temperature)
+-#     print(f"La viscosité actuelle pour {nom_fluide} à {temperature} K est {viscosite} Pa.s, voulez vous la modifier ?")
+-#     reponse = get_element_liste_input(['oui', 'non'])
+-#     if reponse == 'oui':
+-#         print("Entrez la nouvelle viscosité en Pa.s")
+-#         nouvelle_viscosite = get_float_input('+')
+-#         print(f"La nouvelle viscosité sera donc {nouvelle_viscosite} Pa.s ?")
+-#         confirmation = 'non'
+-#         while confirmation == 'non':
+-#             print("Entrez la nouvelle viscosité en Pa.s")
+-#             nouvelle_viscosite = get_float_input('+')
+-#             print(f"La nouvelle viscosité sera donc {nouvelle_viscosite} Pa.s ?")
+-#             confirmation = get_element_liste_input(['oui', 'non'])
+-#         # on modifie la viscosite
+-#     else:
+-#         print(f"Vous sortez de la modification de la viscosité de {nom_fluide} à {temperature} K")
+-#
+-#
+-# def supprimer_fluides():
+-#     """Permet de supprimer un fluide de la base de données"""
+-#     return True
+\ No newline at end of file
++                    valeur_suivant - valeur_precedent)
+\ No newline at end of file
+Index: verifications.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"Ce script permet de définir les fonctions qui vont vérifier la validité des données entrées par l'utilisateur\"\"\"\r\nfrom gestion_BDD_fluides import *\r\nimport numpy as np\r\n\r\n# Définition de la procédure nettoyer_écran\r\ndef nettoyer_ecran():\r\n    \"\"\"Cette procédure permet de nettoyer la console, afin que rien n'y soit plus affiché\"\"\"\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n    print(\"\")\r\n\r\n\r\n# Définition de la fonction qui vérifie que l'entrée est bien un flottant\r\n# La fonction est inspirée de celle définie dans le module 09 - Introduction à la POO\r\ndef get_float_input(signe='all'):\r\n    while True:\r\n        # On vérifie constamment l'entrée\r\n        try:\r\n            # On demande à l'utilisateur d'entrer la valeur\r\n            entree = input(\"--> \")\r\n            # On essaie de le convertir en flottant, si ca ne marche pas, on va dans \"except\"\r\n            value = float(entree)\r\n            if (value >= 0 and signe == '+') or (value <= 0 and signe == '-') or signe == 'all':\r\n                break\r\n            else:\r\n                print(\"\\n Entrée invalide, le signe du nombre entré n'est pas correct. Essayez à nouveau.\")\r\n        except ValueError:\r\n            # Si l'entrée n'est pas un flottant, on obtient ValueError\r\n            print(\"\\n Entrée invalide, elle doit être un décimal. Essayez à nouveau.\")\r\n    return value\r\n\r\n\r\n# Définition de la fonction qui vérifie que l'entrée est bien un entier\r\n# Fonction inspirée de la fonction vérifiant les flottants\r\ndef get_int_input(signe='all'):\r\n    while True:\r\n        # On vérifie constamment l'entrée\r\n        try:\r\n            # On demande à l'utilisateur d'entrer la valeur\r\n            entree = input(\"--> \")\r\n            # On essaie de le convertir en entier, si ca ne marche pas, on va dans \"except\"\r\n            value = int(entree)\r\n            if (value >= 0 and signe == '+') or (value < 0 and signe == '-') or signe == 'all':\r\n                break\r\n            else:\r\n                print(\"\\n Entrée invalide, le signe du nombre entré n'est pas correct. Essayez à nouveau.\")\r\n        except ValueError:\r\n            # Si l'entrée n'est pas un entier, on obtient ValueError\r\n            print(\" \\nEntrée invalide, elle doit être un entier. Essayez à nouveau.\")\r\n    return value\r\n\r\n\r\n# Définition de la fonction qui vérifie que l'entrée est une section valable\r\ndef get_element_liste_input(liste):\r\n    mots_chaine = liste[0]\r\n    for i in liste[1:]:\r\n        mots_chaine += ', '\r\n        mots_chaine += (i)\r\n    print(f\"Veuillez choisir parmi : \")\r\n    print(mots_chaine)\r\n    value = input(\"--> \")\r\n    while value not in liste:\r\n        print(\"Entrée invalide, vous devez sélectionner un élément de la liste :\")\r\n        print(mots_chaine)\r\n        value = input(\"--> \")\r\n    return value\r\n\r\n\r\ndef get_choix_mode():\r\n    print(\"Que voulez-vous faire dans ce programme ?\")\r\n    print(\"1 - Étudier un problème de canalisation\")\r\n    print(\"2 - Ajouter/supprimer un matériau à la base de données\")\r\n    print(\"3 - Ajouter/supprimer un fluide à la base de données\")\r\n    print(\"Entrez 1, 2 ou 3.\")\r\n    value = input(\"--> \")\r\n    liste = ['1', '2', '3']\r\n    while value not in liste:\r\n        print(\"Entrée invalide, vous devez entrer 1, 2 ou 3.\")\r\n        value = input(\"--> \")\r\n    return int(value)\r\n\r\n\r\ndef get_init_cond_input(fluide, diametre):\r\n    liste_temperature = recuperer_liste_temperature(fluide)\r\n    print(\"Voulez-vous entrez la vitesse (m/s) ou le débit (m3/s) à l'entrée de la canalisation ?\")\r\n    choix = get_element_liste_input(['vitesse','débit'])\r\n    if choix == 'débit':\r\n        print(\"Veuillez entrer le débit en m3/s\")\r\n        debit = get_float_input('+')\r\n        vitesse = debit / (np.pi * (diametre/2)**2)\r\n    else:\r\n        print(\"Quelle est la vitesse initiale, en m/s ?\")\r\n        vitesse = get_float_input('+')\r\n        debit = vitesse * np.pi * (diametre/2)**2\r\n\r\n    print(\"Quelle est la température initiale, en °C ?\")\r\n    temperature = get_float_input()\r\n    while temperature < min(liste_temperature) or temperature > max(liste_temperature):\r\n        print(f\"La température initiale doit être comprise entre {min(liste_temperature)} °C et {max(liste_temperature)} °C \")\r\n        print(f\"La température initiale actuelle vaut {temperature} °C, veuillez la modifier.\")\r\n        temperature = get_float_input('+')\r\n\r\n    print(\"Le programme s'appuie sur une base de donnée pour effectuer ses calculs.\")\r\n    print(\"Vous pouvez en faire abstraction et utiliser vos propres données.\")\r\n    print(\"Connaissez-vous les paramètre de votre fluide : densité, viscosité cinématique, pression ?\")\r\n    choix_donnees = get_element_liste_input(['oui','non'])\r\n    if choix_donnees == 'oui':\r\n        print(\"Que vaut la pression initiale, en bar ?\")\r\n        pression = get_float_input('+')*10**5\r\n        print(\"Que vaut la densité initiale, en kg/m3 ?\")\r\n        densite = get_float_input('+')\r\n        print(\"Que vaut la viscosité cinématique initiale, en m2/s ?\")\r\n        viscosite_cine = get_float_input('+')\r\n    else:\r\n        print(\"La pression initiale est fixée à \"\r\n              \"la pression atmosphérique : 1,013 en bar.\")\r\n        pression = 1.013*10**5\r\n        densite = recuperer_valeur_fluide(fluide, temperature, 'Masse volumique')\r\n        viscosite_cine = recuperer_valeur_fluide(fluide, temperature, 'Viscosité cinématique')\r\n\r\n    return vitesse, temperature, pression, densite, viscosite_cine, debit\r\n\r\n\r\ndef get_float_between_input(a,b):\r\n    while b < a:\r\n        print(f\"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes\")\r\n        print(\"a = \")\r\n        a = get_float_input()\r\n        print(\"b = \")\r\n        b = get_float_input()\r\n    nbre = get_float_input()\r\n    while nbre > b or nbre < a:\r\n        print(\"Le chiffre entré n'est pas dans l'intervalle, veuillez le saisir à nouveau.\")\r\n        nbre = get_float_input()\r\n    return nbre
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/verifications.py b/verifications.py
+--- a/verifications.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/verifications.py	(date 1720493193783)
+@@ -1,37 +1,27 @@
+-"""Ce script permet de définir les fonctions qui vont vérifier la validité des données entrées par l'utilisateur"""
++"""
++File: verifications.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir les fonctions qui vont vérifier la validité des données entrées par l'utilisateur.
++"""
++
++# Importations
+ from gestion_BDD_fluides import *
+ import numpy as np
+ 
+-# Définition de la procédure nettoyer_écran
+-def nettoyer_ecran():
+-    """Cette procédure permet de nettoyer la console, afin que rien n'y soit plus affiché"""
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+-    print("")
+ 
+-
+-# Définition de la fonction qui vérifie que l'entrée est bien un flottant
+-# La fonction est inspirée de celle définie dans le module 09 - Introduction à la POO
++# Définition des fonctions
++# La fonction est celle définie dans le module 09 - Introduction à la POO
+ def get_float_input(signe='all'):
++    """
++    Cette fonction permet de récupérer un flottant, qu'a entré l'utilisateur.
++
++    Args :
++        signe (str) : '+' pour des flottants supérieurs ou égaux à 0, '-' sinon
++
++    Returns :
++        float : Le flottant entré par l'utilisateur
++    """
+     while True:
+         # On vérifie constamment l'entrée
+         try:
+@@ -49,9 +39,17 @@
+     return value
+ 
+ 
+-# Définition de la fonction qui vérifie que l'entrée est bien un entier
+ # Fonction inspirée de la fonction vérifiant les flottants
+ def get_int_input(signe='all'):
++    """
++    Cette fonction permet de récupérer un entier, qu'a entré l'utilisateur
++
++    Args :
++        signe (str) : '+' pour des flottants supérieurs ou égaux à 0, '-' sinon
++
++    Returns :
++        int : L'entier entré par l'utilisateur
++    """
+     while True:
+         # On vérifie constamment l'entrée
+         try:
+@@ -69,8 +67,16 @@
+     return value
+ 
+ 
+-# Définition de la fonction qui vérifie que l'entrée est une section valable
+ def get_element_liste_input(liste):
++    """
++    Cette fonction permet de récupérer un élément d'une liste, entré par l'utilisateur.
++
++    Args :
++        liste (list) : La liste des choix donnés à l'utilisateur
++
++    Returns :
++        str : Le choix de l'utilisateur
++    """
+     mots_chaine = liste[0]
+     for i in liste[1:]:
+         mots_chaine += ', '
+@@ -85,21 +91,23 @@
+     return value
+ 
+ 
+-def get_choix_mode():
+-    print("Que voulez-vous faire dans ce programme ?")
+-    print("1 - Étudier un problème de canalisation")
+-    print("2 - Ajouter/supprimer un matériau à la base de données")
+-    print("3 - Ajouter/supprimer un fluide à la base de données")
+-    print("Entrez 1, 2 ou 3.")
+-    value = input("--> ")
+-    liste = ['1', '2', '3']
+-    while value not in liste:
+-        print("Entrée invalide, vous devez entrer 1, 2 ou 3.")
+-        value = input("--> ")
+-    return int(value)
+-
+-
+ def get_init_cond_input(fluide, diametre):
++    """
++    Cette fonction permet de récupérer les conditions initiales, entrées par l'utilisateur.
++
++    Args :
++        fluide (str) : Le nom du fluide
++        diametre (float) : Le diamètre de la canalisation
++
++    Returns :
++        float : La vitesse initiale du fluide, en m/s
++        float : La température initiale du fluide, en °C
++        float : La pression initiale du fluide, en Pa
++        float : La densité du fluide, en kg/m883
++        float : La viscosité cinématique du fluide, en m**2/s
++        float : Le débit du fluide, en m**3/s
++    """
++
+     liste_temperature = recuperer_liste_temperature(fluide)
+     print("Voulez-vous entrez la vitesse (m/s) ou le débit (m3/s) à l'entrée de la canalisation ?")
+     choix = get_element_liste_input(['vitesse','débit'])
+@@ -141,6 +149,16 @@
+ 
+ 
+ def get_float_between_input(a,b):
++    """
++    Cette fonction permet de récupérer un flottant, entré par l'utilisateur, dans un intervalle.
++
++    Args :
++        a (float) : Le plus petit nombre de l'intervalle
++        b (float) : Le plus grand nombre de l'intervalle
++
++    Returns :
++        float : Le nombre entré par l'utilisateur, dans l'intervalle
++    """
+     while b < a:
+         print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")
+         print("a = ")
+@@ -151,4 +169,28 @@
+     while nbre > b or nbre < a:
+         print("Le chiffre entré n'est pas dans l'intervalle, veuillez le saisir à nouveau.")
+         nbre = get_float_input()
++    return nbre
++
++
++def get_int_between_input(a,b):
++    """
++    Cette fonction permet de récupérer un entier, entré par l'utilisateur, dans un intervalle.
++
++    Args :
++        a (float) : Le plus petit nombre de l'intervalle
++        b (float) : Le plus grand nombre de l'intervalle
++
++    Returns :
++        int : Le nombre entré par l'utilisateur, dans l'intervalle
++    """
++    while b < a:
++        print(f"{b} est plus petit que {a}, veuillez entrez à nouveau les bornes")
++        print("a = ")
++        a = get_int_input()
++        print("b = ")
++        b = get_float_input()
++    nbre = get_int_input()
++    while nbre > b or nbre < a:
++        print(f"Le chiffre entré n'est pas dans l'intervalle [{a};{b}], veuillez le saisir à nouveau.")
++        nbre = get_int_input()
+     return nbre
+\ No newline at end of file
+Index: gestion_traces.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import numpy as np\r\nimport matplotlib.pyplot as plt\r\nfrom classes import Troncon, Canalisation\r\n\r\n# La direction x va de gauche à droite\r\n# La direction y va de haut en bas\r\n\r\n\r\ndef calculer_coordonnees_coude(x_debut, y_debut, rayon, angle_deg, orientation, direction):\r\n    angle_rad = np.radians(angle_deg)\r\n\r\n    longueur = np.pi * rayon / 2\r\n\r\n    nbre_points = int(longueur * 100)\r\n\r\n    angles = np.linspace(0, angle_rad, nbre_points)\r\n\r\n    x = np.zeros(nbre_points)\r\n    y = np.zeros(nbre_points)\r\n\r\n    if orientation == 'D':\r\n        if direction == 'x-':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (-np.cos(angles[i]))\r\n                y[i] = y_debut + rayon * (1 - np.sin(angles[i]))\r\n            x = np.flip(x)\r\n            y = np.flip(y)\r\n\r\n        if direction == 'x+':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (np.cos(angles[i]))\r\n                y[i] = y_debut + rayon * (np.sin(angles[i]) - 1)\r\n            x = np.flip(x)\r\n            y = np.flip(y)\r\n\r\n        if direction == 'y+':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (1 - np.cos(angles[i]))\r\n                y[i] = y_debut + rayon * (np.sin(angles[i]))\r\n\r\n        if direction == 'y-':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (np.cos(angles[i])-1)\r\n                y[i] = y_debut + rayon * (-np.sin(angles[i]))\r\n\r\n    elif orientation == 'G':\r\n        if direction == 'x+':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (np.cos(angles[i]))\r\n                y[i] = y_debut + rayon * (1 - np.sin(angles[i]))\r\n            x = np.flip(x)\r\n            y = np.flip(y)\r\n\r\n        if direction == 'x-':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (-np.cos(angles[i]))\r\n                y[i] = y_debut + rayon * (np.sin(angles[i])-1)\r\n            x = np.flip(x)\r\n            y = np.flip(y)\r\n\r\n        if direction == 'y-':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (1-np.cos(angles[i]))\r\n                y[i] = y_debut + rayon * (- np.sin(angles[i]))\r\n\r\n        if direction == 'y+':\r\n            for i in range(nbre_points):\r\n                x[i] = x_debut + rayon * (np.cos(angles[i])-1)\r\n                y[i] = y_debut + rayon * (np.sin(angles[i]))\r\n\r\n    return x, y\r\n\r\n\r\ndef calculer_coordonnees_guide_v2(canalisation, x_debut, y_debut, direction='y+'):\r\n\r\n    liste_longueur = canalisation.renvoyer_liste_longueur()\r\n    liste_geometrie = canalisation.renvoyer_liste_geometrie()\r\n    nbre_troncons = canalisation.recupere_nbre_troncons()\r\n    liste_rayon = canalisation.renvoyer_liste_courbure()\r\n    liste_nbre_pts = []\r\n\r\n    x = np.array([x_debut])\r\n    y = np.array([y_debut])\r\n\r\n    for i in range(nbre_troncons):\r\n        nbre_points = int(liste_longueur[i] * 100)\r\n\r\n        increment = float(liste_longueur[i]) / nbre_points\r\n\r\n        if liste_geometrie[i] == 'droit':\r\n            if direction == 'y+':\r\n                for j in range(nbre_points):\r\n                    x = np.append(x, x[-1] * nbre_points)\r\n                    y = np.append(y, y[-1] + increment)\r\n\r\n            elif direction == 'y-':\r\n                for j in range(nbre_points):\r\n                    x = np.append(x, x[-1] * nbre_points)\r\n                    y = np.append(y, y[-1] - increment)\r\n\r\n            elif direction == 'x+':\r\n                for j in range(nbre_points):\r\n                    y = np.append(y, y[-1])\r\n                    x = np.append(x, x[-1] + increment)\r\n\r\n            elif direction == 'x-':\r\n                for j in range(nbre_points):\r\n                    y = np.append(y, y[-1])\r\n                    x = np.append(x, x[-1] - increment)\r\n\r\n        elif liste_geometrie[i][:-2] == 'coude':\r\n            x_coude, y_coude = calculer_coordonnees_coude(x[-1], y[-1], liste_rayon[i], 90, liste_geometrie[i][-1], direction)\r\n\r\n            y = np.append(y, y_coude)\r\n            x = np.append(x, x_coude)\r\n\r\n            if liste_geometrie[i][-1] == 'D':\r\n                if direction == 'y+':\r\n                    direction = 'x+'\r\n                elif direction == 'y-':\r\n                    direction = 'x-'\r\n                elif direction == 'x+':\r\n                    direction = 'y-'\r\n                else:\r\n                    direction = 'y+'\r\n            elif liste_geometrie[i][-1] == 'G':\r\n                if direction == 'y+':\r\n                    direction = 'x-'\r\n                elif direction == 'y-':\r\n                    direction = 'x+'\r\n                elif direction == 'x+':\r\n                    direction = 'y+'\r\n                else:\r\n                    direction = 'y-'\r\n\r\n    return x,y\r\n\r\n\r\ndef tracer_canalisations(canalisation):\r\n    x_guide, y_guide = calculer_coordonnees_guide_v2(canalisation,0,0)\r\n    plt.plot(x_guide,y_guide)\r\n    plt.axis('equal')\r\n    plt.xlabel(\"Longueur en m\")\r\n    plt.ylabel(\"Longueur en m\")\r\n    plt.title(\"Tracé de la géométrie du problème\")\r\n    plt.grid()\r\n    plt.show()\r\n\r\n\r\ndef tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur):\r\n\r\n    print(\"...Tracé de la pression...\")\r\n    plt.plot(liste_abscisse, liste_pression, label='Pression')\r\n    liste_longueur = liste_longueur[:-1]\r\n    abscisse_geo = 0\r\n    for idx in range(len(liste_longueur)):\r\n        abscisse_geo += liste_longueur[idx]\r\n        plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')\r\n    plt.title(\"Évolution de la pression le long de la canalisation, en longueur linéaire\")\r\n    plt.xlabel(\"Longueur linéaire en m\")\r\n    plt.ylabel(\"Pression en Pa\")\r\n    plt.legend()\r\n    plt.show()\r\n\r\n    # print(\"...Tracé de la vitesse...\")\r\n    # plt.plot(liste_abscisse, liste_vitesse, label='Vitesse')\r\n    # abscisse_geo = liste_longueur[0]\r\n    # for idx in range(len(liste_longueur)):\r\n    #     plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')\r\n    #     abscisse_geo += liste_longueur[idx]\r\n    # plt.title(\"Évolution de la pression le long de la canalisation, en longueur linéaire\")\r\n    # plt.xlabel(\"Longueur linéaire en m\")\r\n    # plt.ylabel(\"Vitesse en m/s\")\r\n    # plt.legend()\r\n    # plt.show()\r\n\r\n\r\n# Fonction test pour tracer une canalisation\r\ndef tracer_canal():\r\n    troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 0, 'eau', 2, 1.018*10**5, 20)\r\n    troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude G',1,'eau', 2, 1.018*10**5, 20)\r\n    troncon3 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  1, 'eau', 2, 1.018*10**5, 20)\r\n    troncon4 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude D',  2, 'eau', 2, 1.018*10**5, 20)\r\n    troncon5 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit',  3, 'eau', 2, 1.018*10**5, 20)\r\n    troncon6 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  4, 'eau', 2, 1.018*10**5, 20)\r\n\r\n    canal = Canalisation()\r\n    canal.ajouter_troncon(troncon1)\r\n    canal.ajouter_troncon(troncon2)\r\n    canal.ajouter_troncon(troncon3)\r\n    canal.ajouter_troncon(troncon4)\r\n    canal.ajouter_troncon(troncon5)\r\n    canal.ajouter_troncon(troncon6)\r\n\r\n    tracer_canalisations(canal)\r\n\r\n\r\ndef tracer_coude():\r\n    x = 0\r\n    y = 0\r\n    r = 2\r\n    angle = 90\r\n    sens = 'x-'\r\n    dir = 'coude G'[-1]\r\n    x,y = calculer_coordonnees_coude(x, y, r, angle, dir, sens)\r\n    print(x[-1],y[-1])\r\n    plt.plot(x,y)\r\n    plt.show()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gestion_traces.py b/gestion_traces.py
+--- a/gestion_traces.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/gestion_traces.py	(date 1720493193795)
+@@ -1,23 +1,52 @@
++"""
++File: gestion_traces.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir des fonctions qui tracerons les variations de pressions et la géométrie d'une canalisation
++"""
++
++# Imports
+ import numpy as np
+ import matplotlib.pyplot as plt
+ from classes import Troncon, Canalisation
+ 
+-# La direction x va de gauche à droite
+-# La direction y va de haut en bas
+ 
++# La direction x va de gauche à droite, 'x+' va vers la droite
++# La direction y va de haut en bas, 'y+' va vers le haut
+ 
++
++# Définitions des fonctions
+ def calculer_coordonnees_coude(x_debut, y_debut, rayon, angle_deg, orientation, direction):
++    """
++    Cette fonction permet de calculer les coordonnées d'un coude.
++
++    Args:
++        x_debut (float) : La coordonnée x ou démarre le coude
++        y_debut (float) : La coordonnée y ou démarre le coude
++        rayon (float) : Le rayon de courbure du coude
++        angle_deg (float) : L'angle du coude, en °
++        orientation (str) : Le sens dans lequel le fluide est dirigé ('G' ou 'D')
++        direction (str) : La direction d'ou vient le fluide ('x+' : le fluide va dans le sens des x croissant,
++        'x-' : Le fluide va dans le sens des x décroissant, idem pour 'y+' et 'y-')
++
++    Returns:
++        list : La liste des coordonnées x du coude
++        list : La liste des coordonnées y du coude
++    """
++    # Conversion de l'angle en radian
+     angle_rad = np.radians(angle_deg)
+ 
+     longueur = np.pi * rayon / 2
+ 
+     nbre_points = int(longueur * 100)
+ 
++    # Liste des angles balayés
+     angles = np.linspace(0, angle_rad, nbre_points)
+ 
+     x = np.zeros(nbre_points)
+     y = np.zeros(nbre_points)
+ 
++    # Si le fluide va vers sa droite
+     if orientation == 'D':
+         if direction == 'x-':
+             for i in range(nbre_points):
+@@ -43,6 +72,7 @@
+                 x[i] = x_debut + rayon * (np.cos(angles[i])-1)
+                 y[i] = y_debut + rayon * (-np.sin(angles[i]))
+ 
++    # Si le fluide va vers sa gauche
+     elif orientation == 'G':
+         if direction == 'x+':
+             for i in range(nbre_points):
+@@ -71,13 +101,25 @@
+     return x, y
+ 
+ 
+-def calculer_coordonnees_guide_v2(canalisation, x_debut, y_debut, direction='y+'):
++def calculer_coordonnees_guide(canalisation, x_debut, y_debut, direction='y+'):
++    """
++    Cette fonction permet de calculer les coordonnées d'une canalisation.
+ 
++    Args:
++        canalisation (Canalisation) : La canalisation étudiée
++        x_debut (float) : La coordonnée x ou démarre le coude
++        y_debut (float) : La coordonnée y ou démarre le coude
++        direction (str) : La direction d'ou vient le fluide ('x+' : le fluide va dans le sens des x croissant, 'x-' : Le fluide va dans le sens des x décroissant, idem pour 'y+' et 'y-')
++
++    Returns:
++        list : La liste des coordonnées x de la canalisation
++        list : La liste des coordonnées y de la canalisation
++    """
++    # On récupère les longueurs, géométries, rayons et le nombre de tronçons de la canalisation
+     liste_longueur = canalisation.renvoyer_liste_longueur()
+     liste_geometrie = canalisation.renvoyer_liste_geometrie()
+     nbre_troncons = canalisation.recupere_nbre_troncons()
+     liste_rayon = canalisation.renvoyer_liste_courbure()
+-    liste_nbre_pts = []
+ 
+     x = np.array([x_debut])
+     y = np.array([y_debut])
+@@ -87,6 +129,7 @@
+ 
+         increment = float(liste_longueur[i]) / nbre_points
+ 
++        # Si le tronçon est droit
+         if liste_geometrie[i] == 'droit':
+             if direction == 'y+':
+                 for j in range(nbre_points):
+@@ -108,6 +151,7 @@
+                     y = np.append(y, y[-1])
+                     x = np.append(x, x[-1] - increment)
+ 
++        # Si le tronçon est un coude
+         elif liste_geometrie[i][:-2] == 'coude':
+             x_coude, y_coude = calculer_coordonnees_coude(x[-1], y[-1], liste_rayon[i], 90, liste_geometrie[i][-1], direction)
+ 
+@@ -137,7 +181,16 @@
+ 
+ 
+ def tracer_canalisations(canalisation):
+-    x_guide, y_guide = calculer_coordonnees_guide_v2(canalisation,0,0)
++    """
++    Cette procédure permet de tracer la canalisation.
++
++    Args :
++        canalisation (Canalisation) : La canalisation à tracer
++
++    Returns :
++        Aucun
++    """
++    x_guide, y_guide = calculer_coordonnees_guide(canalisation,0,0)
+     plt.plot(x_guide,y_guide)
+     plt.axis('equal')
+     plt.xlabel("Longueur en m")
+@@ -148,14 +201,28 @@
+ 
+ 
+ def tracer_pression_vitesse_1d(liste_pression, liste_vitesse, liste_abscisse, liste_longueur):
++    """
++    Cette procédure permet de tracer les variations de pression et de vitesse le long de la canalisation.
+ 
++    Args :
++        liste_pression (liste) : La variation de pression dans la canalisation
++        liste_vitesse (liste) : La variation de vitesse dans la canalisation
++        liste_abscisse (liste) : La liste des abscisses de la canalisation
++        liste_longueur (liste) : La liste des longueurs de chaque géométrie de la canalisation
++
++    Returns :
++        Aucun
++    """
+     print("...Tracé de la pression...")
+     plt.plot(liste_abscisse, liste_pression, label='Pression')
+     liste_longueur = liste_longueur[:-1]
+     abscisse_geo = 0
++
++    # Tracé des changements de géométrie
+     for idx in range(len(liste_longueur)):
+         abscisse_geo += liste_longueur[idx]
+         plt.axvline(abscisse_geo, color='r', linestyle='--', label=f'Changement de géométrie {idx + 1}')
++
+     plt.title("Évolution de la pression le long de la canalisation, en longueur linéaire")
+     plt.xlabel("Longueur linéaire en m")
+     plt.ylabel("Pression en Pa")
+@@ -172,37 +239,4 @@
+     # plt.xlabel("Longueur linéaire en m")
+     # plt.ylabel("Vitesse en m/s")
+     # plt.legend()
+-    # plt.show()
+-
+-
+-# Fonction test pour tracer une canalisation
+-def tracer_canal():
+-    troncon1 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit', 0, 'eau', 2, 1.018*10**5, 20)
+-    troncon2 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude G',1,'eau', 2, 1.018*10**5, 20)
+-    troncon3 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  1, 'eau', 2, 1.018*10**5, 20)
+-    troncon4 = Troncon(2, 'rond', .05, 'PVC', .002, 'coude D',  2, 'eau', 2, 1.018*10**5, 20)
+-    troncon5 = Troncon(2, 'rond', .05, 'PVC', .002, 'droit',  3, 'eau', 2, 1.018*10**5, 20)
+-    troncon6 = Troncon(1, 'rond', .05, 'PVC', .002, 'coude D',  4, 'eau', 2, 1.018*10**5, 20)
+-
+-    canal = Canalisation()
+-    canal.ajouter_troncon(troncon1)
+-    canal.ajouter_troncon(troncon2)
+-    canal.ajouter_troncon(troncon3)
+-    canal.ajouter_troncon(troncon4)
+-    canal.ajouter_troncon(troncon5)
+-    canal.ajouter_troncon(troncon6)
+-
+-    tracer_canalisations(canal)
+-
+-
+-def tracer_coude():
+-    x = 0
+-    y = 0
+-    r = 2
+-    angle = 90
+-    sens = 'x-'
+-    dir = 'coude G'[-1]
+-    x,y = calculer_coordonnees_coude(x, y, r, angle, dir, sens)
+-    print(x[-1],y[-1])
+-    plt.plot(x,y)
+-    plt.show()
++    # plt.show()
+\ No newline at end of file
+Index: classes.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"Ce script définit toutes les classes qui seront utiles au programme\"\"\"\r\nimport numpy as np\r\nimport matplotlib.pyplot as plt\r\n\r\nfrom gestion_BDD_fluides import recuperer_valeur_fluide\r\nfrom calculs import calculer_reynolds, calculer_perte_singuliere, calculer_perte_reguliere, calculer_vitesse_sortie, calculer_temperature_sortie\r\nfrom gestion_BDD_geometries import recuperer_coeff_perte_charge_singuliere\r\n\r\n\r\nclass Troncon:\r\n\r\n    # Méthode constructeur\r\n    def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init, densite, viscosite_cine):\r\n        self.longueur = longueur\r\n        self.section = section\r\n        self.diametre = diametre\r\n        self.materiau = materiau\r\n        self.rugosite = rugosite\r\n        self.geometrie = geometrie\r\n        self.courbure = courbure\r\n        self.fluide = fluide\r\n        self.vitesse_init = vitesse_init\r\n        self.pression_init = pression_init\r\n        self.temperature_init = temperature_init\r\n        if viscosite_cine == 0:\r\n            self.viscosite_cine = recuperer_valeur_fluide(fluide, temperature_init, 'Viscosité cinématique')\r\n        else:\r\n            self.viscosite_cine = viscosite_cine\r\n        if densite == 0:\r\n            self.densite = recuperer_valeur_fluide(fluide, temperature_init, 'Masse volumique')\r\n        else:\r\n            self.densite = densite\r\n\r\n    def calculer_reynolds_troncon(self):\r\n        return calculer_reynolds(self.vitesse_init, self.diametre, self.viscosite_cine)\r\n\r\n    def calculer_delta_pression_reguliere_troncon(self):\r\n        return calculer_perte_reguliere(self.longueur, self.diametre, self.vitesse_init, self.viscosite_cine, self.rugosite, self.densite, self.pression_init)\r\n\r\n    def calculer_coef_singuliere_troncon(self):\r\n        if self.geometrie[:-2] == 'coude':\r\n            geometrie = 'coude'\r\n\r\n        elif self.geometrie[:-2] == 'coude droit':\r\n            geometrie = 'coude droit'\r\n\r\n        elif self.geometrie[:-2] == 'deviation':\r\n            geometrie = 'deviation'\r\n\r\n        else:\r\n            geometrie = self.geometrie\r\n        return recuperer_coeff_perte_charge_singuliere(geometrie, 90, self.diametre, self.diametre, self.courbure)\r\n\r\n    def calculer_delta_pression_singuliere_troncon(self):\r\n        coef = self.calculer_coef_singuliere_troncon()\r\n        return calculer_perte_singuliere(coef, self.densite, self.vitesse_init)\r\n\r\n    def recuperer_longueur(self):\r\n        return self.longueur\r\n\r\n    def recuperer_section(self):\r\n        return self.section\r\n\r\n    def recuperer_diametre(self):\r\n        return self.diametre\r\n\r\n    def recuperer_materiau(self):\r\n        return self.materiau\r\n\r\n    def recuperer_rugosite(self):\r\n        return self.rugosite\r\n\r\n    def recuperer_geometrie(self):\r\n        return self.geometrie\r\n\r\n    def recuperer_courbure(self):\r\n        return self.courbure\r\n\r\n    def recuperer_fluide(self):\r\n        return self.fluide\r\n\r\n    def recuperer_vitesse(self):\r\n        return self.vitesse_init\r\n\r\n    def recuperer_pression(self):\r\n        return self.pression_init\r\n\r\n    def recuperer_temperature(self):\r\n        return self.temperature_init\r\n\r\n    def recuperer_viscosite_cine(self):\r\n        return self.viscosite_cine\r\n\r\n    def recuperer_densite(self):\r\n        return self.densite\r\n\r\n    def ajouter_vitesse(self, vitesse):\r\n        self.vitesse_init = vitesse\r\n\r\n    def ajouter_pression(self, pression):\r\n        self.pression_init = pression\r\n\r\n    def ajouter_temperature(self, temperature):\r\n        self.temperature_init = temperature\r\n\r\n    def afficher(self):\r\n        print(self.longueur, self.section, self.diametre, self.materiau, self.rugosite ,self.geometrie,\r\n              self.courbure, self.fluide, self.vitesse_init, self.pression_init, self.temperature_init,\r\n              self.viscosite_cine, self.densite)\r\n\r\n\r\nclass Canalisation(Troncon):\r\n\r\n    # Méthode constructeur\r\n    def __init__(self):\r\n        self.liste_troncons = []\r\n        self.longueur = 0\r\n\r\n    def recupere_nbre_troncons(self):\r\n        return self.longueur\r\n\r\n    def renvoyer_troncon(self, idx):\r\n        if idx < self.longueur:\r\n            return self.liste_troncons[idx]\r\n        return \"idx trop grand\"\r\n\r\n    def ajouter_troncon(self, troncon):\r\n        self.liste_troncons.append(troncon)\r\n        self.longueur += 1\r\n\r\n    def renvoyer_liste_longueur(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_longueur())\r\n        return liste\r\n\r\n    def renvoyer_liste_section(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_section())\r\n        return liste\r\n\r\n    def renvoyer_liste_diametre(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_diametre())\r\n        return liste\r\n\r\n    def renvoyer_liste_materiau(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_materiau())\r\n        return liste\r\n\r\n    def renvoyer_liste_rugosite(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_rugosite())\r\n        return liste\r\n\r\n    def renvoyer_liste_geometrie(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_geometrie())\r\n        return liste\r\n\r\n    def renvoyer_liste_pression(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_pression())\r\n        return liste\r\n\r\n    def renvoyer_liste_courbure(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_courbure())\r\n        return liste\r\n\r\n    def renvoyer_liste_fluide(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_fluide())\r\n        return liste\r\n\r\n    def renvoyer_liste_vitesse(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_vitesse())\r\n        return liste\r\n\r\n    def calculer_distrib_pression_vitesse(self):\r\n        liste_geometrie = self.renvoyer_liste_geometrie()\r\n        liste_longueur = self.renvoyer_liste_longueur()\r\n        troncon = self.renvoyer_troncon(0)\r\n        nbre_troncon = self.recupere_nbre_troncons()\r\n\r\n        densite = troncon.recuperer_densite()\r\n\r\n        liste_pression = [troncon.recuperer_pression()]\r\n        liste_vitesse = [troncon.recuperer_vitesse()]\r\n        liste_temperature = [troncon.recuperer_temperature()]\r\n        liste_abscisse = [0]\r\n\r\n        for i in range(0,nbre_troncon):\r\n            troncon = self.renvoyer_troncon(i)\r\n            pression_entree = liste_pression[-1]\r\n            vitesse_entree = liste_vitesse[-1]\r\n            temperature_entree = liste_temperature[-1]\r\n            longueur = liste_longueur[i]\r\n            diametre = troncon.recuperer_diametre()\r\n\r\n            # Calcul des pertes de charges et pression de sortie\r\n            delta_reguliere = calculer_perte_reguliere(longueur, diametre, vitesse_entree, troncon.recuperer_viscosite_cine(), troncon.recuperer_rugosite(), densite)\r\n            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, diametre, troncon.recuperer_courbure())\r\n            delta_singuliere = calculer_perte_singuliere(coef_singuliere, densite, vitesse_entree)\r\n            delta_pression = delta_singuliere + delta_reguliere\r\n            # print(f\"Sortie tronçon {i}\")\r\n            # print(f\"Regu : {delta_reguliere}\")\r\n            # print(f\"Singu : {delta_singuliere}\")\r\n            # print(\"\")\r\n            pression_sortie = pression_entree - delta_pression\r\n\r\n            vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere)\r\n            temperature_sortie = calculer_temperature_sortie(temperature_entree)\r\n\r\n            liste_pression = np.append(liste_pression, pression_sortie)\r\n            liste_vitesse = np.append(liste_vitesse, vitesse_sortie)\r\n            liste_temperature = np.append(liste_temperature, temperature_sortie)\r\n            liste_abscisse = np.append(liste_abscisse, liste_abscisse[-1] + liste_longueur[i])\r\n            troncon.ajouter_pression(pression_sortie)\r\n            troncon.ajouter_vitesse(vitesse_sortie)\r\n            troncon.ajouter_temperature(temperature_sortie)\r\n\r\n        liste_abscisse_discrete = []\r\n        liste_pression_discrete =[]\r\n        liste_vitesse_discrete = []\r\n        liste_temperature_discrete =[]\r\n\r\n        for i in range(nbre_troncon):\r\n                longueur = liste_longueur[i]\r\n                nbre_points = int(longueur*100)\r\n\r\n                liste_pression_discrete = np.append(liste_pression_discrete, np.linspace(liste_pression[i], liste_pression[i+1], nbre_points)[:-1])\r\n                liste_vitesse_discrete = np.append(liste_vitesse_discrete, np.linspace(liste_vitesse[i], liste_vitesse[i+1], nbre_points)[:-1])\r\n                liste_temperature_discrete = np.append(liste_temperature_discrete, np.linspace(liste_abscisse[i], liste_abscisse[i+1], nbre_points)[:-1])\r\n                liste_abscisse_discrete = np.append(liste_abscisse_discrete, np.linspace(liste_abscisse[i], liste_abscisse[i + 1], nbre_points)[:-1])\r\n\r\n        return liste_pression_discrete, liste_vitesse_discrete, liste_temperature_discrete, liste_abscisse_discrete, liste_longueur\r\n\r\n    def renvoyer_liste_temperature(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_temperature())\r\n        return liste\r\n\r\n    def renvoyer_liste_viscosite_cine(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_viscosite_cine())\r\n        return liste\r\n\r\n    def renvoyer_liste_densite(self):\r\n        liste = []\r\n        for i in self.liste_troncons:\r\n            liste.append(i.recuperer_densite())\r\n        return liste\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/classes.py b/classes.py
+--- a/classes.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/classes.py	(date 1720493193804)
+@@ -1,16 +1,47 @@
+-"""Ce script définit toutes les classes qui seront utiles au programme"""
++"""
++File: classes.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script définit toutes les classes qui seront utiles au programme
++"""
++
++# Imports
+ import numpy as np
+ import matplotlib.pyplot as plt
+-
+ from gestion_BDD_fluides import recuperer_valeur_fluide
+-from calculs import calculer_reynolds, calculer_perte_singuliere, calculer_perte_reguliere, calculer_vitesse_sortie, calculer_temperature_sortie
++from calculs import calculer_reynolds, calculer_perte_singuliere, calculer_perte_reguliere
+ from gestion_BDD_geometries import recuperer_coeff_perte_charge_singuliere
+ 
+ 
++# Définition des classes
+ class Troncon:
++    """ Une portion de la canalisation
++
++    """
+ 
+     # Méthode constructeur
+     def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init, densite, viscosite_cine):
++        """
++        Méthode constructeur
++
++        Args:
++            longueur (float) : La longueur du tronçon, en m
++            section (str) : La forme de la section du tronçon
++            diametre (float) : Le diamètre de la section du tronçon, en m
++            materiau (str) : Le matériau du tronçon
++            rugosite (float) : La rugosité du tronçon, en m
++            geometrie (str) : La géométrie du tronçon ('droit', 'coude D' ou 'coude G')
++            courbure (float) : Le rayon de courbure du tronçon, s'il y a lieu, en m
++            fluide (str) : Le nom du fluide parcourant le tronçon
++            vitesse_init (float) : La vitesse du fluide dans à l'entrée du tronçon, en m/s
++            pression_init (float) : La pression du fluide dans à l'entrée du tronçon , en Pa
++            temperature_init (float) : La température du fluide à l'entrée du tronçon, en °C
++            densite (flaot) : La densité du fluide, en kg/m**3
++            viscosite_cine : La viscosité cinématique du fluide, en m**2/s
++
++        Returns:
++            Aucun
++        """
+         self.longueur = longueur
+         self.section = section
+         self.diametre = diametre
+@@ -22,22 +53,53 @@
+         self.vitesse_init = vitesse_init
+         self.pression_init = pression_init
+         self.temperature_init = temperature_init
++
++        # Si la viscosité n'est pas rentrée, on va la chercher dans la BDD
+         if viscosite_cine == 0:
+             self.viscosite_cine = recuperer_valeur_fluide(fluide, temperature_init, 'Viscosité cinématique')
+         else:
+             self.viscosite_cine = viscosite_cine
++
++        # Si la densité n'est pas rentrée, on va la chercher dans la BDD
+         if densite == 0:
+             self.densite = recuperer_valeur_fluide(fluide, temperature_init, 'Masse volumique')
+         else:
+             self.densite = densite
+ 
+     def calculer_reynolds_troncon(self):
++        """
++        Cette fonction calcule le nombre de Reynolds du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : Le nombre de Reynolds du fluide dans ce tronçon
++        """
+         return calculer_reynolds(self.vitesse_init, self.diametre, self.viscosite_cine)
+ 
+     def calculer_delta_pression_reguliere_troncon(self):
++        """
++        Cette fonction calcule la différence de pression due aux pertes de charge régulières du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La différence de pression, due aux pertes de charges régulière, entre l'entrée et la sortie du tronçon
++        """
+         return calculer_perte_reguliere(self.longueur, self.diametre, self.vitesse_init, self.viscosite_cine, self.rugosite, self.densite, self.pression_init)
+ 
+     def calculer_coef_singuliere_troncon(self):
++        """
++        Cette fonction calcule le coefficient de perte de charge singulière du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : Le coefficient de perte de charge singulière du tronçon
++        """
+         if self.geometrie[:-2] == 'coude':
+             geometrie = 'coude'
+ 
+@@ -52,143 +114,462 @@
+         return recuperer_coeff_perte_charge_singuliere(geometrie, 90, self.diametre, self.diametre, self.courbure)
+ 
+     def calculer_delta_pression_singuliere_troncon(self):
++        """
++        Cette fonction calcule la différence de pression due aux pertes de charges singulières du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La différence de pression, due aux pertes de charges singulières, entre l'entrée et la sortie du tronçon
++        """
+         coef = self.calculer_coef_singuliere_troncon()
+         return calculer_perte_singuliere(coef, self.densite, self.vitesse_init)
+ 
+     def recuperer_longueur(self):
++        """
++        Cette fonction récupère la longueur du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La longueur du tronçon
++        """
+         return self.longueur
+ 
+     def recuperer_section(self):
++        """
++        Cette fonction récupère la section du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            str : La section du tronçon
++        """
+         return self.section
+ 
+     def recuperer_diametre(self):
++        """
++        Cette fonction récupère le diamètre du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : Le diamètre du tronçon
++        """
+         return self.diametre
+ 
+     def recuperer_materiau(self):
++        """
++        Cette fonction récupère le matériau du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            str : Le matériau du tronçon
++        """
+         return self.materiau
+ 
+     def recuperer_rugosite(self):
++        """
++        Cette fonction récupère la rugosité du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La rugosité du tronçon
++        """
+         return self.rugosite
+ 
+     def recuperer_geometrie(self):
++        """
++        Cette fonction récupère la géométrie du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            str : La géométrie du tronçon
++        """
+         return self.geometrie
+ 
+     def recuperer_courbure(self):
++        """
++        Cette fonction récupère le rayon de courbure du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : Le rayon de courbure du tronçon
++        """
+         return self.courbure
+ 
+     def recuperer_fluide(self):
++        """
++        Cette fonction récupère le nom du fluide  du tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            str : Le nom du fluide du tronçon
++        """
+         return self.fluide
+ 
+     def recuperer_vitesse(self):
++        """
++        Cette fonction récupère la vitesse dans le tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La vitesse dans le tronçon
++        """
+         return self.vitesse_init
+ 
+     def recuperer_pression(self):
++        """
++        Cette fonction récupère la pression du fluide dans le tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La pression du fluide dans le tronçon
++        """
+         return self.pression_init
+ 
+     def recuperer_temperature(self):
++        """
++        Cette fonction récupère la température du fluide dans le tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La température du fluide dans le tronçon
++        """
+         return self.temperature_init
+ 
+     def recuperer_viscosite_cine(self):
++        """
++        Cette fonction récupère la viscosité cinématique du fluide dans le tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La viscosité cinématique du fluide dans le tronçon
++        """
+         return self.viscosite_cine
+ 
+     def recuperer_densite(self):
++        """
++        Cette fonction récupère la densité du fluide dans le tronçon
++
++        Args:
++            Aucun
++
++        Returns:
++            float : La densité du fluide dans le tronçon
++        """
+         return self.densite
+ 
+     def ajouter_vitesse(self, vitesse):
++        """
++        Cette fonction permet d'ajouter / actualiser une vitesse au fluide du tronçon
++
++        Args:
++            vitesse (float) : La vitesse du fluide, en m/s
++
++        Returns:
++            Aucun
++        """
+         self.vitesse_init = vitesse
+ 
+     def ajouter_pression(self, pression):
++        """
++        Cette fonction permet d'ajouter / actualiser une pression au fluide du tronçon
++
++        Args:
++            pression (float) : La pression du fluide, en Pa
++
++        Returns:
++            Aucun
++        """
+         self.pression_init = pression
+ 
+     def ajouter_temperature(self, temperature):
++        """
++        Cette fonction permet d'ajouter / actualiser une température au fluide du tronçon
++
++        Args:
++            temperature (float) : La temperature du fluide, en °C
++
++        Returns:
++            Aucun
++        """
+         self.temperature_init = temperature
+ 
+     def afficher(self):
++        """
++        Cette fonction permet d'afficher les attributs du tronçon
++        Args:
++            Aucun
++
++        Returns:
++            Aucun
++        """
++
+         print(self.longueur, self.section, self.diametre, self.materiau, self.rugosite ,self.geometrie,
+               self.courbure, self.fluide, self.vitesse_init, self.pression_init, self.temperature_init,
+               self.viscosite_cine, self.densite)
+ 
+ 
+-class Canalisation(Troncon):
++class Canalisation():
++    """ Une canalisation en entier
+ 
+-    # Méthode constructeur
++    """
++
+     def __init__(self):
++        """
++        Méthode constructeur
++
++        Args:
++            Aucun
++
++        Returns:
++            Aucun
++        """
++
+         self.liste_troncons = []
+         self.longueur = 0
+ 
+     def recupere_nbre_troncons(self):
++        """
++        Cette fonction récupère le nombre de tronçon dans la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            int : Le nombre de tronçon dans la canaliation
++        """
+         return self.longueur
+ 
+     def renvoyer_troncon(self, idx):
++        """
++        Cette fonction renvoie un tronçon de la canalisation
++
++        Args:
++            idx (int) : L'index du tronçon à renvoyer
++
++        Returns:
++            Troncon : Le tronçon correspondant à idx
++        """
+         if idx < self.longueur:
+             return self.liste_troncons[idx]
+-        return "idx trop grand"
+ 
+     def ajouter_troncon(self, troncon):
++        """
++        Cette fonction peremt d'ajouter / modifier un tronçon à la canalisation
++
++        Args:
++            troncon : Le troncon à ajouter
++
++        Returns:
++            Aucun
++        """
+         self.liste_troncons.append(troncon)
+         self.longueur += 1
+ 
++    def supprimer_troncon(self, idx):
++        """
++        Cette fonction permet de supprimer un tronçon de la canalisation
++
++        Args:
++            idx (int) : L'index du tronçon à renvoyer
++
++        Returns:
++            Aucun
++        """
++        if self.longueur > 1:
++            self.longueur -= 1
++            self.liste_troncons = np.delete(self.liste_troncons, idx)
++
+     def renvoyer_liste_longueur(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la longueur de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des longueurs de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_longueur())
+         return liste
+ 
+     def renvoyer_liste_section(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la section de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des sections de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_section())
+         return liste
+ 
+     def renvoyer_liste_diametre(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant le diamètre de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des diamètres de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_diametre())
+         return liste
+ 
+     def renvoyer_liste_materiau(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant le matériau de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des matériaux de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_materiau())
+         return liste
+ 
+     def renvoyer_liste_rugosite(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la rugosité de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des rugosités de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_rugosite())
+         return liste
+ 
+     def renvoyer_liste_geometrie(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la géométrie de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des géométries de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_geometrie())
+         return liste
+ 
+     def renvoyer_liste_pression(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la pression de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des pressions de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_pression())
+         return liste
+ 
+     def renvoyer_liste_courbure(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant le rayon de courbure de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des rayons de courbure de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_courbure())
+         return liste
+ 
+     def renvoyer_liste_fluide(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant le nom du fluide de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des noms de fluide de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_fluide())
+         return liste
+ 
+     def renvoyer_liste_vitesse(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la vitesse du fluide de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des vitesses de fluide de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_vitesse())
+         return liste
+ 
+     def calculer_distrib_pression_vitesse(self):
++        """
++        Cette fonction permet de calculer la distribution de pression, vitesse, température, abscisses et la liste des
++        longueur de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste de la pression le long de la canalisation
++            list : La liste de la vitesse le long de la canalisation
++            list : La liste de la température le long de la canalisation
++            list : La liste de la longueur le long de la canalisation
++            list : La liste des longueurs de chaque tronçon
++        """
++        # On récupère toute les listes qui nous intéressent et le nombre de tronçons
+         liste_geometrie = self.renvoyer_liste_geometrie()
+         liste_longueur = self.renvoyer_liste_longueur()
+         troncon = self.renvoyer_troncon(0)
+@@ -196,46 +577,51 @@
+ 
+         densite = troncon.recuperer_densite()
+ 
++        # On initialise les listes de pressionm, vitesse, température, abscisse
+         liste_pression = [troncon.recuperer_pression()]
+         liste_vitesse = [troncon.recuperer_vitesse()]
+         liste_temperature = [troncon.recuperer_temperature()]
+         liste_abscisse = [0]
+ 
++        # Pour chaque troncon
+         for i in range(0,nbre_troncon):
+             troncon = self.renvoyer_troncon(i)
++
++            # On enregitre les paramètres à l,entrée
+             pression_entree = liste_pression[-1]
+             vitesse_entree = liste_vitesse[-1]
+             temperature_entree = liste_temperature[-1]
+             longueur = liste_longueur[i]
+             diametre = troncon.recuperer_diametre()
+ 
+-            # Calcul des pertes de charges et pression de sortie
++            # On calcule les pertes de charges et la pression, vitesse et température de sortie
+             delta_reguliere = calculer_perte_reguliere(longueur, diametre, vitesse_entree, troncon.recuperer_viscosite_cine(), troncon.recuperer_rugosite(), densite)
+-            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, diametre, troncon.recuperer_courbure())
++            coef_singuliere = recuperer_coeff_perte_charge_singuliere(liste_geometrie[i][:-2], 90, diametre, troncon.recuperer_courbure())
+             delta_singuliere = calculer_perte_singuliere(coef_singuliere, densite, vitesse_entree)
+             delta_pression = delta_singuliere + delta_reguliere
+-            # print(f"Sortie tronçon {i}")
+-            # print(f"Regu : {delta_reguliere}")
+-            # print(f"Singu : {delta_singuliere}")
+-            # print("")
++
+             pression_sortie = pression_entree - delta_pression
++            vitesse_sortie = vitesse_entree
++            temperature_sortie = temperature_entree
+ 
+-            vitesse_sortie = calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere)
+-            temperature_sortie = calculer_temperature_sortie(temperature_entree)
+-
++            # On enregistre les données dans les listes
+             liste_pression = np.append(liste_pression, pression_sortie)
+             liste_vitesse = np.append(liste_vitesse, vitesse_sortie)
+             liste_temperature = np.append(liste_temperature, temperature_sortie)
+             liste_abscisse = np.append(liste_abscisse, liste_abscisse[-1] + liste_longueur[i])
++
++            # On enregistre les données dans le tronçon
+             troncon.ajouter_pression(pression_sortie)
+             troncon.ajouter_vitesse(vitesse_sortie)
+             troncon.ajouter_temperature(temperature_sortie)
+ 
++        # On initialise les liste discrétisées
+         liste_abscisse_discrete = []
+         liste_pression_discrete =[]
+         liste_vitesse_discrete = []
+-        liste_temperature_discrete =[]
++        liste_temperature_discrete = []
+ 
++        # On remplit les listes discrétisées
+         for i in range(nbre_troncon):
+                 longueur = liste_longueur[i]
+                 nbre_points = int(longueur*100)
+@@ -248,19 +634,46 @@
+         return liste_pression_discrete, liste_vitesse_discrete, liste_temperature_discrete, liste_abscisse_discrete, liste_longueur
+ 
+     def renvoyer_liste_temperature(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la température du fluide de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des températures de fluide de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_temperature())
+         return liste
+ 
+     def renvoyer_liste_viscosite_cine(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la viscosité cinématique du fluide de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des viscosité cinématique de fluide de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_viscosite_cine())
+         return liste
+ 
+     def renvoyer_liste_densite(self):
++        """
++        Cette fonction permet de renvoyer la liste contenant la densité du fluide de chaque tronçon de la canalisation
++
++        Args:
++            Aucun
++
++        Returns:
++            list : La liste des densités de fluide de chaque tronçon de la canalisation
++        """
+         liste = []
+         for i in self.liste_troncons:
+             liste.append(i.recuperer_densite())
+-        return liste
++        return liste
+\ No newline at end of file
+Index: calculs.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import numpy as np\r\n\r\ng = 9.81\r\n\r\n\r\n# Définition de la fonction qui calcule le nombre de reynolds\r\ndef calculer_reynolds(vitesse, diametre, viscosite_cine):\r\n    \"\"\"Calcule le nombre de Reynolds\"\"\"\r\n    # vitesse en m/s - diametre en m - viscorsite_cine en m2/s\r\n    re = vitesse * diametre / viscosite_cine\r\n    # print(f\"Reynolds : {re}\")\r\n    return re\r\n\r\n\r\ndef calculer_debit2vitesse(debit, diametre, section):\r\n    surface = 1\r\n    if section == 'rond':\r\n        surface = np.pi*(diametre/2)**2\r\n    return debit/surface\r\n\r\n\r\n# Définition de la fonction qui calcule le coefficient de perte de charge\r\ndef calculer_coef_perte_de_charge(reynolds, rugosite, diametre):\r\n    \"\"\"Renvoie le coefficient de perte de charge selon le nomre de Reynolds\"\"\"\r\n    # rugosite et diametre en mm - reynolds sans unite\r\n    # formule https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach\r\n    if reynolds < 2320:\r\n    #if reynolds > 0:\r\n        # Loi de Hagen-Poiseuille\r\n        return 64 / reynolds\r\n    else:\r\n        if rugosite == 0:\r\n            # Correlation de Blasius\r\n            return 0.3164 * reynolds ** (-1/4)\r\n\r\n        # Corrélation de Serguides\r\n        A = -2 * np.log10((rugosite/(diametre*3.7) + 12/reynolds))\r\n        B = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*A/reynolds))\r\n        C = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*B/reynolds))\r\n        return A - ((B-A)**2)/(C-2*B+A)\r\n\r\n\r\n# Définition de la fonction de calcul de pression selon la formule de Poiseuille\r\ndef calculer_pression_poiseuille(debit_vol, viscosite_cine, pression_entree, longueur_canal, rayon_canal):\r\n    \"\"\"Renvoie la différence de pression de sortie dans un écoulement de Poiseuille\"\"\"\r\n    # debit_col en m3/s - viscosite_cine en m2/s - pression_entree en Pa - longueur_canal, rayon_canal en m\r\n    return 8 * viscosite_cine * longueur_canal * debit_vol / (np.pi * rayon_canal**4)\r\n\r\n\r\n# Définition de la fonction qui calcule les pertes de charges régulières\r\ndef calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite):\r\n    \"\"\"Renvoie la différence de pression en sortie d'un endroit pouvant provoquer une perte de charge régulière\"\"\"\r\n    # longueur, diametre, rugosite en m - vitesse en m/s - viscosite_cine en m2/s - densite en kg/m2 -\r\n    # pression_entree en Pa\r\n    reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)\r\n    fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)\r\n    # print(f\"coef regu : {fd}\")\r\n    return fd * longueur * densite * vitesse**2 / (diametre * 2)\r\n\r\n\r\n# Définition de la fonction qui calcule les pertes de charges liée à un changement brusque de section\r\ndef calculer_perte_chgt_brusque_section(vitesse, section_entree, densite, section_sortie, pression_entree):\r\n    \"\"\"Renvoie la différence de pression en sortie d'un changement brusaue de section\"\"\"\r\n    # vitesse en m/s - section_entree, section_sortie en m - densite en kg/m3 - pression_entree en Pa\r\n    if section_entree < section_sortie:\r\n        ksi = (1 - section_entree/section_sortie)**2\r\n        # il faut multiplier par la vitesse d'entrée\r\n        return pression_entree + densite * ksi * vitesse ** 2 / 2\r\n    else:\r\n        C = 0.63 + 0.37 * (section_sortie/section_entree)**2\r\n        ksi = (1/C - 1)**2\r\n        # il faut multiplier par la vitesse de sortie\r\n        return densite * ksi * vitesse ** 2 / 2\r\n\r\n\r\n# Définition de la fonction qui renvoie la pression en sortie de la pompe\r\ndef calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree):\r\n    \"\"\"Renvoie la différence de pression en sortie d'une pompe\"\"\"\r\n    # puissance en W - debit en m3/s - pression_entree en Pa - rendement sans unité\r\n    return pression_entree + rendement * puissance/debit\r\n\r\n\r\ndef calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse_init):\r\n    return coef_perte_signuliere * densite * vitesse_init**2 / 2\r\n\r\n\r\ndef calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere):\r\n    A = ((pression_entree - pression_sortie - delta_reguliere) / (densite * (1 + coef_singuliere)))\r\n    B = (vitesse_entree**2 / (1 + coef_singuliere))\r\n    return np.sqrt(2 * A + B)\r\n\r\n\r\ndef calculer_temperature_sortie(temperature_entree):\r\n    return temperature_entree\r\n\r\n\r\ndef exercice_verif_regu():\r\n    diametre = 14*10**(-3)\r\n    longueur = 10\r\n    rugosite = .1*10**(-3)\r\n\r\n    densite = 900\r\n    viscosite_cine = 30*10**(-6)\r\n    debit = 55*10**(-3)/60\r\n\r\n    vitesse = calculer_debit2vitesse(debit, diametre, 'rond')\r\n    reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)\r\n    coef_singu = calculer_coef_perte_de_charge(reynolds, 0, diametre)\r\n\r\n    delta_P = calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, 0, densite)\r\n    print(delta_P)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/calculs.py b/calculs.py
+--- a/calculs.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/calculs.py	(date 1720493193811)
+@@ -1,31 +1,75 @@
++"""
++File : calculs.py
++Author : Alexis Markiewicz
++Date : 2024-07-08
++Description : Ce script permet de définir des fonctions qui permettent de calculer les pertes de charges et coefficients associés
++"""
++
++# Imports
+ import numpy as np
+ 
++# Définition des constantes
+ g = 9.81
+ 
+ 
+-# Définition de la fonction qui calcule le nombre de reynolds
++# Définition des fonctions
+ def calculer_reynolds(vitesse, diametre, viscosite_cine):
+-    """Calcule le nombre de Reynolds"""
+-    # vitesse en m/s - diametre en m - viscorsite_cine en m2/s
++    """Cette fonction calcule le nombre de Reynolds.
++
++    :param vitesse: La vitesse du fluide, en m/s
++    :type vitesse: float
++    :param diametre: Le diamètre de la canalisation, en m
++    :type diametre: float
++    :param viscosite_cine: La viscosité cinématique de fluide, en m**2/s
++    :type viscosite_cine: float
++
++    :return: Le nombre de Reynolds calculé à partir de ces paramètres
++    :rtype: float
++    """
++
+     re = vitesse * diametre / viscosite_cine
+-    # print(f"Reynolds : {re}")
+     return re
+ 
+ 
+ def calculer_debit2vitesse(debit, diametre, section):
++    """Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds.
++
++    :param debit: Le débit du fluide, en m**3/s
++    :type debit: float
++    :param diametre: Le diamètre de la canalisation, en m
++    :type diametre: float
++    :param section: La forme de la section (par exemple 'rond')
++    :type section: str
++
++    :return: La vitesse correspondant à ces paramètres
++    :rtype: float
++    """
++
+     surface = 1
++    # Si la section est ronde
+     if section == 'rond':
+         surface = np.pi*(diametre/2)**2
++    elif section == 'carre':
++        surface = diametre**2
+     return debit/surface
+ 
+ 
+-# Définition de la fonction qui calcule le coefficient de perte de charge
+ def calculer_coef_perte_de_charge(reynolds, rugosite, diametre):
+-    """Renvoie le coefficient de perte de charge selon le nomre de Reynolds"""
+-    # rugosite et diametre en mm - reynolds sans unite
+-    # formule https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
++    """Cette fonction calcule le coefficient de perte de charge régulière, selon le nombre de Reynolds.
++
++    :param reynolds: Le nombre de Reynolds, sans dimension
++    :type reynolds: float
++    :param rugosite: La rugosité de la canalisation, en m
++    :type rugosite: float
++    :param diametre: Le diamètre de la canalisation, en m
++    :type diametre: float
++
++    :return: Le coefficient de perte de charge
++    :rtype: float
++    """
++
++    # formules trouvées sur : https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
+     if reynolds < 2320:
+-    #if reynolds > 0:
+         # Loi de Hagen-Poiseuille
+         return 64 / reynolds
+     else:
+@@ -34,78 +78,96 @@
+             return 0.3164 * reynolds ** (-1/4)
+ 
+         # Corrélation de Serguides
+-        A = -2 * np.log10((rugosite/(diametre*3.7) + 12/reynolds))
+-        B = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*A/reynolds))
+-        C = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*B/reynolds))
+-        return A - ((B-A)**2)/(C-2*B+A)
+-
++        a = -2 * np.log10((rugosite/(diametre*3.7) + 12/reynolds))
++        b = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*a/reynolds))
++        c = -2 * np.log10((rugosite/(diametre*3.7) + 2.51*b/reynolds))
++        return a - ((b-a)**2)/(c-2*b+a)
+ 
+-# Définition de la fonction de calcul de pression selon la formule de Poiseuille
+-def calculer_pression_poiseuille(debit_vol, viscosite_cine, pression_entree, longueur_canal, rayon_canal):
+-    """Renvoie la différence de pression de sortie dans un écoulement de Poiseuille"""
+-    # debit_col en m3/s - viscosite_cine en m2/s - pression_entree en Pa - longueur_canal, rayon_canal en m
+-    return 8 * viscosite_cine * longueur_canal * debit_vol / (np.pi * rayon_canal**4)
+ 
+-
+-# Définition de la fonction qui calcule les pertes de charges régulières
+ def calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, rugosite, densite):
+-    """Renvoie la différence de pression en sortie d'un endroit pouvant provoquer une perte de charge régulière"""
+-    # longueur, diametre, rugosite en m - vitesse en m/s - viscosite_cine en m2/s - densite en kg/m2 -
+-    # pression_entree en Pa
++    """Cette fonction calcule la différence de pression due aux pertes de charges régulières.
++
++    :param longueur: La longueur de la canalisation, en m
++    :type longueur: float
++    :param diametre: Le diamètre de la canalisation, en m
++    :type diametre: float
++    :param vitesse: La vitesse du fluide, en m/s
++    :type vitesse: float
++    :param viscosite_cine: La viscosité cinématique de fluide, en m**2/s
++    :type viscosite_cine: float
++    :param rugosite: La rugosité de la canalisation, en m
++    :type rugosite: float
++    :param densite: La densité du fluide, en kg/m**3
++    :type densite: float
++
++    :return: La différence de pression causée par les pertes de charge régulières
++    :rtype: float
++    """
++
+     reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
+     fd = calculer_coef_perte_de_charge(reynolds, rugosite, diametre)
+-    # print(f"coef regu : {fd}")
++    # formule trouvée sur : https://fr.wikipedia.org/wiki/%C3%89quation_de_Darcy-Weisbach
+     return fd * longueur * densite * vitesse**2 / (diametre * 2)
+ 
+ 
+-# Définition de la fonction qui calcule les pertes de charges liée à un changement brusque de section
+-def calculer_perte_chgt_brusque_section(vitesse, section_entree, densite, section_sortie, pression_entree):
+-    """Renvoie la différence de pression en sortie d'un changement brusaue de section"""
+-    # vitesse en m/s - section_entree, section_sortie en m - densite en kg/m3 - pression_entree en Pa
+-    if section_entree < section_sortie:
+-        ksi = (1 - section_entree/section_sortie)**2
+-        # il faut multiplier par la vitesse d'entrée
+-        return pression_entree + densite * ksi * vitesse ** 2 / 2
++def calculer_perte_chgt_brusque_section(vitesse, diametre_entree, densite, diametre_sortie):
++    """Cette fonction calcule la différence de pression due aux pertes de charges singulières causées par un
++        changement de section brusque.
++
++    :param vitesse: La vitesse du fluide, en m/s
++    :type vitesse: float
++    :param diametre_entree: Le diamètre de la canalisation, en m
++    :type diametre_entree: float
++    :param densite: La densité du fluide, en kg/m**3
++    :type densite: float
++    :param diametre_sortie: Le diamètre de la canalisation, en m
++    :type diametre_sortie: float
++
++    :return: La différence de pression causée par les pertes de charge
++    :rtype: float
++    """
++
++    # On utilise les formules trouvées sur : https://gpip.cnam.fr/ressources-pedagogiques-ouvertes/hydraulique/co/3grain_PertesChargeVariationsSectionConduite.html
++    if diametre_entree < diametre_sortie:
++        ksi = (1 - diametre_entree/diametre_sortie)**2
+     else:
+-        C = 0.63 + 0.37 * (section_sortie/section_entree)**2
++        C = 0.63 + 0.37 * (diametre_sortie/diametre_entree)**2
+         ksi = (1/C - 1)**2
+-        # il faut multiplier par la vitesse de sortie
+-        return densite * ksi * vitesse ** 2 / 2
++    return densite * ksi * vitesse ** 2 / 2
+ 
+ 
+-# Définition de la fonction qui renvoie la pression en sortie de la pompe
+ def calculer_pression_sortie_pompe(puissance, rendement, debit, pression_entree):
+-    """Renvoie la différence de pression en sortie d'une pompe"""
+-    # puissance en W - debit en m3/s - pression_entree en Pa - rendement sans unité
++    """Cette fonction calcule la pression en sortie d'une pompe.
++
++    :param puissance: La puissance de la pompe, en W
++    :type puissance: float
++    :param rendement: Le rendement de la pompe, entre 0 et 1
++    :type rendement: float
++    :param debit: Le debit de la canalisation, en m**3/s
++    :type debit: float
++    :param pression_entree: La pression en entrée de la pompe, en Pa
++    :type pression_entree: float
++
++    :return: La valeur de la pression du fluide en sortie de pompe
++    :rtype: float
++    """
++
+     return pression_entree + rendement * puissance/debit
+ 
+ 
+-def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse_init):
+-    return coef_perte_signuliere * densite * vitesse_init**2 / 2
+-
+-
+-def calculer_vitesse_sortie(vitesse_entree, pression_entree, pression_sortie, delta_reguliere, densite, coef_singuliere):
+-    A = ((pression_entree - pression_sortie - delta_reguliere) / (densite * (1 + coef_singuliere)))
+-    B = (vitesse_entree**2 / (1 + coef_singuliere))
+-    return np.sqrt(2 * A + B)
+-
+-
+-def calculer_temperature_sortie(temperature_entree):
+-    return temperature_entree
++def calculer_perte_singuliere(coef_perte_signuliere, densite, vitesse):
++    """Cette fonction calcule la différence de pression due aux pertes de charges singulières.
+ 
++    :param coef_perte_signuliere: Le coefficient de perte de charge singuliètre, sans unité
++    :type coef_perte_signuliere: float
++    :param densite: La densité du fluide, en kg/m**3
++    :type densite: float
++    :param vitesse: La vitesse du fluide, en m/s
++    :type vitesse: float
+ 
+-def exercice_verif_regu():
+-    diametre = 14*10**(-3)
+-    longueur = 10
+-    rugosite = .1*10**(-3)
++    :return: La différence de pression causée par les pertes de charge singulières
++    :rtype: float
++    """
+ 
+-    densite = 900
+-    viscosite_cine = 30*10**(-6)
+-    debit = 55*10**(-3)/60
+-
+-    vitesse = calculer_debit2vitesse(debit, diametre, 'rond')
+-    reynolds = calculer_reynolds(vitesse, diametre, viscosite_cine)
+-    coef_singu = calculer_coef_perte_de_charge(reynolds, 0, diametre)
+-
+-    delta_P = calculer_perte_reguliere(longueur, diametre, vitesse, viscosite_cine, 0, densite)
+-    print(delta_P)
+\ No newline at end of file
++    # formule trouvée sur : https://fr.wikipedia.org/wiki/Perte_de_charge
++    return coef_perte_signuliere * densite * vitesse**2 / 2
+\ No newline at end of file
+Index: LecteurYAML.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import yaml\r\n\r\nclass LecteurYAML:\r\n    def __init__(self, file_path):\r\n        self.file_path = file_path\r\n\r\n    def read_yaml(self):\r\n        with open(self.file_path, 'r') as file:\r\n            try:\r\n                data = yaml.safe_load(file)\r\n                return data\r\n            except yaml.YAMLError as e:\r\n                print(f\"Error reading YAML file: {e}\")
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/LecteurYAML.py b/LecteurYAML.py
+--- a/LecteurYAML.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/LecteurYAML.py	(date 1720493193828)
+@@ -1,13 +1,33 @@
++
++"""
++File: LecteurYAML.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir la classe qui permet d'utiliser des fichiers .yaml.
++"""
++
++# Imports
+ import yaml
+ 
++
++# Définition de la classe
+ class LecteurYAML:
+     def __init__(self, file_path):
+         self.file_path = file_path
+ 
+     def read_yaml(self):
++        """
++        Cette fonction permet de lire le fichier .yaml
++
++        Args :
++            Aucun
++
++        Returns :
++            dict : dictionnaire associant chaque valeur à sa clé
++        """
+         with open(self.file_path, 'r') as file:
+             try:
+                 data = yaml.safe_load(file)
+                 return data
+             except yaml.YAMLError as e:
+-                print(f"Error reading YAML file: {e}")
+\ No newline at end of file
++                print(f"Error reading YAML file: {e}")
+Index: gestion_YAML.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># On commence par importer le fichier qui contient notre classe LecteurYAML\r\nfrom LecteurYAML import LecteurYAML\r\nimport os\r\n\r\n\r\ndef get_name_yaml():\r\n    nom = input(\"--> \")\r\n    while not os.path.exists(nom):\r\n        print(\" Le fichier indiqué n'existe pas, entrez le nom du fichier sous la forme : [mon_fichier.txt]\")\r\n        nom = input(\"--> \")\r\n    return nom\r\n\r\n\r\ndef get_info_yaml(nom):\r\n    # On crée un objet YAML au sein duquel on charge une instance de LecteurYAML qui lit le fichier \"deck.yamL\"\r\n    parser = LecteurYAML('yaml_exemple.yaml')\r\n    # On exécute la fonction read_yaml() de notre objet LecteurYAML\r\n    parsed_data = parser.read_yaml()\r\n\r\n    # nom_fluide, nbre_troncon, materiau, rugosite, forme, diametre, vitesse_init, debit_init, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie, liste_longueur, liste_rayon, choix_pompe, pression_min, puissance, rendement = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0\r\n\r\n    for key, value in parsed_data.items():\r\n        if key == 'nom du fluide':\r\n            nom_fluide = value\r\n        elif key == 'nombre de troncons':\r\n            nbre_troncon = value\r\n        elif key == 'materiau de la canalisation':\r\n            materiau = value\r\n        elif key == 'rugosite de la canalisation':\r\n           rugosite = value\r\n        elif key == 'forme de la section':\r\n            forme = value\r\n        elif key == 'diametre de la section':\r\n            diametre = value\r\n        elif key == 'vitesse initiale':\r\n            vitesse_init = value\r\n        elif key == 'debit initial':\r\n            debit_init = value\r\n        elif key == 'temperature initiale':\r\n            temperature_init = value\r\n        elif key == 'pression initiale':\r\n            pression_init = value\r\n        elif key == 'densite initiale':\r\n            densite = value\r\n        elif key == 'viscosite cinematique initiale':\r\n            viscosite_cine = value\r\n        elif key == 'liste des geometries de la canalisation':\r\n            liste_geometrie = value\r\n        elif key == 'liste des longueur des troncons':\r\n            liste_longueur = value\r\n        elif key == 'liste des rayons de courbure des troncons':\r\n            liste_rayon = value\r\n        elif key == 'placement de pompes':\r\n            choix_pompe = value\r\n        elif key == 'pression minimale':\r\n            pression_min = value\r\n        elif key == 'puissance de la pompe':\r\n            puissance = value\r\n        elif key == 'rendement de la pompe':\r\n            rendement = value\r\n\r\n    return nom_fluide, nbre_troncon, materiau, rugosite, forme, diametre, vitesse_init, debit_init, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie, liste_longueur, liste_rayon, choix_pompe, pression_min, puissance, rendement\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gestion_YAML.py b/gestion_YAML.py
+--- a/gestion_YAML.py	(revision 4337d99f305cf59988affb5e54ab4f9660f65008)
++++ b/gestion_YAML.py	(date 1720493193837)
+@@ -1,9 +1,26 @@
+-# On commence par importer le fichier qui contient notre classe LecteurYAML
++"""
++File: gestion_YAML.py
++Author: Alexis Markiewicz
++Date: 2024-07-08
++Description: Ce script permet de définir des fonctions qui permettent de manipuler des fichiers .yaml.
++"""
++
++# Imports
+ from LecteurYAML import LecteurYAML
+ import os
+ 
+ 
++# Définition des fonctions
+ def get_name_yaml():
++    """
++    Cette fonction permet de récupérer le nom du fichier .yaml.
++
++    Args :
++        Aucun
++
++    Returns :
++        str : nom du fichier .yaml
++    """
+     nom = input("--> ")
+     while not os.path.exists(nom):
+         print(" Le fichier indiqué n'existe pas, entrez le nom du fichier sous la forme : [mon_fichier.txt]")
+@@ -12,13 +29,38 @@
+ 
+ 
+ def get_info_yaml(nom):
++    """
++    Cette procédure permet de récupérer les informations du fichier .yaml.
++
++    Args :
++        nom (str) : Le nom du fichier .yaml
++
++    Returns :
++        str : Le nom du fluide
++        int : Le nombre de tronçons
++        str : Le nom du matériau de la canalisation
++        float : La rugosité de la canalisation, en m
++        str : La forme de la section de la canalisation
++        float : Le diamètre de la canalisation, en m
++        float : La vitesse intiale, en m/s
++        float : Le débit, m**3/s
++        float : La température initiale, en °C
++        float : La pression initiale, en Pa
++        float : La densité, en kg/m**#
++        float : La viscosité cinématique en m**2/s
++        list : La liste des géométries de la canalisation
++        list : La liste des longueurs de chaque tronçon
++        list : La liste des rayons de chaque tronçon
++        str : 'oui' ou 'non' si l'utilisateur veut placer une pompe
++        float : La pression minimale à ne pas franchir, en Pa
++        float : La puissance de la pompe, en W
++        float : Le rendement de la pompe, entre 0 et 1
++    """
+     # On crée un objet YAML au sein duquel on charge une instance de LecteurYAML qui lit le fichier "deck.yamL"
+     parser = LecteurYAML('yaml_exemple.yaml')
+     # On exécute la fonction read_yaml() de notre objet LecteurYAML
+     parsed_data = parser.read_yaml()
+ 
+-    # nom_fluide, nbre_troncon, materiau, rugosite, forme, diametre, vitesse_init, debit_init, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie, liste_longueur, liste_rayon, choix_pompe, pression_min, puissance, rendement = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+-
+     for key, value in parsed_data.items():
+         if key == 'nom du fluide':
+             nom_fluide = value
+@@ -59,5 +101,4 @@
+         elif key == 'rendement de la pompe':
+             rendement = value
+ 
+-    return nom_fluide, nbre_troncon, materiau, rugosite, forme, diametre, vitesse_init, debit_init, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie, liste_longueur, liste_rayon, choix_pompe, pression_min, puissance, rendement
+-
++    return nom_fluide, nbre_troncon, materiau, rugosite, forme, diametre, vitesse_init, debit_init, temperature_init, pression_init, densite, viscosite_cine, liste_geometrie, liste_longueur, liste_rayon, choix_pompe, pression_min, puissance, rendement
+\ No newline at end of file

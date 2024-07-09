@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>classes module &#8212; PipeHelper  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="gestion_BDD_fluides module" href="gestion_BDD_fluides.html" />
+    <link rel="prev" title="calculs module" href="calculs.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-classes">
+<span id="classes-module"></span><h1>classes module<a class="headerlink" href="#module-classes" title="Link to this heading">¶</a></h1>
+<p>File: classes.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script définit toutes les classes qui seront utiles au programme</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="classes.Canalisation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">classes.</span></span><span class="sig-name descname"><span class="pre">Canalisation</span></span><a class="headerlink" href="#classes.Canalisation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe qui représente une canalisation, soit une liste de tronçons</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.ajouter_troncon">
+<span class="sig-name descname"><span class="pre">ajouter_troncon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">troncon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.ajouter_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction peremt d’ajouter / modifier un tronçon à la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>troncon</strong> (<a class="reference internal" href="#classes.Troncon" title="classes.Troncon"><em>Troncon</em></a>) – Le troncon à ajouter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.calculer_distrib_pression_vitesse">
+<span class="sig-name descname"><span class="pre">calculer_distrib_pression_vitesse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.calculer_distrib_pression_vitesse" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de calculer la distribution de pression, vitesse, température, abscisses et la liste des
+longueur de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste de la pression le long de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste de la vitesse le long de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste de la température le long de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste de la longueur le long de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des longueurs de chaque tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.recupere_nbre_troncons">
+<span class="sig-name descname"><span class="pre">recupere_nbre_troncons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.recupere_nbre_troncons" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère le nombre de tronçon dans la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le nombre de tronçon dans la canaliation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_courbure">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_courbure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_courbure" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant le rayon de courbure de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des rayons de courbure de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_densite">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_densite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_densite" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la densité du fluide de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des densités de fluide de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_diametre">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_diametre</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_diametre" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant le diamètre de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des diamètres de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_fluide">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_fluide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_fluide" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant le nom du fluide de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des noms de fluide de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_geometrie">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_geometrie</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_geometrie" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la géométrie de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des géométries de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_longueur">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_longueur</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_longueur" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la longueur de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des longueurs de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_materiau">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_materiau</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_materiau" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant le matériau de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des matériaux de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_pression">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_pression</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_pression" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la pression de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des pressions de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_rugosite">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_rugosite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_rugosite" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la rugosité de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des rugosités de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_section">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_section</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_section" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la section de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des sections de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_temperature">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_temperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_temperature" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la température du fluide de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des températures de fluide de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_viscosite_cine">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_viscosite_cine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_viscosite_cine" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la viscosité cinématique du fluide de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des viscosité cinématique de fluide de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_liste_vitesse">
+<span class="sig-name descname"><span class="pre">renvoyer_liste_vitesse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_liste_vitesse" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de renvoyer la liste contenant la vitesse du fluide de chaque tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des vitesses de fluide de chaque tronçon de la canalisation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.renvoyer_troncon">
+<span class="sig-name descname"><span class="pre">renvoyer_troncon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.renvoyer_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction renvoie un tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – L’index du tronçon à renvoyer</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le tronçon correspondant à idx</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#classes.Troncon" title="classes.Troncon">Troncon</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Canalisation.supprimer_troncon">
+<span class="sig-name descname"><span class="pre">supprimer_troncon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Canalisation.supprimer_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de supprimer un tronçon de la canalisation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – L’index du tronçon à renvoyer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="classes.Troncon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">classes.</span></span><span class="sig-name descname"><span class="pre">Troncon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">longueur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diametre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materiau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rugosite</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometrie</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">courbure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vitesse_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pression_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">densite</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viscosite_cine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe qui modélise un tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>longueur</strong> (<em>float</em>) – La longueur du tronçon, en m</p></li>
+<li><p><strong>section</strong> (<em>str</em>) – La forme de la section du tronçon</p></li>
+<li><p><strong>diametre</strong> (<em>float</em>) – Le diamètre de la section du tronçon, en m</p></li>
+<li><p><strong>materiau</strong> (<em>str</em>) – Le matériau du tronçon</p></li>
+<li><p><strong>rugosite</strong> (<em>float</em>) – La rugosité du tronçon, en m</p></li>
+<li><p><strong>geometrie</strong> (<em>str</em>) – La géométrie du tronçon (‘droit’, ‘coude D’ ou ‘coude G’)</p></li>
+<li><p><strong>courbure</strong> (<em>float</em>) – Le rayon de courbure du tronçon, s’il y a lieu, en m</p></li>
+<li><p><strong>fluide</strong> (<em>str</em>) – Le nom du fluide parcourant le tronçon</p></li>
+<li><p><strong>vitesse_init</strong> (<em>float</em>) – La vitesse du fluide dans à l’entrée du tronçon, en m/s</p></li>
+<li><p><strong>pression_init</strong> (<em>float</em>) – La pression du fluide dans à l’entrée du tronçon, en Pa</p></li>
+<li><p><strong>temperature_init</strong> (<em>float</em>) – La température du fluide à l’entrée du tronçon, en °C</p></li>
+<li><p><strong>densite</strong> (<em>float</em>) – La densité du fluide, en kg/m**3</p></li>
+<li><p><strong>viscosite_cine</strong> (<em>float</em>) – La viscosité cinématique du fluide, en m**2/s</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.afficher">
+<span class="sig-name descname"><span class="pre">afficher</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.afficher" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet d’afficher les attributs du tronçon</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.ajouter_pression">
+<span class="sig-name descname"><span class="pre">ajouter_pression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.ajouter_pression" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet d’ajouter / actualiser une pression au fluide du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pression</strong> (<em>float</em>) – La pression du fluide, en Pa</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.ajouter_temperature">
+<span class="sig-name descname"><span class="pre">ajouter_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.ajouter_temperature" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet d’ajouter / actualiser une température au fluide du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<em>float</em>) – La temperature du fluide, en °C</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.ajouter_vitesse">
+<span class="sig-name descname"><span class="pre">ajouter_vitesse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vitesse</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.ajouter_vitesse" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet d’ajouter / actualiser une vitesse au fluide du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vitesse</strong> (<em>float</em>) – La vitesse du fluide, en m/s</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.calculer_coef_singuliere_troncon">
+<span class="sig-name descname"><span class="pre">calculer_coef_singuliere_troncon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.calculer_coef_singuliere_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction calcule le coefficient de perte de charge singulière du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le coefficient de perte de charge singulière du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.calculer_delta_pression_reguliere_troncon">
+<span class="sig-name descname"><span class="pre">calculer_delta_pression_reguliere_troncon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.calculer_delta_pression_reguliere_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction calcule la différence de pression due aux pertes de charge régulières du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La différence de pression, due aux pertes de charges régulière, entre l’entrée et la sortie du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.calculer_delta_pression_singuliere_troncon">
+<span class="sig-name descname"><span class="pre">calculer_delta_pression_singuliere_troncon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.calculer_delta_pression_singuliere_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction calcule la différence de pression due aux pertes de charges singulières du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La différence de pression, due aux pertes de charges singulières, entre l’entrée et la sortie du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.calculer_reynolds_troncon">
+<span class="sig-name descname"><span class="pre">calculer_reynolds_troncon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.calculer_reynolds_troncon" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction calcule le nombre de Reynolds du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le nombre de Reynolds du fluide dans ce tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_courbure">
+<span class="sig-name descname"><span class="pre">recuperer_courbure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_courbure" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère le rayon de courbure du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le rayon de courbure du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_densite">
+<span class="sig-name descname"><span class="pre">recuperer_densite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_densite" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la densité du fluide dans le tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La densité du fluide dans le tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_diametre">
+<span class="sig-name descname"><span class="pre">recuperer_diametre</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_diametre" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère le diamètre du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le diamètre du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_fluide">
+<span class="sig-name descname"><span class="pre">recuperer_fluide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_fluide" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère le nom du fluide  du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le nom du fluide du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_geometrie">
+<span class="sig-name descname"><span class="pre">recuperer_geometrie</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_geometrie" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la géométrie du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>n</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_longueur">
+<span class="sig-name descname"><span class="pre">recuperer_longueur</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_longueur" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la longueur du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La longueur du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_materiau">
+<span class="sig-name descname"><span class="pre">recuperer_materiau</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_materiau" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère le matériau du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le matériau du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_pression">
+<span class="sig-name descname"><span class="pre">recuperer_pression</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_pression" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la pression du fluide dans le tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La pression du fluide dans le tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_rugosite">
+<span class="sig-name descname"><span class="pre">recuperer_rugosite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_rugosite" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la rugosité du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La rugosité du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_section">
+<span class="sig-name descname"><span class="pre">recuperer_section</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_section" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la section du tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La section du tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_temperature">
+<span class="sig-name descname"><span class="pre">recuperer_temperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_temperature" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la température du fluide dans le tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La température du fluide dans le tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_viscosite_cine">
+<span class="sig-name descname"><span class="pre">recuperer_viscosite_cine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_viscosite_cine" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la viscosité cinématique du fluide dans le tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La viscosité cinématique du fluide dans le tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="classes.Troncon.recuperer_vitesse">
+<span class="sig-name descname"><span class="pre">recuperer_vitesse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes.Troncon.recuperer_vitesse" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère la vitesse dans le tronçon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La vitesse dans le tronçon</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PipeHelper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PipeHelper</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LecteurYAML.html">LecteurYAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculs.html">calculs module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">classes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_fluides.html">gestion_BDD_fluides module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_geometries.html">gestion_BDD_geometries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_materiaux.html">gestion_BDD_materiaux module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_YAML.html">gestion_YAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_traces.html">gestion_traces module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verifications.html">verifications module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">PipeHelper</a><ul>
+      <li>Previous: <a href="calculs.html" title="previous chapter">calculs module</a></li>
+      <li>Next: <a href="gestion_BDD_fluides.html" title="next chapter">gestion_BDD_fluides module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Alexis Markiewicz.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/classes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

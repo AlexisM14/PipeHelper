@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>gestion_BDD_geometries module &#8212; PipeHelper  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="gestion_BDD_materiaux module" href="gestion_BDD_materiaux.html" />
+    <link rel="prev" title="gestion_BDD_fluides module" href="gestion_BDD_fluides.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-gestion_BDD_geometries">
+<span id="gestion-bdd-geometries-module"></span><h1>gestion_BDD_geometries module<a class="headerlink" href="#module-gestion_BDD_geometries" title="Link to this heading">¶</a></h1>
+<p>File: gestion_BDD_geometries.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir des fonctions qui permettent de gérer la base de données “BDD_geometries.xlsx”</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_BDD_geometries.recuperer_attribut_geo">
+<span class="sig-prename descclassname"><span class="pre">gestion_BDD_geometries.</span></span><span class="sig-name descname"><span class="pre">recuperer_attribut_geo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometrie</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colonne</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_BDD_geometries.recuperer_attribut_geo" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction récupère une valeur pour la géométrie ‘geometrie’ dans la colonne ‘colonne’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geometrie</strong> (<em>str</em>) – Le nom de la géométrie</p></li>
+<li><p><strong>colonne</strong> (<em>str</em>) – Le nom de la colonne ou chercher</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>La valeur dans la colonne pour la géométrie</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_BDD_geometries.recuperer_coeff_perte_charge_singuliere">
+<span class="sig-prename descclassname"><span class="pre">gestion_BDD_geometries.</span></span><span class="sig-name descname"><span class="pre">recuperer_coeff_perte_charge_singuliere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometrie</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diametre_entree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rayon_courbure</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_BDD_geometries.recuperer_coeff_perte_charge_singuliere" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction renvoie le coefficient de perte de charge singulière pour la géométrie, l’angle,
+le diamètre et le rayon de courbure donné.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geometrie</strong> (<em>str</em>) – Le nom de la géométrie</p></li>
+<li><p><strong>angle</strong> (<em>str</em>) – L’angle de la géométrie</p></li>
+<li><p><strong>diametre_entree</strong> (<em>float</em>) – Le diamètre de la géométrie</p></li>
+<li><p><strong>rayon_courbure</strong> (<em>float</em>) – Le rayon de courbure de la géométrie</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le coefficient de perte de charge singulière</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_BDD_geometries.recuperer_fourchette_geo">
+<span class="sig-prename descclassname"><span class="pre">gestion_BDD_geometries.</span></span><span class="sig-name descname"><span class="pre">recuperer_fourchette_geo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometrie</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colonne</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nombre</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_BDD_geometries.recuperer_fourchette_geo" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction renvoie le nombre juste avant et juste après ‘nombre’, dans la colonne ‘colonne’, pour ‘fluide’
+dans la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geometrie</strong> (<em>str</em>) – Le nom de la géométrie</p></li>
+<li><p><strong>colonne</strong> (<em>str</em>) – Le nom de la colonne ou chercher</p></li>
+<li><p><strong>nombre</strong> (<em>float</em>) – Le nombre qu’on souhaite encadrer dans la colonne ‘colonne’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le plus grand nombre, plus petit que nombre dans la liste</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le plus petit nombre, plus grand que nombre dans la liste</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PipeHelper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PipeHelper</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LecteurYAML.html">LecteurYAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculs.html">calculs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classes.html">classes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_fluides.html">gestion_BDD_fluides module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gestion_BDD_geometries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_materiaux.html">gestion_BDD_materiaux module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_YAML.html">gestion_YAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_traces.html">gestion_traces module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verifications.html">verifications module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">PipeHelper</a><ul>
+      <li>Previous: <a href="gestion_BDD_fluides.html" title="previous chapter">gestion_BDD_fluides module</a></li>
+      <li>Next: <a href="gestion_BDD_materiaux.html" title="next chapter">gestion_BDD_materiaux module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Alexis Markiewicz.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/gestion_BDD_geometries.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

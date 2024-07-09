@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>gestion_traces module &#8212; PipeHelper  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="gestion_YAML module" href="gestion_YAML.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-gestion_traces">
+<span id="gestion-traces-module"></span><h1>gestion_traces module<a class="headerlink" href="#module-gestion_traces" title="Link to this heading">¶</a></h1>
+<p>File: gestion_traces.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir des fonctions qui tracerons les variations de pressions et la géométrie d’une canalisation</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_traces.calculer_coordonnees_coude">
+<span class="sig-prename descclassname"><span class="pre">gestion_traces.</span></span><span class="sig-name descname"><span class="pre">calculer_coordonnees_coude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_debut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_debut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rayon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_traces.calculer_coordonnees_coude" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de calculer les coordonnées d’un coude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_debut</strong> (<em>float</em>) – La coordonnée x ou démarre le coude</p></li>
+<li><p><strong>y_debut</strong> (<em>float</em>) – La coordonnée y ou démarre le coude</p></li>
+<li><p><strong>rayon</strong> (<em>float</em>) – Le rayon de courbure du coude</p></li>
+<li><p><strong>angle_deg</strong> (<em>float</em>) – L’angle du coude, en °</p></li>
+<li><p><strong>orientation</strong> (<em>str</em>) – Le sens dans lequel le fluide est dirigé (‘G’ ou ‘D’)</p></li>
+<li><p><strong>direction</strong> – La direction d’ou vient le fluide (‘x+’ : le fluide va dans le sens des x croissant,</p></li>
+</ul>
+</dd>
+</dl>
+<p>‘x-’ : Le fluide va dans le sens des x décroissant, idem pour ‘y+’ et ‘y-‘)
+:type direction: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des coordonnées x du coude</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La liste des coordonnées y du coude</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_traces.calculer_coordonnees_guide">
+<span class="sig-prename descclassname"><span class="pre">gestion_traces.</span></span><span class="sig-name descname"><span class="pre">calculer_coordonnees_guide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canalisation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_debut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_debut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'y+'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_traces.calculer_coordonnees_guide" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de calculer les coordonnées d’une canalisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>canalisation</strong> (<em>Canalisatiobn</em>) – La canalisation étudiée</p></li>
+<li><p><strong>x_debut</strong> (<em>Canalisatiobn</em>) – La coordonnée x ou démarre le coude</p></li>
+<li><p><strong>y_debut</strong> (<em>Canalisatiobn</em>) – La coordonnée y ou démarre le coude</p></li>
+<li><p><strong>direction</strong> (<em>Canalisatiobn</em>) – La direction d’ou vient le fluide (‘x+’ : le fluide va dans le sens des x croissant, ‘x-’ : Le fluide va dans le sens des x décroissant, idem pour ‘y+’ et ‘y-‘), optionnel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>La liste des coordonnées x de la canalisation</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>La liste des coordonnées y de la canalisation</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_traces.tracer_canalisations">
+<span class="sig-prename descclassname"><span class="pre">gestion_traces.</span></span><span class="sig-name descname"><span class="pre">tracer_canalisations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canalisation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_traces.tracer_canalisations" title="Link to this definition">¶</a></dt>
+<dd><p>Cette procédure permet de tracer la canalisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>canalisation</strong> (<a class="reference internal" href="classes.html#classes.Canalisation" title="classes.Canalisation"><em>Canalisation</em></a>) – La canalisation à tracer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gestion_traces.tracer_pression_vitesse_1d">
+<span class="sig-prename descclassname"><span class="pre">gestion_traces.</span></span><span class="sig-name descname"><span class="pre">tracer_pression_vitesse_1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">liste_pression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liste_vitesse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liste_abscisse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liste_longueur</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gestion_traces.tracer_pression_vitesse_1d" title="Link to this definition">¶</a></dt>
+<dd><p>Cette procédure permet de tracer les variations de pression et de vitesse le long de la canalisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>liste_pression</strong> (<em>list</em>) – La variation de pression dans la canalisation</p></li>
+<li><p><strong>liste_vitesse</strong> (<em>list</em>) – La variation de vitesse dans la canalisation</p></li>
+<li><p><strong>liste_abscisse</strong> (<em>list</em>) – La liste des abscisses de la canalisation</p></li>
+<li><p><strong>liste_longueur</strong> (<em>list</em>) – La liste des longueurs de chaque géométrie de la canalisation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PipeHelper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PipeHelper</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LecteurYAML.html">LecteurYAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculs.html">calculs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classes.html">classes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_fluides.html">gestion_BDD_fluides module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_geometries.html">gestion_BDD_geometries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_materiaux.html">gestion_BDD_materiaux module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_YAML.html">gestion_YAML module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gestion_traces module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verifications.html">verifications module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">PipeHelper</a><ul>
+      <li>Previous: <a href="gestion_YAML.html" title="previous chapter">gestion_YAML module</a></li>
+      <li>Next: <a href="main.html" title="next chapter">main module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Alexis Markiewicz.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/gestion_traces.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

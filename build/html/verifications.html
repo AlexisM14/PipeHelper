@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>verifications module &#8212; PipeHelper  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="main module" href="main.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-verifications">
+<span id="verifications-module"></span><h1>verifications module<a class="headerlink" href="#module-verifications" title="Link to this heading">¶</a></h1>
+<p>File: verifications.py
+Author: Alexis Markiewicz
+Date: 2024-07-08
+Description: Ce script permet de définir les fonctions qui vont vérifier la validité des données entrées par l’utilisateur.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="verifications.get_element_liste_input">
+<span class="sig-prename descclassname"><span class="pre">verifications.</span></span><span class="sig-name descname"><span class="pre">get_element_liste_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">liste</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verifications.get_element_liste_input" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de récupérer un élément d’une liste, entré par l’utilisateur.</p>
+<dl class="simple">
+<dt>Args :</dt><dd><p>liste (list) : La liste des choix donnés à l’utilisateur</p>
+</dd>
+<dt>Returns :</dt><dd><p>str : Le choix de l’utilisateur</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="verifications.get_float_between_input">
+<span class="sig-prename descclassname"><span class="pre">verifications.</span></span><span class="sig-name descname"><span class="pre">get_float_between_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verifications.get_float_between_input" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de récupérer un flottant, entré par l’utilisateur, dans un intervalle.</p>
+<dl class="simple">
+<dt>Args :</dt><dd><p>a (float) : Le plus petit nombre de l’intervalle
+b (float) : Le plus grand nombre de l’intervalle</p>
+</dd>
+<dt>Returns :</dt><dd><p>float : Le nombre entré par l’utilisateur, dans l’intervalle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="verifications.get_float_input">
+<span class="sig-prename descclassname"><span class="pre">verifications.</span></span><span class="sig-name descname"><span class="pre">get_float_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verifications.get_float_input" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de récupérer un flottant, qu’a entré l’utilisateur.</p>
+<dl class="simple">
+<dt>Args :</dt><dd><p>signe (str) : ‘+’ pour des flottants supérieurs ou égaux à 0, ‘-’ sinon</p>
+</dd>
+<dt>Returns :</dt><dd><p>float : Le flottant entré par l’utilisateur</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="verifications.get_init_cond_input">
+<span class="sig-prename descclassname"><span class="pre">verifications.</span></span><span class="sig-name descname"><span class="pre">get_init_cond_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diametre</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verifications.get_init_cond_input" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de récupérer les conditions initiales, entrées par l’utilisateur.</p>
+<dl class="simple">
+<dt>Args :</dt><dd><p>fluide (str) : Le nom du fluide
+diametre (float) : Le diamètre de la canalisation</p>
+</dd>
+<dt>Returns :</dt><dd><p>float : La vitesse initiale du fluide, en m/s
+float : La température initiale du fluide, en °C
+float : La pression initiale du fluide, en Pa
+float : La densité du fluide, en kg/m883
+float : La viscosité cinématique du fluide, en m**2/s
+float : Le débit du fluide, en m**3/s</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="verifications.get_int_between_input">
+<span class="sig-prename descclassname"><span class="pre">verifications.</span></span><span class="sig-name descname"><span class="pre">get_int_between_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verifications.get_int_between_input" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de récupérer un entier, entré par l’utilisateur, dans un intervalle.</p>
+<dl class="simple">
+<dt>Args :</dt><dd><p>a (float) : Le plus petit nombre de l’intervalle
+b (float) : Le plus grand nombre de l’intervalle</p>
+</dd>
+<dt>Returns :</dt><dd><p>int : Le nombre entré par l’utilisateur, dans l’intervalle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="verifications.get_int_input">
+<span class="sig-prename descclassname"><span class="pre">verifications.</span></span><span class="sig-name descname"><span class="pre">get_int_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verifications.get_int_input" title="Link to this definition">¶</a></dt>
+<dd><p>Cette fonction permet de récupérer un entier, qu’a entré l’utilisateur</p>
+<dl class="simple">
+<dt>Args :</dt><dd><p>signe (str) : ‘+’ pour des flottants supérieurs ou égaux à 0, ‘-’ sinon</p>
+</dd>
+<dt>Returns :</dt><dd><p>int : L’entier entré par l’utilisateur</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PipeHelper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PipeHelper</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LecteurYAML.html">LecteurYAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculs.html">calculs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classes.html">classes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_fluides.html">gestion_BDD_fluides module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_geometries.html">gestion_BDD_geometries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_BDD_materiaux.html">gestion_BDD_materiaux module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_YAML.html">gestion_YAML module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gestion_traces.html">gestion_traces module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">verifications module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">PipeHelper</a><ul>
+      <li>Previous: <a href="main.html" title="previous chapter">main module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Alexis Markiewicz.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/verifications.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

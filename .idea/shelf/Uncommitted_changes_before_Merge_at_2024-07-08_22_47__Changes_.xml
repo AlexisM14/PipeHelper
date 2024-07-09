@@ -1,0 +1,19 @@
+<changelist name="Uncommitted_changes_before_Merge_at_2024-07-08_22_47_[Changes]" date="1720493252038" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-07-08_22_47_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Merge at 2024-07-08 22:47 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="Base_De_Donnees/BDD_fluides.xlsx" />
+    <option name="AFTER_PATH" value="BDD_fluides.xlsx" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-07-08_22_47_[Changes]/BDD_fluides.xlsx" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Base_De_Donnees/BDD_materiaux.xlsx" />
+    <option name="AFTER_PATH" value="BDD_materiaux.xlsx" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-07-08_22_47_[Changes]/BDD_materiaux.xlsx" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Base_De_Donnees/BDD_geometrie.xlsx" />
+    <option name="AFTER_PATH" value="BDD_geometrie.xlsx" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-07-08_22_47_[Changes]/BDD_geometrie.xlsx" />
+  </binary>
+</changelist>

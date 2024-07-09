@@ -31,14 +31,7 @@ rapport_rayon_diam_max = max(liste_rap_coude)
 # Définition des fonctions
 # Définition de la procédure nettoyer_écran
 def nettoyer_ecran():
-    """
-    Cette procédure permet de nettoyer la console.
-
-    Args :
-        Aucun
-
-    Returns :
-        Aucun
+    """Cette procédure permet de nettoyer la console.
     """
     print("")
     print("")
@@ -65,15 +58,15 @@ def nettoyer_ecran():
 
 
 def choisir_materiaux_canalisation(nbre, choix):
-    """
-    Cette fonction permet de récupérer le nom des matériaux composant la canalisation.
+    """Cette fonction permet de récupérer le nom des matériaux composant la canalisation.
 
-    Args :
-        nbre (int) : Le nombre de tronçons dans la canalisation
-        choix (str) : 'oui' : la canalisation est composée d'un seul matériau, sinon 'non
+    :param nbre: Le nombre de tronçons dans la canalisation
+    :type nbre: int
+    :param choix: 'oui' : la canalisation est composée d'un seul matériau, sinon 'non
+    :type choix: str
 
-    Returns :
-        list : La liste des matériaux de la canalisation
+    :return: La liste des matériaux de la canalisation
+    :rtype: list
     """
     liste = np.array([])
 
@@ -206,15 +199,15 @@ def choisir_geometrie_canalisation(nbre):
 
 
 def choisir_longueur_canalisation(nbre, liste_geo):
-    """
-    Cette fonction permet de récupérer les longueurs des géométries de la canalisation.
+    """Cette fonction permet de récupérer les longueurs des géométries de la canalisation.
 
-    Args :
-        nbre (int) : Le nombre de tronçons dans la canalisation
-        liste_geo (list) : La liste des géométries de la canalisation
+    :param nbre: Le nombre de tronçons dans la canalisation
+    :type nbre: int
+    :param liste_geo: La liste des géométries de la canalisation
+    :type liste_geo: list
 
-    Returns :
-        list : La liste des longueurs des géométries de la canalisation
+    :return: La liste des longueurs des géométries de la canalisation
+    :rtype : list
     """
     liste_long = []
     liste_rayon = []
@@ -238,18 +231,21 @@ def choisir_longueur_canalisation(nbre, liste_geo):
 
 
 def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste_rayon):
-    """
-    Cette fonction permet de vérifier que les rapports rayon de courbure / diametre des coudes sont bien couverts par la base de données.
+    """Cette fonction permet de vérifier que les rapports rayon de courbure / diametre des coudes sont bien couverts par la base de données.
 
-    Args :
-        nbre (int) : Le nombre de tronçons dans la canalisation
-        liste_geo (list) : La liste des géométries de la canalisation
-        liste_diam (list) : La liste des diamètres de la canalisation
-        liste_rayon (list) : La liste des rayons de courbures de la canalisation
+    :param nbre: Le nombre de tronçons dans la canalisation
+    :type nbre: int
+    :param liste_geo: La liste des géométries de la canalisation
+    :type liste_geo: list
+    :param liste_diam: La liste des diamètres de la canalisation
+    :type liste_diam: list
+    :param liste_rayon: La liste des rayons de courbures de la canalisation
+    :type liste_rayon: list
 
-    Returns :
-        list : La liste des rayons de courbure des géométries de la canalisation
-        list : La liste des longueurs des géométries de la canalisation
+    :return: La liste des rayons de courbure des géométries de la canalisation
+    :rtype: list
+    :return: La liste des longueurs des géométries de la canalisation
+    :rtype: list
     """
     liste = []
 
@@ -279,15 +275,15 @@ def verifier_rapport_canalisation(nbre, liste_geo, liste_long, liste_diam, liste
 
 
 def verifier_dans_intervalle(nbre, intervalle):
-    """
-    Cette fonction permet de vérifier qu'un nombre est bien dans un intervalle.
+    """Cette fonction permet de vérifier qu'un nombre est bien dans un intervalle.
 
-    Args :
-        nbre (float) : Le nombre à tester
-        intervalle (list) : L'intervalle dans lequel vérifier la présence du nombre
+    :param nbre: Le nombre à tester
+    :type nbre: float
+    :param intervalle: L'intervalle dans lequel vérifier la présence du nombre
+    :type intervalle: list
 
-    Returns :
-        bool : True si 'nbre' est dans 'intervalle', False sinon
+    :return:True si 'nbre' est dans 'intervalle', False sinon
+    :rtype: bool
     """
     a = intervalle[0]
     b = intervalle[1]
@@ -295,15 +291,15 @@ def verifier_dans_intervalle(nbre, intervalle):
 
 
 def recuperer_index_plus_proche_inf(liste_abscisse, nbre):
-    """
-    Cette fonction permet de récupérer l'index du nombre le plus petit et le plus proche de 'nbre' dans une liste.
+    """Cette fonction permet de récupérer l'index du nombre le plus petit et le plus proche de 'nbre' dans une liste.
 
-    Args :
-        nbre (float) : Le nombre à tester
-        liste_abscisse (float) : La liste dans laquelle chercher
+    :param nbre: Le nombre à tester
+    :type nbre: float
+    :param liste_abscisse: La liste dans laquelle chercher
+    :type liste_abscisse: list
 
-    Returns :
-        int : l'index du nombre le plus proche et le plus petit de 'nbre'
+    :return: L'index du nombre le plus proche et le plus petit de 'nbre'
+    :rtype: int
     """
     compteur = 0
     while liste_abscisse[compteur] < nbre:
@@ -312,18 +308,21 @@ def recuperer_index_plus_proche_inf(liste_abscisse, nbre):
 
 
 def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur):
-    """
-    Cette fonction permet de récupérer l'index ou placer une pompe pour que la pression ne descende pas sous 'pression_min'.
+    """Cette fonction permet de récupérer l'index ou placer une pompe pour que la pression ne descende pas sous 'pression_min'.
 
-    Args :
-        liste_pression (list) : La liste de distribution des pressions dans la canalisation
-        pression_min (float) : La pression minimale sous laquelle ne pas descendre, en Pa
-        liste_geometrie (list) : La liste des géométries de la canalisation
-        liste_abscisse (list) : La liste des abscisses de la canalisation
-        liste_longueur (list) : La liste des longueurs des géométries de la canalisation
+    :param liste_pression: La liste de distribution des pressions dans la canalisation
+    :type liste_pression: list
+    :param pression_min: La pression minimale sous laquelle ne pas descendre, en Pa
+    :type pression_min: float
+    :param liste_geometrie: La liste des géométries de la canalisation
+    :type liste_geometrie: list
+    :param liste_abscisse: La liste des abscisses de la canalisation
+    :type liste_abscisse: list
+    :param liste_longueur: La liste des longueurs des géométries de la canalisation
+    :type liste_longueur: list
 
-    Returns :
-        int : Index de l'endroit ou placer la pompe
+    :return: Index de l'endroit ou placer la pompe
+    :rtype: int
     """
     compteur = 0
     pression_entree = liste_pression[compteur]
@@ -357,21 +356,24 @@ def trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, lis
 
 
 def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance, rendement, liste_geometrie, liste_longueur):
-    """
-    Cette procédure permet de tracer la distribution de pressions dans la canalisation, avec des ponmpes.
+    """Cette procédure permet de tracer la distribution de pressions dans la canalisation, avec des ponmpes.
 
-    Args :
-        debit (float) : Le débit de la canalisation, en kg/m**3
-        liste_abscisse (list) : La liste des abscisses de la canalisation
-        liste_pression (list) : La liste de distribution des pressions dans la canalisation
-        pression_min (float) : La pression minimale sous laquelle ne pas descendre, en Pa
-        puissance (float) : La puissance de la pompe
-        rendement (float) : Le rendement de la pompe
-        liste_geometrie (list) : La liste des géométries de la canalisation
-        liste_longueur (list) : La liste des longueurs des géométries de la canalisation
-
-    Returns :
-        Aucun
+    :param debit: Le débit de la canalisation, en kg/m**3
+    :type debit: float
+    :param liste_abscisse: La liste des abscisses de la canalisation
+    :type liste_abscisse: list
+    :param liste_pression: La liste de distribution des pressions dans la canalisation
+    :type liste_pression: list
+    :param pression_min: La pression minimale sous laquelle ne pas descendre, en Pa
+    :type pression_min: float
+    :param puissance: La puissance de la pompe
+    :type puissance: float
+    :param rendement: Le rendement de la pompe
+    :type rendement: float
+    :param liste_geometrie: La liste des géométries de la canalisation
+    :type liste_geometrie: list
+    :param liste_longueur: La liste des longueurs des géométries de la canalisation
+    :type liste_longueur: list
     """
     liste_pression_origine = liste_pression.copy()
     idx_emplacement_pompe = trouver_emplacement_pompe(liste_pression, pression_min, liste_geometrie, liste_abscisse, liste_longueur)
@@ -416,14 +418,7 @@ def placer_pompe(debit, liste_abscisse, liste_pression, pression_min, puissance,
 
 # Défintion de la procédure principale
 def interface():
-    """
-    Cette procédure permet de lancer le programme.
-
-    Args :
-        Aucun
-
-    Returns :
-        Aucun
+    """Cette procédure permet de lancer le programme.
     """
     # Affichage du principe du script
     print("Ce script permet de configurer des canalisations ! \n"

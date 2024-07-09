@@ -3,6 +3,7 @@ File: gestion_YAML.py
 Author: Alexis Markiewicz
 Date: 2024-07-08
 Description: Ce script permet de définir des fonctions qui permettent de manipuler des fichiers .yaml.
+Une partie du code est repris du cours MGA802
 """
 
 # Imports
@@ -12,14 +13,10 @@ import os
 
 # Définition des fonctions
 def get_name_yaml():
-    """
-    Cette fonction permet de récupérer le nom du fichier .yaml.
+    """Cette fonction permet de récupérer le nom du fichier .yaml.
 
-    Args :
-        Aucun
-
-    Returns :
-        str : nom du fichier .yaml
+    :return: nom du fichier .yaml
+    :rtype: strç
     """
     nom = input("--> ")
     while not os.path.exists(nom):
@@ -29,32 +26,49 @@ def get_name_yaml():
 
 
 def get_info_yaml(nom):
-    """
-    Cette procédure permet de récupérer les informations du fichier .yaml.
+    """Cette procédure permet de récupérer les informations du fichier .yaml.
 
-    Args :
-        nom (str) : Le nom du fichier .yaml
+    :param nom: Le nom du fichier .yaml
+    :type nom: str
 
-    Returns :
-        str : Le nom du fluide
-        int : Le nombre de tronçons
-        str : Le nom du matériau de la canalisation
-        float : La rugosité de la canalisation, en m
-        str : La forme de la section de la canalisation
-        float : Le diamètre de la canalisation, en m
-        float : La vitesse intiale, en m/s
-        float : Le débit, m**3/s
-        float : La température initiale, en °C
-        float : La pression initiale, en Pa
-        float : La densité, en kg/m**#
-        float : La viscosité cinématique en m**2/s
-        list : La liste des géométries de la canalisation
-        list : La liste des longueurs de chaque tronçon
-        list : La liste des rayons de chaque tronçon
-        str : 'oui' ou 'non' si l'utilisateur veut placer une pompe
-        float : La pression minimale à ne pas franchir, en Pa
-        float : La puissance de la pompe, en W
-        float : Le rendement de la pompe, entre 0 et 1
+    :return: Le nom du fluide
+    :rtype: str
+    :return: Le nombre de tronçons
+    :rtype: int
+    :return: Le nom du matériau de la canalisation
+    :rtype: str
+    :return: La rugosité de la canalisation, en m
+    :rtype: float
+    :return: La forme de la section de la canalisation
+    :rtype: str
+    :return: Le diamètre de la canalisation, en m
+    :rtype: float
+    :return: La vitesse intiale, en m/s
+    :rtype: float
+    :return: Le débit, m**3/s
+    :rtype: float
+    :return: à La température initiale, en °C
+    :rtype: float
+    :return: La pression initiale, en Pa
+    :rtype: float
+    :return: La densité, en kg/m**#
+    :rtype: float
+    :return: La viscosité cinématique en m**2/s
+    :rtype: float
+    :return: La liste des géométries de la canalisation
+    :rtype: list
+    :return: La liste des longueurs de chaque tronçon
+    :rtype: list
+    :return: La liste des rayons de chaque tronçon
+    :rtype: list
+    :return: 'oui' ou 'non' si l'utilisateur veut placer une pompe
+    :rtype: str
+    :return: La pression minimale à ne pas franchir, en Pa
+    :rtype: float
+    :return: La puissance de la pompe, en W
+    :rtype: float
+    :return: Le rendement de la pompe, entre 0 et 1
+    :rtype: float
     """
     # On crée un objet YAML au sein duquel on charge une instance de LecteurYAML qui lit le fichier "deck.yamL"
     parser = LecteurYAML('yaml_exemple.yaml')

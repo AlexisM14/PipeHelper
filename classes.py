@@ -15,29 +15,38 @@ from gestion_BDD_geometries import recuperer_coeff_perte_charge_singuliere
 
 # Définition des classes
 class Troncon:
+    """Classe qui modélise un tronçon
 
-    # Méthode constructeur
+    :param longueur: La longueur du tronçon, en m
+    :type longueur: float
+    :param section: La forme de la section du tronçon
+    :type section: str
+    :param diametre: Le diamètre de la section du tronçon, en m
+    :type diametre: float
+    :param materiau: Le matériau du tronçon
+    :type materiau: str
+    :param rugosite: La rugosité du tronçon, en m
+    :type rugosite: float
+    :param geometrie: La géométrie du tronçon ('droit', 'coude D' ou 'coude G')
+    :type geometrie: str
+    :param courbure: Le rayon de courbure du tronçon, s'il y a lieu, en m
+    :type courbure: float
+    :param fluide: Le nom du fluide parcourant le tronçon
+    :type fluide: str
+    :param vitesse_init: La vitesse du fluide dans à l'entrée du tronçon, en m/s
+    :type vitesse_init: float
+    :param pression_init: La pression du fluide dans à l'entrée du tronçon, en Pa
+    :type pression_init: float
+    :param temperature_init: La température du fluide à l'entrée du tronçon, en °C
+    :type temperature_init: float
+    :param densite: La densité du fluide, en kg/m**3
+    :type densite: float
+    :param viscosite_cine: La viscosité cinématique du fluide, en m**2/s
+    :type viscosite_cine: float
+    """
+
     def __init__(self, longueur, section, diametre, materiau, rugosite, geometrie, courbure, fluide, vitesse_init, pression_init, temperature_init, densite, viscosite_cine):
-        """
-        Méthode constructeur
-
-        Args:
-            longueur (float) : La longueur du tronçon, en m
-            section (str) : La forme de la section du tronçon
-            diametre (float) : Le diamètre de la section du tronçon, en m
-            materiau (str) : Le matériau du tronçon
-            rugosite (float) : La rugosité du tronçon, en m
-            geometrie (str) : La géométrie du tronçon ('droit', 'coude D' ou 'coude G')
-            courbure (float) : Le rayon de courbure du tronçon, s'il y a lieu, en m
-            fluide (str) : Le nom du fluide parcourant le tronçon
-            vitesse_init (float) : La vitesse du fluide dans à l'entrée du tronçon, en m/s
-            pression_init (float) : La pression du fluide dans à l'entrée du tronçon , en Pa
-            temperature_init (float) : La température du fluide à l'entrée du tronçon, en °C
-            densite (flaot) : La densité du fluide, en kg/m**3
-            viscosite_cine : La viscosité cinématique du fluide, en m**2/s
-
-        Returns:
-            Aucun
+        """Méthode constructeur
         """
         self.longueur = longueur
         self.section = section
@@ -64,38 +73,26 @@ class Troncon:
             self.densite = densite
 
     def calculer_reynolds_troncon(self):
-        """
-        Cette fonction calcule le nombre de Reynolds du tronçon
+        """Cette fonction calcule le nombre de Reynolds du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : Le nombre de Reynolds du fluide dans ce tronçon
+        :return: Le nombre de Reynolds du fluide dans ce tronçon
+        :rtype: float
         """
         return calculer_reynolds(self.vitesse_init, self.diametre, self.viscosite_cine)
 
     def calculer_delta_pression_reguliere_troncon(self):
-        """
-        Cette fonction calcule la différence de pression due aux pertes de charge régulières du tronçon
+        """Cette fonction calcule la différence de pression due aux pertes de charge régulières du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La différence de pression, due aux pertes de charges régulière, entre l'entrée et la sortie du tronçon
+        :return: La différence de pression, due aux pertes de charges régulière, entre l'entrée et la sortie du tronçon
+        :rtype: float
         """
         return calculer_perte_reguliere(self.longueur, self.diametre, self.vitesse_init, self.viscosite_cine, self.rugosite, self.densite, self.pression_init)
 
     def calculer_coef_singuliere_troncon(self):
-        """
-        Cette fonction calcule le coefficient de perte de charge singulière du tronçon
+        """Cette fonction calcule le coefficient de perte de charge singulière du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : Le coefficient de perte de charge singulière du tronçon
+        :return: Le coefficient de perte de charge singulière du tronçon
+        :rtype: float
         """
         if self.geometrie[:-2] == 'coude':
             geometrie = 'coude'
@@ -111,195 +108,131 @@ class Troncon:
         return recuperer_coeff_perte_charge_singuliere(geometrie, 90, self.diametre, self.diametre, self.courbure)
 
     def calculer_delta_pression_singuliere_troncon(self):
-        """
-        Cette fonction calcule la différence de pression due aux pertes de charges singulières du tronçon
+        """Cette fonction calcule la différence de pression due aux pertes de charges singulières du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La différence de pression, due aux pertes de charges singulières, entre l'entrée et la sortie du tronçon
+        :return: La différence de pression, due aux pertes de charges singulières, entre l'entrée et la sortie du tronçon
+        :rtype: float
         """
         coef = self.calculer_coef_singuliere_troncon()
         return calculer_perte_singuliere(coef, self.densite, self.vitesse_init)
 
     def recuperer_longueur(self):
-        """
-        Cette fonction récupère la longueur du tronçon
+        """Cette fonction récupère la longueur du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La longueur du tronçon
+        :return: La longueur du tronçon
+        :rtype: float
         """
         return self.longueur
 
     def recuperer_section(self):
-        """
-        Cette fonction récupère la section du tronçon
+        """Cette fonction récupère la section du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            str : La section du tronçon
+        :return: La section du tronçon
+        :rtype: float
         """
         return self.section
 
     def recuperer_diametre(self):
-        """
-        Cette fonction récupère le diamètre du tronçon
+        """Cette fonction récupère le diamètre du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : Le diamètre du tronçon
+        :return: Le diamètre du tronçon
+        :rtype: float
         """
         return self.diametre
 
     def recuperer_materiau(self):
-        """
-        Cette fonction récupère le matériau du tronçon
+        """Cette fonction récupère le matériau du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            str : Le matériau du tronçon
+        :return: Le matériau du tronçon
+        :rtype: str
         """
         return self.materiau
 
     def recuperer_rugosite(self):
-        """
-        Cette fonction récupère la rugosité du tronçon
+        """Cette fonction récupère la rugosité du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La rugosité du tronçon
+        :return: La rugosité du tronçon
+        :rtype: float
         """
         return self.rugosite
 
     def recuperer_geometrie(self):
-        """
-        Cette fonction récupère la géométrie du tronçon
+        """Cette fonction récupère la géométrie du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            str : La géométrie du tronçon
+        :return: n
+        :rtype: str
         """
         return self.geometrie
 
     def recuperer_courbure(self):
-        """
-        Cette fonction récupère le rayon de courbure du tronçon
+        """Cette fonction récupère le rayon de courbure du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : Le rayon de courbure du tronçon
+        :return: Le rayon de courbure du tronçon
+        :rtype: float
         """
         return self.courbure
 
     def recuperer_fluide(self):
-        """
-        Cette fonction récupère le nom du fluide  du tronçon
+        """Cette fonction récupère le nom du fluide  du tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            str : Le nom du fluide du tronçon
+        :return: Le nom du fluide du tronçon
+        :rtype: str
         """
         return self.fluide
 
     def recuperer_vitesse(self):
-        """
-        Cette fonction récupère la vitesse dans le tronçon
+        """Cette fonction récupère la vitesse dans le tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La vitesse dans le tronçon
+        :return: La vitesse dans le tronçon
+        :rtype: float
         """
         return self.vitesse_init
 
     def recuperer_pression(self):
-        """
-        Cette fonction récupère la pression du fluide dans le tronçon
+        """ Cette fonction récupère la pression du fluide dans le tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La pression du fluide dans le tronçon
+        :return: La pression du fluide dans le tronçon
+        :rtype: float
         """
         return self.pression_init
 
     def recuperer_temperature(self):
-        """
-        Cette fonction récupère la température du fluide dans le tronçon
+        """Cette fonction récupère la température du fluide dans le tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La température du fluide dans le tronçon
+        :return: La température du fluide dans le tronçon
+        :rtype: float
         """
         return self.temperature_init
 
     def recuperer_viscosite_cine(self):
-        """
-        Cette fonction récupère la viscosité cinématique du fluide dans le tronçon
+        """Cette fonction récupère la viscosité cinématique du fluide dans le tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La viscosité cinématique du fluide dans le tronçon
+        :return: La viscosité cinématique du fluide dans le tronçon
+        :rtype: float
         """
         return self.viscosite_cine
 
     def recuperer_densite(self):
-        """
-        Cette fonction récupère la densité du fluide dans le tronçon
+        """Cette fonction récupère la densité du fluide dans le tronçon
 
-        Args:
-            Aucun
-
-        Returns:
-            float : La densité du fluide dans le tronçon
+        :return: La densité du fluide dans le tronçon
+        :rtype: float
         """
         return self.densite
 
     def ajouter_vitesse(self, vitesse):
-        """
-        Cette fonction permet d'ajouter / actualiser une vitesse au fluide du tronçon
+        """Cette fonction permet d'ajouter / actualiser une vitesse au fluide du tronçon
 
-        Args:
-            vitesse (float) : La vitesse du fluide, en m/s
-
-        Returns:
-            Aucun
+        :param vitesse: La vitesse du fluide, en m/s
+        :type vitesse: float
         """
         self.vitesse_init = vitesse
 
     def ajouter_pression(self, pression):
-        """
-        Cette fonction permet d'ajouter / actualiser une pression au fluide du tronçon
+        """Cette fonction permet d'ajouter / actualiser une pression au fluide du tronçon
 
-        Args:
-            pression (float) : La pression du fluide, en Pa
-
-        Returns:
-            Aucun
+        :param pression: La pression du fluide, en Pa
+        :type pression: float
         """
         self.pression_init = pression
 
@@ -307,22 +240,13 @@ class Troncon:
         """
         Cette fonction permet d'ajouter / actualiser une température au fluide du tronçon
 
-        Args:
-            temperature (float) : La temperature du fluide, en °C
-
-        Returns:
-            Aucun
+        :param temperature: La temperature du fluide, en °C
+        :type temperature: float
         """
         self.temperature_init = temperature
 
     def afficher(self):
-        """
-        Cette fonction permet d'afficher les attributs du tronçon
-        Args:
-            Aucun
-
-        Returns:
-            Aucun
+        """Cette fonction permet d'afficher les attributs du tronçon
         """
 
         print(self.longueur, self.section, self.diametre, self.materiau, self.rugosite ,self.geometrie,
@@ -331,82 +255,60 @@ class Troncon:
 
 
 class Canalisation():
+    """Classe qui représente une canalisation, soit une liste de tronçons
+    """
 
     def __init__(self):
-        """
-        Méthode constructeur
-
-        Args:
-            Aucun
-
-        Returns:
-            Aucun
+        """Méthode constructeur
         """
 
         self.liste_troncons = []
         self.longueur = 0
 
     def recupere_nbre_troncons(self):
-        """
-        Cette fonction récupère le nombre de tronçon dans la canalisation
+        """Cette fonction récupère le nombre de tronçon dans la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            int : Le nombre de tronçon dans la canaliation
+        :return: Le nombre de tronçon dans la canaliation
+        :rtype: int
         """
         return self.longueur
 
     def renvoyer_troncon(self, idx):
-        """
-        Cette fonction renvoie un tronçon de la canalisation
+        """Cette fonction renvoie un tronçon de la canalisation
 
-        Args:
-            idx (int) : L'index du tronçon à renvoyer
+        :param idx: L'index du tronçon à renvoyer
+        :type idx: int
 
-        Returns:
-            Troncon : Le tronçon correspondant à idx
+        :return: Le tronçon correspondant à idx
+        :rtype: Troncon
         """
         if idx < self.longueur:
             return self.liste_troncons[idx]
 
     def ajouter_troncon(self, troncon):
-        """
-        Cette fonction peremt d'ajouter / modifier un tronçon à la canalisation
+        """Cette fonction peremt d'ajouter / modifier un tronçon à la canalisation
 
-        Args:
-            troncon : Le troncon à ajouter
-
-        Returns:
-            Aucun
+        :param troncon: Le troncon à ajouter
+        :type troncon: Troncon
         """
         self.liste_troncons.append(troncon)
         self.longueur += 1
 
     def supprimer_troncon(self, idx):
-        """
-        Cette fonction permet de supprimer un tronçon de la canalisation
+        """Cette fonction permet de supprimer un tronçon de la canalisation
 
-        Args:
-            idx (int) : L'index du tronçon à renvoyer
-
-        Returns:
-            Aucun
+        :param idx: L'index du tronçon à renvoyer
+        :type idx: int
         """
         if self.longueur > 1:
             self.longueur -= 1
             self.liste_troncons = np.delete(self.liste_troncons, idx)
 
     def renvoyer_liste_longueur(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la longueur de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la longueur de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des longueurs de chaque tronçon de la canalisation
+        :return: La liste des longueurs de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -414,14 +316,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_section(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la section de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la section de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des sections de chaque tronçon de la canalisation
+        :return: La liste des sections de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -429,14 +327,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_diametre(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant le diamètre de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant le diamètre de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des diamètres de chaque tronçon de la canalisation
+        :return: La liste des diamètres de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -444,14 +338,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_materiau(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant le matériau de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant le matériau de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des matériaux de chaque tronçon de la canalisation
+        :return: La liste des matériaux de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -459,14 +349,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_rugosite(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la rugosité de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la rugosité de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des rugosités de chaque tronçon de la canalisation
+        :return: La liste des rugosités de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -474,14 +360,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_geometrie(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la géométrie de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la géométrie de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des géométries de chaque tronçon de la canalisation
+        :return: La liste des géométries de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -489,14 +371,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_pression(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la pression de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la pression de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des pressions de chaque tronçon de la canalisation
+        :return: La liste des pressions de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -504,14 +382,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_courbure(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant le rayon de courbure de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant le rayon de courbure de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des rayons de courbure de chaque tronçon de la canalisation
+        :return: La liste des rayons de courbure de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -519,14 +393,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_fluide(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant le nom du fluide de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant le nom du fluide de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des noms de fluide de chaque tronçon de la canalisation
+        :return: La liste des noms de fluide de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -534,14 +404,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_vitesse(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la vitesse du fluide de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la vitesse du fluide de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des vitesses de fluide de chaque tronçon de la canalisation
+        :return: La liste des vitesses de fluide de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -549,19 +415,19 @@ class Canalisation():
         return liste
 
     def calculer_distrib_pression_vitesse(self):
-        """
-        Cette fonction permet de calculer la distribution de pression, vitesse, température, abscisses et la liste des
+        """Cette fonction permet de calculer la distribution de pression, vitesse, température, abscisses et la liste des
         longueur de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste de la pression le long de la canalisation
-            list : La liste de la vitesse le long de la canalisation
-            list : La liste de la température le long de la canalisation
-            list : La liste de la longueur le long de la canalisation
-            list : La liste des longueurs de chaque tronçon
+        :return: La liste de la pression le long de la canalisation
+        :rtype: list
+        :return: La liste de la vitesse le long de la canalisation
+        :rtype: list
+        :return: La liste de la température le long de la canalisation
+        :rtype: list
+        :return: La liste de la longueur le long de la canalisation
+        :rtype: list
+        :return: La liste des longueurs de chaque tronçon
+        :rtype: list
         """
         # On récupère toute les listes qui nous intéressent et le nombre de tronçons
         liste_geometrie = self.renvoyer_liste_geometrie()
@@ -628,14 +494,10 @@ class Canalisation():
         return liste_pression_discrete, liste_vitesse_discrete, liste_temperature_discrete, liste_abscisse_discrete, liste_longueur
 
     def renvoyer_liste_temperature(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la température du fluide de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la température du fluide de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des températures de fluide de chaque tronçon de la canalisation
+        :return: La liste des températures de fluide de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -643,14 +505,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_viscosite_cine(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la viscosité cinématique du fluide de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la viscosité cinématique du fluide de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des viscosité cinématique de fluide de chaque tronçon de la canalisation
+        :return: La liste des viscosité cinématique de fluide de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
@@ -658,14 +516,10 @@ class Canalisation():
         return liste
 
     def renvoyer_liste_densite(self):
-        """
-        Cette fonction permet de renvoyer la liste contenant la densité du fluide de chaque tronçon de la canalisation
+        """Cette fonction permet de renvoyer la liste contenant la densité du fluide de chaque tronçon de la canalisation
 
-        Args:
-            Aucun
-
-        Returns:
-            list : La liste des densités de fluide de chaque tronçon de la canalisation
+        :return: La liste des densités de fluide de chaque tronçon de la canalisation
+        :rtype: list
         """
         liste = []
         for i in self.liste_troncons:
