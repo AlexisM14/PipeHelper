@@ -91,17 +91,19 @@ def choisir_materiaux_canalisation(nbre, choix):
 
 
 def choisir_rugosite_canalisation(nbre, choix_rugo, choix_mat, liste_mat):
-    """
-    Cette fonction permet de récupérer les rugosités de la canalisation.
+    """Cette fonction permet de récupérer les rugosités de la canalisation.
 
-    Args :
-        nbre (int) : Le nombre de tronçons dans la canalisation
-        choix_rug (str) : 'oui' : si la rugosité est constante, sinon 'non
-        choix_mat (str) : 'oui' : la canalisation est composée d'un seul matériau, sinon 'non
-        liste_mat (list) : La liste des matériaux de la canalisation
+    :param nbre: Le nombre de tronçons dans la canalisation
+    :type nbre: int
+    :param choix_rugo: 'oui' : si la rugosité est constante, sinon 'non
+    :type choix_rugo: str
+    :param choix_mat: 'oui' : la canalisation est composée d'un seul matériau, sinon 'non
+    :type choix_mat: str
+    :param liste_mat: La liste des matériaux de la canalisation
+    :type liste_mat: list
 
-    Returns :
-        list : La liste des rugosités de la canalisation
+    :return: La liste des rugosités de la canalisation
+    :rtype: list
     """
     liste = []
     # Si la rugosité varie
